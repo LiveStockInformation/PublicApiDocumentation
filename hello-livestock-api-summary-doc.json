@@ -129,8 +129,8 @@
               {
                 "type": "P",
                 "body": [
-                  "This endpoint is secured by LIS user authorization security."
-                  "You would also need to Subscription key in a"
+                  "This endpoint is secured by LIS user authorization security.",
+                  "You would also need to Subscription key in a",
                   "header. This key can be retrieved by Subscribing to the API."
                 ]
               },
