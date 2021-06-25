@@ -1,2 +1,2 @@
 # PublicApiDocumentation
-This repository contains api defnitions and summary documentation for the Liverstock Information Systems Public APIs
+This repository contains api defnitions and summary documentation for the Livestock Information Systems Public APIs
