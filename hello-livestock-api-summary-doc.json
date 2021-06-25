@@ -7,11 +7,11 @@
       "content": [
         {
           "type": "P",
-          "body": "We have created the Hello livestock API to show users what the Developer Hub can do. It allows software developers to connect with the Livestock information systems identity system and consume an example api"
+          "body": "We have created the Hello livestock to show users what the Developer Hub can do. It allows software developers to connect with the Livestock information systems identity system and consume an example api"
         },
         {
           "type": "P",
-          "body": "For more details about the livestock information systems api authentication and , read the <a href='/documentation/authorisation' class='govuk-link'>authorisation</a> section."
+          "body": "For more details about the livestock information systems api authentication and security, read the <a href='/documentation/authorisation' class='govuk-link'>authorisation</a> section."
         },
         {
           "type": "P",
@@ -69,7 +69,7 @@
         {
             "type": "UL",
             "body": [
-                "200 - OK - the request has been processed successfully",
+                "200 -Hello livestock - the request has been processed successfully",
                 "400 - bad request - the incoming request body or parameters do not conform with the Open API document that describes the API",
                 "403 - Service Unavailable - the service is currently unavailable",
                 "429 - Too Many Requests - the client’s limit has been exceeded",
