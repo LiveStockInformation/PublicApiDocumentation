@@ -14,7 +14,7 @@
 				{
 					"type": "P",
 					"body": [ 
-						"The connection is insecure and access to endpoints is restricted to registered users."
+						"The connection is secure and access to endpoints is restricted to registered users."
 					]
 				},
 				{
