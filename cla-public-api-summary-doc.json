@@ -8,7 +8,12 @@
 				{
 					"type": "P",
 					"body": [ 
-						"We developed the Common Livestock Application (CLA) API to allow livestock holders to submit, view, modify and confirm livestock movements electronically.\n",
+						"We developed the Common Livestock Application (CLA) API to allow livestock holders to submit, view, modify and confirm livestock movements electronically."
+					]
+				},
+				{
+					"type": "P",
+					"body": [ 
 						"The connection is secure and access to endpoints is restricted to registered users."
 					]
 				},
@@ -126,15 +131,23 @@
 							},
 							{
 								"type": "P",
-								"body": "Animals reported in a movement report can be identified individually or by batch.\n"
+								"body": "Animals reported in a movement report can be identified individually or by batch."
+							},
+							{
+								"type": "P",
+								"body": "Transfers can be one of two types depending on the role of the user who is submitting the request:"
+							},
+							{
+								"type": "UL",
+								"body": [
+									"If the submitting user is associated with the source holding, the system treats the movement as an 'OFF' Movement.",
+									"If the submitting user is associated with the source holding, the system treats the movement as an 'ON' Movement."
+								]
 							},
 							{
 								"type": "P",
 								"body": [
-									"Transfers can be one of two types depending on the role of the user who is submitting the request:\n", 
-									"* If the submitting user is associated with the source holding, the system treats the movement as an 'OFF' Movement.\n",
-									"* If the submitting user is associated with the source holding, the system treats the movement as an 'ON' Movement.\n",
-									"The userHolding must contain the same value as the sourceHolding when reporting an 'OFF' movement, and the same value as the destinationHolding when reporting an 'ON' movement.\n",
+									"The userHolding must contain the same value as the sourceHolding when reporting an 'OFF' movement, and the same value as the destinationHolding when reporting an 'ON' movement.",
 									"The movementDocument must be completed and have all mandatory fields populated for the movement to be valid.\n",
 									"When reporting an 'OFF' movement, the departureDateTime must be specified and must be a date/time in the past.\n",
 									"When reporting an 'ON' movement, both departureDateTime and arrivalDateTime must be specified. Both departureDateTime and arrivalDateTime must be in the past and arrivalDateTime must be later than departureDateTime. \n"
@@ -142,10 +155,13 @@
 							},
 							{
 								"type": "P",
+								"body": "For market users reporting an movement off a market holding:\n"
+							},
+							{
+								"type": "UL",
 								"body": [
-									"For market users reporting an movement off a market holding:\n",
-									"* saleDate and saleId must be specified.\n",
-									"* movementGroups should be used to group the animals by lot/pen and vendor holding. Each movement group should have these details specified in fromSubLocation and vendorHolding respectively."				  
+									"saleDate and saleId must be specified.\n",
+									"movementGroups should be used to group the animals by lot/pen and vendor holding. Each movement group should have these details specified in fromSubLocation and vendorHolding respectively."				  
 								]
 							},
 							{
