@@ -454,7 +454,7 @@
 					"type": "DETAIL",
 					"body": {
 						"title": "/v1/<strong>UndoRequests</strong>",
-						"tag": "GET",
+						"tag": "POST",
 						"body": [
 							{
 								"type": "H4",
@@ -462,7 +462,21 @@
 							},
 							{
 								"type": "P",
-								"body": "UndoRequests"
+								"body": "This endpoint supports the ability for users to undo or rollback requests that have previously been submitted."
+							},
+							{
+								"type": "P",
+								"body": "In order to succeed, the user submitting the request must be the same as the user who created the request to be undone. In addition, the system may reject an undo request if other events have happened to the animals in the original requests between the time of submission and the time the undo request is processed."
+							},
+							{
+								"type": "P",
+								"body": "To undo a request, supply a message body containing the requestId that the system returned in response to original request."
+							},
+							{
+								"type": "CODE",
+								"body": [
+									"{\r\n  \"content\": {\r\n    \"undoRequestId\": \"<original request id>\",\r\n   }\r\n  }\r\n}"
+								]
 							}
 						]
 					}
