@@ -493,7 +493,7 @@
 							},
 							{
 								"type": "P",
-								"body": "where 'original request id' is the requestId value returned in the success response to the call that is to be rolled back."
+								"body": "where \<original request id\> is the requestId value returned in the success response to the call that is to be rolled back."
 							},
 							{
 								"type": "H4",
