@@ -125,7 +125,7 @@
 				{
 					"type": "CODE",
 					"body": [
-						"{\r\n  \"@odata.context\": {\r\n    \"https://<host>/v1/$metadata#ReviewHoldingMovementRequests\": \"string\",\r\n    \"message\": \"string\",\r\n    \"target\": \"string\",\r\n    \"details\": [\r\n      {\r\n        \"code\": \"string\",\r\n        \"target\": \"string\",\r\n        \"message\": \"string\"\r\n      }\r\n    ]\r\n  }\r\n}"
+						"{\"@odata.context\": \"https://<host>/v1/$metadata#ReviewHoldingMovementRequests\",\"value\": [… 50 movement entities],\"@odata.nextLink\": \"https://<host>/v1/ReviewHoldingMovementRequest?$skip=50\"}"
 					]
 				},
 				{
