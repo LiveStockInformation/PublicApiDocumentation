@@ -1,17 +1,19 @@
 {
 	"name": "CLA core API",
 	"meta": [],
-	"sections": [{
+	"sections": [
+		{
 			"title": "Overview",
-			"content": [{
+			"content": [
+				{
 					"type": "P",
-					"body": [
+					"body": [ 
 						"We developed the Common Livestock Application (CLA) API to allow livestock holders to submit, view, modify and confirm livestock movements electronically."
 					]
 				},
 				{
 					"type": "P",
-					"body": [
+					"body": [ 
 						"The connection is secure and access to endpoints is restricted to registered users."
 					]
 				},
@@ -27,7 +29,8 @@
 		},
 		{
 			"title": "Versioning",
-			"content": [{
+			"content": [
+				{
 					"type": "P",
 					"body": "When an API changes, we will make backwards compatible changes where we can. When this is not possible, we will add a note about deprecated endpoints and make a new endpoint available."
 				},
@@ -39,19 +42,21 @@
 		},
 		{
 			"title": "API browser and Open API file",
-			"content": [{
+			"content": [
+				{
 					"type": "P",
 					"body": "For more details about the Common Livestock Application API, open an API browser like <a href='https://editor.swagger.io' data-swagger-editor class='govuk-link' target='_blank'>Swagger Editor</a> and copy the Open API file content into it."
 				},
 				{
 					"type": "P",
-					"body": "You can also generate a client library from the Open API file using Swagger Editor."
+					"body":  "You can also generate a client library from the Open API file using Swagger Editor."
 				}
 			]
 		},
 		{
 			"title": "HTTP status codes",
-			"content": [{
+			"content": [
+				{
 					"type": "P",
 					"body": "The Common Livestock Application API uses standard HTTP response code conventions:"
 				},
@@ -72,27 +77,27 @@
 				{
 					"type": "UL",
 					"body": [
-						"200 - OK. The request has been successfuly proceessed to completion.",
-						"201 - Created. The request was successfully received by the system and has been queued for later processing.",
-						"400 - Bad Request. The incoming request body or parameters do not conform with the Open API document that describes the API",
-						"403 - Forbidden. The request is formed correctly, but the REST API refuses to honour it. This is usually because the user does not have the necessary permissions for the resource",
-						"429 - Too Many Requests - you have made too many requests within a short time (see Request rate limit for further information).",
-						"503 - Service Unavailable. The service is currently unable to handle the request due to a temporary overloading or maintenance activity.",
-						"504 - Gateway Timeout - there is a network connection problem within the layers of the API fulfilment stack"
+						"<strong>200 - OK.</strong> The request has been successfuly proceessed to completion.",
+						"<strong>201 - Created.</strong> The request was successfully received by the system and has been queued for later processing.",
+						"<strong>400 - Bad Request.</strong> The incoming request body or parameters do not conform with the Open API document that describes the API",
+						"<strong>403 - Forbidden.</strong> The request is formed correctly, but the REST API refuses to honour it. This is usually because the user does not have the necessary permissions for the resource", 
+						"<strong>429 - Too Many Requests.</strong> - you have made too many requests within a short time (see Request rate limit for further information).",
+						"<strong>503 - Service Unavailable.</strong> The service is currently unable to handle the request due to a temporary overloading or maintenance activity.",
+						"<strong>504 - Gateway Timeout.</strong> - there is a network connection problem within the layers of the API fulfilment stack"
 					]
 				},
 				{
 					"type": "P",
 					"body": [
-						"We use HTTP status codes to signal overall success or failure of a request.",
-						"Further detail describing the precise nature of the error is returned in the response body."
+						"We use HTTP status codes to signal overall success or failure of a request. Further detail describing the precise nature of the error is returned in the response body."
 					]
 				}
 			]
 		},
 		{
 			"title": "Request rate limit",
-			"content": [{
+			"content": [
+				{
 					"type": "P",
 					"body": "To protect the system against being overloaded with requests, we limit how the number of API requests you can make within a time period."
 				},
@@ -108,12 +113,14 @@
 		},
 		{
 			"title": "Endpoints",
-			"content": [{
+			"content": [
+				{
 					"type": "DETAIL",
 					"body": {
 						"title": "/v1/<strong>TransferRequests</strong>",
 						"tag": "POST",
-						"body": [{
+						"body": [
+							{
 								"type": "H4",
 								"body": "Description"
 							},
@@ -138,12 +145,11 @@
 							},
 							{
 								"type": "P",
-								"body": [
-									"The userHolding must contain the same value as the sourceHolding when reporting an 'OFF' movement, and the same value as the destinationHolding when reporting an 'ON' movement.",
-									"The movementDocument must be completed and have all mandatory fields populated for the movement to be valid.\n",
-									"When reporting an 'OFF' movement, the departureDateTime must be specified and must be a date/time in the past.\n",
-									"When reporting an 'ON' movement, both departureDateTime and arrivalDateTime must be specified. Both departureDateTime and arrivalDateTime must be in the past and arrivalDateTime must be later than departureDateTime. \n"
-								]
+								"body": "The userHolding must contain the same value as the sourceHolding when reporting an 'OFF' movement, and the same value as the destinationHolding when reporting an 'ON' movement. The movementDocument must be completed and have all mandatory fields populated for the movement to be accepted as valid."
+							},
+							{
+								"type": "P",
+								"body": "When reporting an 'ON' movement, both departureDateTime and arrivalDateTime must be specified. Both departureDateTime and arrivalDateTime must be in the past and arrivalDateTime must be later than departureDateTime."
 							},
 							{
 								"type": "P",
@@ -152,8 +158,8 @@
 							{
 								"type": "UL",
 								"body": [
-									"saleDate and saleId must be specified.\n",
-									"movementGroups should be used to group the animals by lot/pen and vendor holding. Each movement group should have these details specified in fromSubLocation and vendorHolding respectively."
+									"saleDate and saleId must be specified.",
+									"movementGroups should be used to group the animals by lot/pen and vendor holding. Each movement group should have these details specified in fromSubLocation and vendorHolding respectively."				  
 								]
 							},
 							{
@@ -162,8 +168,11 @@
 							},
 							{
 								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
 								"body": [
-									"This endpoint is secured by LIS user authorization security.",
 									"You will also need to Subscription key in a header.",
 									"This key can be retrieved by Subscribing to the API."
 								]
@@ -179,7 +188,8 @@
 										"Name",
 										"Description"
 									],
-									"rows": [{
+									"rows": [
+										{
 											"data": ["Ocp-Apim-Subscription-Key", "Livestock Information Service API subscription key"]
 										},
 										{
@@ -245,17 +255,17 @@
 								"body": [
 									"If the requestStatus indicates that the movement request has been queued by the system (i.e has a requestStatus of 'Pending' or 'Processing'), the caller must then call GET /v1/TransferRequests({requestId}) repeatedly to track its progress through the validation process.",
 									"The requestId parameter is the unique identifier returned in response to a successful POST /v1/TransferRequests.",
-									"The process is complete once a call to GET /v1/TransferRequests({requestId}) returns a requestStatus of 'Success', 'Fail', 'QueueFail', 'CompletedError', 'Rejected', 'Cancelled' or 'Completed'",
+									"The process is complete once a call to GET /v1/TransferRequests({requestId}) returns a requestStatus of 'Success', 'Fail', 'QueueFail', 'CompletedError', 'Rejected', 'Cancelled' or 'Completed'", 
 									"To prevent overloading the system, the caller should call GET /v1/TransferRequests at a frequency no less that once per second."
 								]
 							},
 							{
 								"type": "P",
 								"body": [
-									"HTTP status: <code class='code--slim'>400 (Bad Request)</code>\n",
-									"This response indicates that the submission has been rejected by the system as some, or all of the data supplied was found to be in error.", "The CLAErrorResponse structure in the returned message provides a list of error codes, together with a textual description of each error.", "Additional information is provided in the the errors and identifies the field or fields in the original submission that that generated each error.",
+									"HTTP status: <code class='code--slim'>400 (Bad Request)</code>\n", 
+									"This response indicates that the submission has been rejected by the system as some, or all of the data supplied was found to be in error.","The CLAErrorResponse structure in the returned message provides a list of error codes, together with a textual description of each error.", "Additional information is provided in the the errors and identifies the field or fields in the original submission that that generated each error.", 
 									"Following an error response, the system discards the submitted data.",
-									"The caller must correct the errors identified and resubmit the movement again.",
+									"The caller must correct the errors identified and resubmit the movement again.", 
 									"If the caller supplied a value in the trackingId field of the submitted movement, this can be reused in a future submission as the system maintains no record of it."
 								]
 							},
@@ -273,7 +283,8 @@
 					"body": {
 						"title": "/v1/<strong>TransferRequests</strong>",
 						"tag": "GET",
-						"body": [{
+						"body": [
+							{
 								"type": "H4",
 								"body": "Description"
 							},
@@ -289,7 +300,8 @@
 					"body": {
 						"title": "/v1/<strong>ApprovedMovements</strong>",
 						"tag": "GET",
-						"body": [{
+						"body": [
+							{
 								"type": "H4",
 								"body": "Description"
 							},
