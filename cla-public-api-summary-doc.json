@@ -493,7 +493,7 @@
 							},
 							{
 								"type": "P",
-								"body": "where 'original request id' is the requestId value returned in the success response to the call that is to be rolled back."
+								"body": "where '<original request id>' is the requestId value returned in the success response to the call that is to be rolled back."
 							},
 							{
 								"type": "H4",
@@ -595,6 +595,118 @@
 								"type": "P",
 								"body": "This response indicates that either the system could not interpret the request (because it was malformed) or could find no record of the supplied requestId."
 							}							
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v1/<strong>UndoRequests({requestId})</strong>",
+						"tag": "GET",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "Requests the status of the specified UndoRequests POST call to allow the caller to determine whether the system has finished processing it."
+							},
+							{
+								"type": "P",
+								"body": "This is the endpoint that is called to monitor the progress of an UndoRequests call that returned a requestStatus value of <strong>'Pending'</strong> or <strong>'Processing'</strong>. Pass the returned requestId as the parameter to this call. The system will respond with the current processing state."
+							},
+							{
+								"type": "P",
+								"body": "Note, that when processing complex undo transactions, or during periods of high system activity, the system may return <strong>'Pending'</strong> or <strong>'Processing'</strong> in reponse to this call."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to Subscription key in a header. This key can be retrieved by Subscribing to the API."
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Type",
+										"Required",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["requestId", "integer", "true", "the unique identifier of the undo request being queried"]
+										},
+										{
+											"data": ["$select", "string", "false", "query string to limit the search"]
+										},
+										{
+											"data": ["$expand", "string", "false", "Indicates the related entities to be represented inline. The maximum depth is 2."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>200 (Created)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that the system has located the undo request associated with the supplied requestId and has returned its current processing status in the return body"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 (Bad request)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that the supplied parameters could not be understood by the system. Correct the parameters and resubmit the request."
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>404 (No found)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates the system could not locate an undo request record corresponding tho the supplied requestId."
+							}
 						]
 					}
 				}
