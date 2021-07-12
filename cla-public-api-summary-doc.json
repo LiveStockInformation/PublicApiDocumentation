@@ -1083,27 +1083,48 @@
 					"body": "CPH (County Parish Holding) is a unique identifier that refers to a holding."
 				},
 				{
-					"type": "TABLE",
-					"body": {
-						"headers": [
-							"Item",
-							"Description"
-						],
-						"rows": [
-							{
-								"data": ["Holding CPH", "A ‘holding’ is the land and buildings that are used to house livestock. CPH (County Parish Holding) is a unique identifier that refers to a holding. Every holding that keeps livestock must obtain a CPH number from the Rural Payments Agency. The CPH is a 9-digit number (e.g. 12/345/6789). The first 2 digits relate to the county, the next 3 relate to the parish, and the last 4 digits identify the holding."]
-							},
-							{
-								"data": ["Holding MHS", "A 4-digit number that is usually assigned to an Abattoir by the Meat Hygiene Service. Commonly known as an MHS number, this can be used as an alternative to a CPH when recording livestock movements to an abattoir."]
-							},
-							{
-								"data": ["Tag Numbers", "Tag numbers are a unique identifier used for individual animals."]
-							},
-							{
-								"data": ["", "For sheep and goats, the Tag number format starts with the letters UK, followed by either 0 or 1, then 6 digits, an optional space, then 5 more digits."]
-							}
-						]
-					}
+					"type": "P",
+					"body": "Every holding that keeps livestock must obtain a CPH number from the Rural Payments Agency. The CPH is a 9-digit number (e.g. 12/345/6789). The first 2 digits relate to the county, the next 3 relate to the parish, and the last 4 digits identify the holding."
+				},
+				{
+					"type": "H4",
+					"body": "Holding HMS"
+				},
+				{
+					"type": "P",
+					"body": "A 4-digit number that is usually assigned to an Abattoir by the Meat Hygiene Service. "
+				},
+				{
+					"type": "P",
+					"body": "Commonly known as an MHS number, this can be used as an alternative to a CPH when recording livestock movements to an abattoir."
+				},
+				{
+					"type": "H4",
+					"body": "Dates and Times"
+				},
+				{
+					"type": "P",
+					"body": "Dates and times are represented in the CLA interface as .NET DateTimeOffset objects."
+				},
+				{
+					"type": "P",
+					"body": "String representation of the date time is ISO8601 and the format string is 'yyyy-MM-ddTHH:mm:ssK', where:"
+				},
+				{
+					"type": "UL",
+					"body": [
+						"<code class='code--slim'>yyyy</code> - 4 digit year",
+						"<code class='code--slim'>MM</code> - 2-digit month",
+						"<code class='code--slim'>dd</code> - 2-digit day",
+						"<code class='code--slim'>HH</code> - 2-digit hour",
+						"<code class='code--slim'>mm</code> - 2-digit minutes",
+						"<code class='code--slim'>ss</code> - 2-digit seconds",
+						"<code class='code--slim'>K</code> - the timezone as [+/-]hz:mz difference from UTC"
+					]
+				},
+				{
+					"type": "P",
+					"body": "Note: UTC can can be expressed as either using the character 'Z' or +00:00"
 				}
 			]
 		}		
