@@ -477,7 +477,27 @@
 									"<strong>CompletedWarning</strong> - the request was accepted, but some of the content generated warnings. The warning are detailed in the warnings section of the response. The system view of the animals on the users holding has been adjusted to account for the details in the movement.",
 									"<strong>NotAvailable</strong> - this error should be reported to the LI Service Desk, together with the requestId that resulted in the error"
 								]
-							}
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 (Bad Request)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that the correction has been rejected by the system as some, or all of the data supplied was found to be in error. "
+							},
+							{
+								"type": "P",
+								"body": "The CLAErrorResponse structure in the returned message provides a list of error codes, together with a textual description of each error. Additional information is provided in the the errors body and identifies the field or fields in the submitted data that generated each error."
+							},
+							{
+								"type": "P",
+								"body": "Following an error response, the system discards the submitted data. The caller must correct the errors identified and resubmit the movement again. NOTE: The movement data submitted during the original TransferRequest remains present in the system."
+							},
+							{
+								"type": "P",
+								"body": "If the caller supplied a value in the trackingId field of the submitted movement, this can be reused in a future submission as the system maintains no record of it."
+							},						
 						]
 					}
 				},
