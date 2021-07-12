@@ -525,11 +525,15 @@
 							},
 							{
 								"type": "P",
-								"body": "This is the endpoint that is called to monitor the progress of a CorrectTransferRequests call that returned a requestStatus value of <strong>'Pending'</strong> or <strong>'Processing'</strong>. Pass the returned requestId of the POST CorrectTransferRequests as the parameter to this call, not the requestId of the original TransferRequests. The system will respond with the current processing state."
+								"body": "This is the endpoint that is called to monitor the progress of a CorrectTransferRequests call that returned a requestStatus value of <strong>'Pending'</strong> or <strong>'Processing'</strong>."
 							},
 							{
 								"type": "P",
-								"body": "Note, that when processing complex movements, or during periods of high system activity, the system may return <strong>'Pending'</strong> or <strong>'Processing'</strong> in reponse to this call."
+								"body": "Note: be sure to pass the returned requestId of the POST CorrectTransferRequests as the parameter to this call, <strong>not</strong> the requestId of the original TransferRequests. The system will respond with the current processing state."
+							},
+							{
+								"type": "P",
+								"body": "When processing complex movements, or during periods of high system activity, the system may return <strong>'Pending'</strong> or <strong>'Processing'</strong> in reponse to this call."
 							},
 							{
 								"type": "H4",
@@ -633,7 +637,69 @@
 							},
 							{
 								"type": "P",
-								"body": "HoldingMovementForReviews"
+								"body": "This endpoint is used to begin the process of confirming receipt of a livestock movement. It return a list of the unconfirmed livestock movements that the system has recorded for any holding associated with the user making the call."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to Subscription key in a header. This key can be retrieved by Subscribing to the API."
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Type",
+										"Required",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["species", "string", "true", "the unique identifier of the CorrectTransferRequests request being queried"]
+										},
+										{
+											"data": ["holding", "string", "false", "a valid CPH or MHS number that the user is associated with. If this parameter is not supplied, the system will return unconfirmed movements for <strong>all</strong> holdings that the user is associated with."]
+										},
+										{
+											"data": ["$select", "string", "false", "query string to limite the search"]
+										},
+										{
+											"data": ["$expand", "string", "false", "Indicates the related entities to be represented inline. The maximum depth is 2."]
+										}
+									]
+								}
 							}
 						]
 					}
