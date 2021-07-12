@@ -120,7 +120,13 @@
 				},
 				{
 					"type": "P",
-					"body": "Each minute, you can make up to 10 GET requests for each endpoint."
+					"body": "When a requests generates more results that can be accommodated on a page, the response includes extra information to allow the caller to identify that paging occurred and provides the URL that can be used to obtain the next page of results. This information is included in the @odata.nextLink property alongside the value property."
+				},
+				{
+					"type": "CODE",
+					"body": [
+						"{\r\n  \"@odata.context\": {\r\n    \"https://<host>/v1/$metadata#ReviewHoldingMovementRequests\": \"string\",\r\n    \"message\": \"string\",\r\n    \"target\": \"string\",\r\n    \"details\": [\r\n      {\r\n        \"code\": \"string\",\r\n        \"target\": \"string\",\r\n        \"message\": \"string\"\r\n      }\r\n    ]\r\n  }\r\n}"
+					]
 				},
 				{
 					"type": "P",
@@ -361,9 +367,37 @@
 							{
 								"type": "CODE",
 								"body": [
-									"{\r\n  \"error\": {\r\n    \"code\": \"string\",\r\n    \"message\": \"string\",\r\n    \"target\": \"string\",\r\n    \"details\": [\r\n      {\r\n        \"code\": \"string\",\r\n        \"target\": \"string\",\r\n        \"message\": \"string\"\r\n      }\r\n    ]\r\n  }\r\n}"
+									"{\"@odata.context\": \"https://<host>/v1/$metadata#ReviewHoldingMovementRequests\",\"value\": [… 50 movement entities],\"@odata.nextLink\": \"https://<host>/v1/ReviewHoldingMovementRequest?$skip=50\"}"
 								]
-							}
+							},
+							{
+								"type": "P",
+								"body": "Absence of the @odata.nextLink indicates that the results set is complete and there are no further pages that can be requested."
+							},
+							{
+								"type": "P",
+								"body": "It is also possible for a calling application to request a smaller than the maximum number of results to be returned."
+							},
+							{
+								"type": "P",
+								"body": "Clients request a smaller page size by including the $top query parameter. Requests for further data are enabled by the caller populating the $skip query parameter. The caller would normally set the $skip parameter to a multiple of the $top parameter, but there is no restriction on the value."
+							},
+							{
+								"type": "P",
+								"body": "For example, manually requesting the third page of animal movements that require review with a client-defined page size of 2 would be done using the GET /v1/ReviewHoldingMovementRequests?$top=2&$skip=4 endpoint."
+							},
+							{
+								"type": "P",
+								"body": "The $top value indicates that a maximum of two movements should be returned, the $skip value indicates that the first four movements should be skipped."
+							},
+							{
+								"type": "P",
+								"body": "here is no requirement that $skip is a multiple of $top; a $top of ten and a $skip of five would be permitted and would return results six to fifteen inclusive, assuming there were at least fifteen results available."
+							},
+							{
+								"type": "P",
+								"body": "When a client requests a page size, the response does not include a nextLink; it is the responsibility of the client to manage any further requests for data using $top and $skip."
+							}							
 						]
 					}
 				},
