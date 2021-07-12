@@ -497,7 +497,7 @@
 							{
 								"type": "P",
 								"body": "If the caller supplied a value in the trackingId field of the submitted movement, this can be reused in a future submission as the system maintains no record of it."
-							},						
+							}						
 						]
 					}
 				},
