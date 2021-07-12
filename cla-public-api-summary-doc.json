@@ -112,6 +112,23 @@
 			]
 		},
 		{
+			"title": "Dealing with large results sets",
+			"content": [
+				{
+					"type": "P",
+					"body": "Some endpoints may return a large number of results depending on the filter criteria provided in the $filterparameter. All collection-based endpoints (e.g. requests to return a list of movements) enforce a maximum count of results returned at once. This maximum is called a results page."
+				},
+				{
+					"type": "P",
+					"body": "Each minute, you can make up to 10 GET requests for each endpoint."
+				},
+				{
+					"type": "P",
+					"body": "If you exceed this limit, you will receive an HTTP 429 (Too Many Requests) status code for each request you make within the remainder of the time."
+				}
+			]
+		},
+		{
 			"title": "Endpoints",
 			"content": [
 				{
@@ -187,7 +204,7 @@
 									],
 									"rows": [
 										{
-											"data": ["Ocp-Apim-Subscription-Key", "Livestock Information Service API subscription key"]
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
 										},
 										{
 											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
@@ -334,7 +351,7 @@
 									],
 									"rows": [
 										{
-											"data": ["Ocp-Apim-Subscription-Key", "Livestock Information Service API subscription key"]
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
 										},
 										{
 											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
@@ -470,14 +487,67 @@
 							},
 							{
 								"type": "P",
-								"body": "To undo a request, supply a message body containing the requestId that the system returned in response to original request."
+								"body": "To undo a request, supply a message body containing the requestId that the system returned in response to original request that should be rolled back."
 							},
 							{
 								"type": "CODE",
 								"body": [
-									"{\r\n  \"content\": {\r\n    \"undoRequestId\": \"<original request id>\",\r\n   }\r\n  }\r\n}"
+									"{\r\n  \"content\": {\r\n    \"undoRequestId\": \"<original request id>\",\r\n  }\r\n}"
 								]
-							}
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to Subscription key in a header. This key can be retrieved by Subscribing to the API."
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "P",
+								"body": "None"
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>200 (Success)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that the system has located the livestock movement data associated with the supplied requestId and has returns its current processing status in the return body"
+							}							
 						]
 					}
 				}
