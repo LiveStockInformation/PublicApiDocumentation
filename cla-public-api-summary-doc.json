@@ -1,19 +1,17 @@
 {
 	"name": "CLA core API",
 	"meta": [],
-	"sections": [
-		{
+	"sections": [{
 			"title": "Overview",
-			"content": [
-				{
+			"content": [{
 					"type": "P",
-					"body": [ 
+					"body": [
 						"We developed the Common Livestock Application (CLA) API to allow livestock holders to submit, view, modify and confirm livestock movements electronically."
 					]
 				},
 				{
 					"type": "P",
-					"body": [ 
+					"body": [
 						"The connection is secure and access to endpoints is restricted to registered users."
 					]
 				},
@@ -29,8 +27,7 @@
 		},
 		{
 			"title": "Versioning",
-			"content": [
-				{
+			"content": [{
 					"type": "P",
 					"body": "When an API changes, we will make backwards compatible changes where we can. When this is not possible, we will add a note about deprecated endpoints and make a new endpoint available."
 				},
@@ -42,21 +39,19 @@
 		},
 		{
 			"title": "API browser and Open API file",
-			"content": [
-				{
+			"content": [{
 					"type": "P",
 					"body": "For more details about the Common Livestock Application API, open an API browser like <a href='https://editor.swagger.io' data-swagger-editor class='govuk-link' target='_blank'>Swagger Editor</a> and copy the Open API file content into it."
 				},
 				{
 					"type": "P",
-					"body":  "You can also generate a client library from the Open API file using Swagger Editor."
+					"body": "You can also generate a client library from the Open API file using Swagger Editor."
 				}
 			]
 		},
 		{
 			"title": "HTTP status codes",
-			"content": [
-				{
+			"content": [{
 					"type": "P",
 					"body": "The Common Livestock Application API uses standard HTTP response code conventions:"
 				},
@@ -80,7 +75,7 @@
 						"<strong>200 - OK.</strong> The request has been successfuly proceessed to completion.",
 						"<strong>201 - Created.</strong> The request was successfully received by the system and has been queued for later processing.",
 						"<strong>400 - Bad Request.</strong> The incoming request body or parameters do not conform with the Open API document that describes the API",
-						"<strong>403 - Forbidden.</strong> The request is formed correctly, but the REST API refuses to honour it. This is usually because the user does not have the necessary permissions for the resource", 
+						"<strong>403 - Forbidden.</strong> The request is formed correctly, but the REST API refuses to honour it. This is usually because the user does not have the necessary permissions for the resource",
 						"<strong>429 - Too Many Requests.</strong> - you have made too many requests within a short time (see Request rate limit for further information).",
 						"<strong>503 - Service Unavailable.</strong> The service is currently unable to handle the request due to a temporary overloading or maintenance activity.",
 						"<strong>504 - Gateway Timeout.</strong> - there is a network connection problem within the layers of the API fulfilment stack"
@@ -96,8 +91,7 @@
 		},
 		{
 			"title": "Request rate limit",
-			"content": [
-				{
+			"content": [{
 					"type": "P",
 					"body": "To protect the system against being overloaded with requests, we limit how the number of API requests you can make within a time period."
 				},
@@ -113,8 +107,7 @@
 		},
 		{
 			"title": "Dealing with large results sets",
-			"content": [
-				{
+			"content": [{
 					"type": "P",
 					"body": "Some endpoints may return a large number of results depending on the filter criteria provided in the $filterparameter. All collection-based endpoints (e.g. requests to return a list of movements) enforce a maximum count of results returned at once. This maximum is called a results page."
 				},
@@ -130,14 +123,12 @@
 		},
 		{
 			"title": "Endpoints",
-			"content": [
-				{
+			"content": [{
 					"type": "DETAIL",
 					"body": {
 						"title": "/v1/<strong>TransferRequests</strong>",
 						"tag": "POST",
-						"body": [
-							{
+						"body": [{
 								"type": "H4",
 								"body": "Description"
 							},
@@ -176,7 +167,7 @@
 								"type": "UL",
 								"body": [
 									"saleDate and saleId must be specified.",
-									"movementGroups should be used to group the animals by lot/pen and vendor holding. Each movement group should have these details specified in fromSubLocation and vendorHolding respectively."				  
+									"movementGroups should be used to group the animals by lot/pen and vendor holding. Each movement group should have these details specified in fromSubLocation and vendorHolding respectively."
 								]
 							},
 							{
@@ -202,8 +193,7 @@
 										"Name",
 										"Description"
 									],
-									"rows": [
-										{
+									"rows": [{
 											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
 										},
 										{
@@ -265,7 +255,7 @@
 							},
 							{
 								"type": "P",
-								"body": "Processing is complete once a call to GET /v1/TransferRequests({requestId}) returns a requestStatus of <strong>'Success', 'Fail', 'QueueFail', 'CompletedError', 'Rejected', 'Cancelled' or 'Completed'</strong>." 
+								"body": "Processing is complete once a call to GET /v1/TransferRequests({requestId}) returns a requestStatus of <strong>'Success', 'Fail', 'QueueFail', 'CompletedError', 'Rejected', 'Cancelled' or 'Completed'</strong>."
 							},
 							{
 								"type": "P",
@@ -303,10 +293,9 @@
 				{
 					"type": "DETAIL",
 					"body": {
-					"title": "/v1/<strong>TransferRequests({requestId})</strong>",
+						"title": "/v1/<strong>TransferRequests({requestId})</strong>",
 						"tag": "GET",
-						"body": [
-							{
+						"body": [{
 								"type": "H4",
 								"body": "Description"
 							},
@@ -345,8 +334,7 @@
 										"Name",
 										"Description"
 									],
-									"rows": [
-										{
+									"rows": [{
 											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
 										},
 										{
@@ -368,8 +356,7 @@
 										"Required",
 										"Description"
 									],
-									"rows": [
-										{
+									"rows": [{
 											"data": ["requestId", "integer", "true", "the unique identifier of the request being queried"]
 										},
 										{
@@ -417,8 +404,7 @@
 					"body": {
 						"title": "/v1/<strong>CorrectTransferRequests</strong>",
 						"tag": "POST",
-						"body": [
-							{
+						"body": [{
 								"type": "H4",
 								"body": "Description"
 							},
@@ -497,7 +483,7 @@
 							{
 								"type": "P",
 								"body": "If the caller supplied a value in the trackingId field of the submitted movement, this can be reused in a future submission as the system maintains no record of it."
-							}						
+							}
 						]
 					}
 				},
@@ -506,8 +492,7 @@
 					"body": {
 						"title": "/v1/<strong>HoldingMovementForReviews</strong>",
 						"tag": "GET",
-						"body": [
-							{
+						"body": [{
 								"type": "H4",
 								"body": "Description"
 							},
@@ -523,8 +508,7 @@
 					"body": {
 						"title": "/v1/<strong>ReviewHoldingMovementRequests</strong>",
 						"tag": "GET",
-						"body": [
-							{
+						"body": [{
 								"type": "H4",
 								"body": "Description"
 							},
@@ -540,8 +524,7 @@
 					"body": {
 						"title": "/v1/<strong>UndoRequests</strong>",
 						"tag": "POST",
-						"body": [
-							{
+						"body": [{
 								"type": "H4",
 								"body": "Description"
 							},
@@ -590,8 +573,7 @@
 										"Name",
 										"Description"
 									],
-									"rows": [
-										{
+									"rows": [{
 											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
 										},
 										{
@@ -619,7 +601,7 @@
 							{
 								"type": "P",
 								"body": "This response indicates that the undo request has been received by the system and is being processed."
-							},							
+							},
 							{
 								"type": "P",
 								"body": "The requestId field in the response body contains a unique identifier generated by the system that the caller can uses to track the progress of the undo request as it is validated by the system. The requestStatus field in the response body indicates that a request corresponding to the supplied requestId parameter has been located and shows its current validation status."
@@ -653,7 +635,7 @@
 							},
 							{
 								"type": "P",
-								"body": "Processing is complete once a call to GET /v1/UndoRequests({requestId}) returns a requestStatus of <strong>'Success', 'Fail', 'QueueFail', 'CompletedError', 'Rejected', 'Cancelled' or 'Completed'</strong>." 
+								"body": "Processing is complete once a call to GET /v1/UndoRequests({requestId}) returns a requestStatus of <strong>'Success', 'Fail', 'QueueFail', 'CompletedError', 'Rejected', 'Cancelled' or 'Completed'</strong>."
 							},
 							{
 								"type": "P",
@@ -666,7 +648,7 @@
 							{
 								"type": "P",
 								"body": "This response indicates that either the system could not interpret the request (because it was malformed) or could find no record of the supplied requestId."
-							}							
+							}
 						]
 					}
 				},
@@ -675,8 +657,7 @@
 					"body": {
 						"title": "/v1/<strong>UndoRequests({requestId})</strong>",
 						"tag": "GET",
-						"body": [
-							{
+						"body": [{
 								"type": "H4",
 								"body": "Description"
 							},
@@ -715,8 +696,7 @@
 										"Name",
 										"Description"
 									],
-									"rows": [
-										{
+									"rows": [{
 											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
 										},
 										{
@@ -738,8 +718,7 @@
 										"Required",
 										"Description"
 									],
-									"rows": [
-										{
+									"rows": [{
 											"data": ["requestId", "integer", "true", "the unique identifier of the undo request being queried"]
 										},
 										{
