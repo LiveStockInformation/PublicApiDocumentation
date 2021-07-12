@@ -1173,7 +1173,7 @@
 				},
 				{
 					"type": "P",
-					"body": "A batch can be defined as <code class='code--slim'>\<BatchNumber\> x \<AnimalCount\> [\<I.D. Mark\> - \<StockType\>]</code>, where <code class='code--slim'>\<I.D. Mark\>\/code> and <code class='code--slim'>\<StockType\></code> are both optional."
+					"body": "A batch can be defined as <code class='code--slim'>&ltBatchNumber&gt x &ltAnimalCount&gt [&ltI.D. Mark&gt - &ltStockType&gt]</code>, where <code class='code--slim'>&ltI.D. Mark%gt</code> and <code class='code--slim'>&ltStockType&gt</code> are both optional."
 				}
 			]
 		}		
