@@ -125,7 +125,7 @@
 				{
 					"type": "CODE",
 					"body": [
-						"{\r\n   \"@odata.context\": \"https://<host>/v1/$metadata#ReviewHoldingMovementRequests\",\r\n   \"value\": [… 50 movement entities],\r\n   \"@odata.nextLink\": \"https://<host>/v1/ReviewHoldingMovementRequest?$skip=50\r\n\"}"
+						"{\r\n   \"@odata.context\": \"https://<host>/v1/$metadata#ReviewHoldingMovementRequests\",\r\n   \"value\": [… 50 movement entities],\r\n   \"@odata.nextLink\": \"https://<host>/v1/ReviewHoldingMovementRequest?$skip=50\"\r\n}"
 					]
 				},
 				{
@@ -1060,6 +1060,40 @@
 					}
 				}
 			]
-		}
+		},
+		{
+			"title": "Common terms",
+			"content": [
+				{
+					"type": "P",
+					"body": [ 
+						"The table below lists the common terms and data formats that are widely used across all interfaces to the LIS service."
+					]
+				},
+				{
+					"type": "TABLE",
+					"body": {
+						"headers": [
+							"Item",
+							"Description"
+						],
+						"rows": [
+							{
+								"data": ["Holding CPH", "A ‘holding’ is the land and buildings that are used to house livestock. CPH (County Parish Holding) is a unique identifier that refers to a holding. Every holding that keeps livestock must obtain a CPH number from the Rural Payments Agency. The CPH is a 9-digit number (e.g. 12/345/6789). The first 2 digits relate to the county, the next 3 relate to the parish, and the last 4 digits identify the holding."]
+							},
+							{
+								"data": ["Holding MHS", "A 4-digit number that is usually assigned to an Abattoir by the Meat Hygiene Service. Commonly known as an MHS number, this can be used as an alternative to a CPH when recording livestock movements to an abattoir."]
+							},
+							{
+								"data": ["Tag Numbers", "Tag numbers are a unique identifier used for individual animals."]
+							},
+							{
+								"data": ["", "For sheep and goats, the Tag number format starts with the letters UK, followed by either 0 or 1, then 6 digits, an optional space, then 5 more digits."]
+							}
+						]
+					}
+				}
+			]
+		}		
 	]
 }
