@@ -1125,6 +1125,55 @@
 				{
 					"type": "P",
 					"body": "Note: UTC can can be expressed as either using the character 'Z' or +00:00"
+				},
+				{
+					"type": "H4",
+					"body": "Tag numbers"
+				},
+				{
+					"type": "P",
+					"body": "Tag numbers are a unique identifier used for individual animals."
+				},
+				{
+					"type": "P",
+					"body": "For sheep and goats, the Tag number format starts with the letters UK, followed by either 0 or 1, then 6 digits, an optional space, then 5 more digits"
+				},
+				{
+					"type": "P",
+					"body": "Valid examples are: UK0123456 12345, UK012345612345"
+				},
+				{
+					"type": "H4",
+					"body": "Radio Frequency Identifier (RFID)"
+				},
+				{
+					"type": "P",
+					"body": "The RF_ID (or RFID) is the ‘Radio Frequency Identifier’ and is the unique number returned by an RFID reader when an electronic tag is read."
+				},
+				{
+					"type": "P",
+					"body": "CLA can accept RF_ID value in HEX, Decimal and UK WYSIWYG format, such as:"
+				},
+				{
+					"type": "UL",
+					"body": [
+						"<code class='code--slim'>8200ce82dfdae801</code>",
+						"<code class='code--slim'>0826012345612345</code>",
+						"<code class='code--slim'>UK012345612345</code>",
+						"<code class='code--slim'>UK0123456 12345</code>"
+					]
+				},
+				{
+					"type": "H4",
+					"body": "Batch numbers"
+				},
+				{
+					"type": "P",
+					"body": "A batch is used to denote a flock or herd of animals in a movement record, rather than individuals."
+				},
+				{
+					"type": "P",
+					"body": "A batch can be defined as <code class='code--slim'><BatchNumber> x <AnimalCount> [<I.D. Mark> - <StockType>]</code>, where <code class='code--slim'><I.D. Mark></code> and <code class='code--slim'><StockType></code> are both optional"
 				}
 			]
 		}		
