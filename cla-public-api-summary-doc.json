@@ -1071,6 +1071,18 @@
 					]
 				},
 				{
+					"type": "H4",
+					"body": "Holding CPH"
+				},
+				{
+					"type": "P",
+					"body": "A ‘holding’ is the land and buildings that are used to house livestock."
+				},
+				{
+					"type": "P",
+					"body": "CPH (County Parish Holding) is a unique identifier that refers to a holding."
+				},
+				{
 					"type": "TABLE",
 					"body": {
 						"headers": [
@@ -1085,7 +1097,7 @@
 								"data": ["Holding MHS", "A 4-digit number that is usually assigned to an Abattoir by the Meat Hygiene Service. Commonly known as an MHS number, this can be used as an alternative to a CPH when recording livestock movements to an abattoir."]
 							},
 							{
-								"data": ["Tag Numbers", "Tag numbers are a unique identifier used for individual animals\r\n line 2."]
+								"data": ["Tag Numbers", "Tag numbers are a unique identifier used for individual animals."]
 							},
 							{
 								"data": ["", "For sheep and goats, the Tag number format starts with the letters UK, followed by either 0 or 1, then 6 digits, an optional space, then 5 more digits."]
