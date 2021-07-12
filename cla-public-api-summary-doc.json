@@ -791,6 +791,54 @@
 										}
 									]
 								}
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>200 (Success)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that the system has identified unconfirmed movements associated with the supplied users holding(s). The return body contains the list, with each list entry containing a requestId that the user will need when confirming the movement."
+							},
+							{
+								"type": "P",
+								"body": "Once a list of unconfirmed movements has been obtained, the calling application calls POST /v1/ReviewHoldingMovementRequests supplying the requestId of the movement being confirmed and the tag or batch numbers of the animals that are being accepted or rejected. It is permitted to accept some tags or batches and reject others in the same transaction."
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 (Bad request)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that the supplied parameters could not be understood by the system. Correct the parameters and resubmit the request."
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>404 (No found)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates the system could not any uncofimed livestock movements for the holding(s)"
+							},
+							{
+								"type": "H4",
+								"body": "Duplicate movements"
+							},
+							{
+								"type": "P",
+								"body": "Where both the departure keeper and the destination keeper have reported movements of the same livestock independently, the system can identify this. This can occur when a destination keeper has recorded the 'ON' movement to their holding before the departure keeper has submitted the 'OFF' movement from their holding."
+							},
+							{
+								"type": "P",
+								"body": "The system flags this in the response to HoldingMovementForReviews by setting the isDuplicate flag for the affected movements and providing the duplicateRequestIds of the requests that the systems considers are duplicates."
+							},
+							{
+								"type": "P",
+								"body": "The destination keeper accepts or rejects the movement using POST /v1/ReviewHoldingMovementRequests, using the <departureRequestId>from the departure keepers movement as the key to identify the target."
 							}
 						]
 					}
@@ -799,7 +847,7 @@
 					"type": "DETAIL",
 					"body": {
 						"title": "/v1/<strong>ReviewHoldingMovementRequests</strong>",
-						"tag": "GET",
+						"tag": "POST",
 						"body": [
 							{
 								"type": "H4",
@@ -807,7 +855,84 @@
 							},
 							{
 								"type": "P",
-								"body": "ReviewHoldingMovementRequests"
+								"body": "This endpoint is used to accept or reject livestock movements returned by HoldingMovementForReviews."
+							},
+							{
+								"type": "P",
+								"body": "The message body identifies the movement being confirmed or rejected using the requestId returned in the HoldingMovementForReviews. The caller also identifies the tag or batch numbers of the animals that are being accepted or rejected. It is permitted to accept some tags or batches and reject others in the same transaction."
+							},
+							{
+								"type": "P",
+								"body": "Adding additional tags or batches not present in the originalHoldingMovementForReviews is <strong>not</strong> possible using ReviewHoldingMovementRequests. To add additional animals to the transfer, a new TransferRequest must be created detailing the missing livestock. The system will treat this as a new 'ON' movement reported by the destination keeper, adjusts the holding register of the arrival keepers holding accordingly, then notifies the departure keeper of the adjustment. The departure keeper will need to confirm the adjustment using  HoldingMovementForReviews and ReviewHoldingMovementRequests as for any other movement."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to Subscription key in a header. This key can be retrieved by Subscribing to the API."
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "P",
+								"body": "None"
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>200 (Success)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that the system has accepted confirmation or rejection"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 (Bad request)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that the supplied parameters could not be understood by the system. Correct the parameters and resubmit the request."
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>404 (No found)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates the system could not a livestock movements wih the requestId specified in the body of the ReviewHoldingMovementRequests call."
 							}
 						]
 					}
@@ -1228,6 +1353,6 @@
 					"body": "Any Processing Flags values supplied as part of the movement record are stored within the system as pertaining to that movement. It is important, therefore that the submitter of the movement is certain that any ProcessingFlags values supplied are applicable to the livestock movement they are attached."
 				}
 			]
-		}		
+		}
 	]
 }
