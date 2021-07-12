@@ -1173,7 +1173,59 @@
 				},
 				{
 					"type": "P",
-					"body": "A batch can be defined as <code class='code--slim'>&ltBatchNumber&gt x &ltAnimalCount&gt [&ltI.D. Mark&gt - &ltStockType&gt]</code>, where <code class='code--slim'>&ltI.D. Mark%gt</code> and <code class='code--slim'>&ltStockType&gt</code> are both optional."
+					"body": "A batch can be defined as <code class='code--slim'>&ltBatchNumber&gt x &ltAnimalCount&gt [&ltI.D. Mark&gt - &ltStockType&gt]</code>, where <code class='code--slim'>&ltI.D. Mark&gt</code> and <code class='code--slim'>&ltStockType&gt</code> are both optional."
+				},
+				{
+					"type": "P",
+					"body": "Examples of batch numbers include:"
+				},
+				{
+					"type": "UL",
+					"body": [
+						"<code class='code--slim'>UK999999 x 2 (Blue)</code>",
+						"<code class='code--slim'>UK999999 x 2 (Blue – Total Sheep)</code>",
+						"<code class='code--slim'>UK999999 x 2</code>"
+					]
+				},
+				{
+					"type": "P",
+					"body": "For movements relating to sheep and goats, a valid batch number always begins with the characters 'UK' and is followed by 6 digits."
+				},
+				{
+					"type": "P",
+					"body": "Where a batch number is unknown, the reserved valued 'unknown' can be used. This value is case-insensitive; 'UNKNOWN', 'unknown' and Unknown' will all be accepted."
+				},
+				{
+					"type": "H4",
+					"body": "Devices"
+				},
+				{
+					"type": "P",
+					"body": "A device is used to represent a tag that is attached to an animal."
+				},
+				{
+					"type": "P",
+					"body": "A key concept of CLA is that a 'tag upload' is the act of registering a tag and a 'device application' is the act of attaching a tag to an animal. A 'tag number' is the actual number of the tag, and so applies regardless of whether the tag is attached to an animal or not."
+				},
+				{
+					"type": "P",
+					"body": "Tag numbers used in movements must be known to the system in some capacity."
+				},
+				{
+					"type": "H4",
+					"body": "Processing Flags"
+				},
+				{
+					"type": "P",
+					"body": "Some endpoints include one or more Processing Flags attributes that are used modify how a request is validated and processed."
+				},
+				{
+					"type": "P",
+					"body": "Exemption Codes on a movement are an example of ProcessingFlags usage. Specifying and Exemption Code in the ProcessingFlags entry of a livestock movement changes the validation behaviour to accept a movement, where a movement without an Exemption Code would otherwise be rejected."
+				},
+				{
+					"type": "P",
+					"body": "Any Processing Flags values supplied as part of the movement record are stored within the system as pertaining to that movement. It is important, therefore that the submitter of the movement is certain that any ProcessingFlags values supplied are applicable to the livestock movement they are attached."
 				}
 			]
 		}		
