@@ -189,10 +189,15 @@
 									],
 									"rows": [
 										{
-											"data": [
-												[ "Ocp-Apim-Subscription-Key", "Livestock Information Service API subscription key"],
-												[ "x-correlation-id","a unique identifer for this request (we recommend generating a GUID for this)."]
-											]
+										"data": [{
+												"Name": "Ocp-Apim-Subscription-Key",
+												"Description": "Livestock Information Service API subscription key"
+											},
+											{
+												"Name": "x-correlation-id",
+												"Descrption": "a unique identifer for this request (we recommend generating a GUID for this)."
+											}
+										]
 										}
 									]
 								}
