@@ -190,8 +190,8 @@
 									"rows": [
 										{
 											"data": [
-												{ "Ocp-Apim-Subscription-Key"},
-												{ "x-correlation-id"}
+												{ "Ocp-Apim-Subscription-Key"}, {key}
+												{ "x-correlation-id"}, {id}
 											]
 										}
 									]
