@@ -228,7 +228,7 @@
 							{
 								"type": "UL",
 								"body": [
-									"Pending - the requests is still queued and the caller should query again after a short delay",
+									"<strong>Pending</strong> - the requests is still queued and the caller should query again after a short delay",
 									"Processing - the system is currently processing the request and the caller should query again after a short delay",
 									"Success - the system has accepted the request and the system view of the animals on the users holding has been adjusted to account for the details in the movement.",
 									"Fail - the request has failed. The failure reasons are detailed in the errors section of the response.",
