@@ -290,7 +290,7 @@
 				{
 					"type": "DETAIL",
 					"body": {
-						"title": "/v1/<strong>TransferRequests</strong>",
+					"title": "/v1/<strong>TransferRequests(requestId})</strong>",
 						"tag": "GET",
 						"body": [
 							{
@@ -299,7 +299,67 @@
 							},
 							{
 								"type": "P",
-								"body": "TransferRequests registers the movement of animals between two holdings: the source holding and the destination holding."
+								"body": "Requests the status of the specified TransferRequests POST call to allow the caller to determine whether the system has finished processing it."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to Subscription key in a header. This key can be retrieved by Subscribing to the API."
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "Livestock Information Service API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Type",
+										"Required",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["requestId", "integer", "true", "the unique identifier of the request being queried"]
+										},
+										{
+											"data": ["$select", "string", "false", "query string to limite the search"]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Response"
 							}
 						]
 					}
