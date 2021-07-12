@@ -125,7 +125,7 @@
 				{
 					"type": "CODE",
 					"body": [
-						"{\"@odata.context\": \"https://<host>/v1/$metadata#ReviewHoldingMovementRequests\",\"value\": [… 50 movement entities],\"@odata.nextLink\": \"https://<host>/v1/ReviewHoldingMovementRequest?$skip=50\"}"
+						"{\r\n   \"@odata.context\": \"https://<host>/v1/$metadata#ReviewHoldingMovementRequests\",\r\n   \"value\": [… 50 movement entities],\r\n   \"@odata.nextLink\": \"https://<host>/v1/ReviewHoldingMovementRequest?$skip=50\r\n\"}"
 					]
 				},
 				{
