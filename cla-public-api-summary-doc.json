@@ -8,7 +8,12 @@
 				{
 					"type": "P",
 					"body": [ 
-						"We developed the Common Livestock Application (CLA) API to allow livestock holders to submit, view, modify and confirm livestock movements electronically.\n",
+						"We developed the Common Livestock Application (CLA) API to allow livestock holders to submit, view, modify and confirm livestock movements electronically."
+					]
+				},
+				{
+					"type": "P",
+					"body": [ 
 						"The connection is secure and access to endpoints is restricted to registered users."
 					]
 				},
@@ -72,19 +77,20 @@
 				{
 					"type": "UL",
 					"body": [
-						"200 - OK. The request has been successfuly proceessed to completion.",
-						"201 - Created. The request was successfully received by the system and has been queued for later processing."
-						"400 - Bad Request. The incoming request body or parameters do not conform with the Open API document that describes the API",
-						"403 - Forbidden. The request is formed correctly, but the REST API refuses to honour it. This is usually because the user does not have the necessary permissions for the resource", 
-						"429 - Too Many Requests - you have made too many requests within a short time (see Request rate limit for further information).",
-						"503 - Service Unavailable. The service is currently unable to handle the request due to a temporary overloading or maintenance activity."
-						"504 - Gateway Timeout - there is a network connection problem within the layers of the API fulfilment stack"
+						"<strong>200 - OK.</strong> The request has been successfuly proceessed to completion.",
+						"<strong>201 - Created.</strong> The request was successfully received by the system and has been queued for later processing.",
+						"<strong>400 - Bad Request.</strong> The incoming request body or parameters do not conform with the Open API document that describes the API",
+						"<strong>403 - Forbidden.</strong> The request is formed correctly, but the REST API refuses to honour it. This is usually because the user does not have the necessary permissions for the resource", 
+						"<strong>429 - Too Many Requests.</strong> - you have made too many requests within a short time (see Request rate limit for further information).",
+						"<strong>503 - Service Unavailable.</strong> The service is currently unable to handle the request due to a temporary overloading or maintenance activity.",
+						"<strong>504 - Gateway Timeout.</strong> - there is a network connection problem within the layers of the API fulfilment stack"
 					]
 				},
 				{
 					"type": "P",
-					"body": "We use HTTP status codes to signal overall success or failure of a request.",
-							"Further detail describing the precise nature of the error is returned in the response body."
+					"body": [
+						"We use HTTP status codes to signal overall success or failure of a request. Further detail describing the precise nature of the error is returned in the response body."
+					]
 				}
 			]
 		},
@@ -98,11 +104,125 @@
 				{
 					"type": "P",
 					"body": "Each minute, you can make up to 10 GET requests for each endpoint."
-				}
+				},
 				{
 					"type": "P",
 					"body": "If you exceed this limit, you will receive an HTTP 429 (Too Many Requests) status code for each request you make within the remainder of the time."
+				}
+			]
+		},
+		{
+			"title": "Dealing with large results sets",
+			"content": [
+				{
+					"type": "P",
+					"body": "Some endpoints may return a large number of results depending on the filter criteria provided in the $filterparameter. All collection-based endpoints (e.g. requests to return a list of movements) enforce a maximum count of results returned at once. This maximum is called a results page."
 				},
+				{
+					"type": "P",
+					"body": "When a request generates more results that can be accommodated on a page, the response includes extra information to allow the caller to identify that paging occurred and provides the URL that can be used to obtain the next page of results. This information is included in the @odata.nextLink property alongside the value property."
+				},
+				{
+					"type": "CODE",
+					"body": [
+						"{\r\n   \"@odata.context\": \"https://<host>/v1/$metadata#ReviewHoldingMovementRequests\",\r\n   \"value\": [… 50 movement entities],\r\n   \"@odata.nextLink\": \"https://<host>/v1/ReviewHoldingMovementRequest?$skip=50\"\r\n}"
+					]
+				},
+				{
+					"type": "P",
+					"body": "Absence of the @odata.nextLink indicates that the results set is complete and there are no further pages that can be requested."
+				},
+				{
+					"type": "P",
+					"body": "It is also possible for a calling application to request a smaller than the maximum number of results to be returned."
+				},
+				{
+					"type": "P",
+					"body": "Clients request a smaller page size by including the $top query parameter. Requests for further data are enabled by the caller populating the $skip query parameter. The caller would normally set the $skip parameter to a multiple of the $top parameter, but there is no restriction on the value."
+				},
+				{
+					"type": "P",
+					"body": "For example, manually requesting the third page of animal movements that require review with a client-defined page size of 2 would be done using the GET /v1/ReviewHoldingMovementRequests?$top=2&$skip=4 endpoint."
+				},
+				{
+					"type": "P",
+					"body": "The $top value indicates that a maximum of two movements should be returned, the $skip value indicates that the first four movements should be skipped."
+				},
+				{
+					"type": "P",
+					"body": "here is no requirement that $skip is a multiple of $top; a $top of ten and a $skip of five would be permitted and would return results six to fifteen inclusive, assuming there were at least fifteen results available."
+				},
+				{
+					"type": "P",
+					"body": "When a client requests a page size, the response does not include a nextLink; it is the responsibility of the client to manage any further requests for data using $top and $skip."
+				}							
+			]
+		},
+		{
+			"title": "URL encoding of data",
+			"content": [
+				{
+					"type": "P",
+					"body": "Special handling is required for parameter strings containing punctuation characters, such as CPH numbers or date/times in functions such /v1/HoldingMovementForReviews"
+				},
+				{
+					"type": "P",
+					"body": "These endpoints must have such parameter values URL encoded to ensure that punctuation characters are not mistaken for other parts of the URL."
+				},
+				{
+					"type": "P",
+					"body": "Below are examples of how to encode submitted data for these commonly used parameter strings:"
+				},
+				{
+					"type": "TABLE",
+					"body": {
+						"headers": [
+							"Sample",
+							"Description"
+						],
+						"rows": [
+							{
+								"data": ["Holding", "URL encoding of CPH replaces the forward slashes as follows: holding='26/001/8033' becomes holding='26%2f001%2f8033'"]
+							},
+							{
+								"data": ["Dates and times", "URL encoding of CPH replaces '+' and ':' with the character sequences '%2b' and '%3b' respectively"]
+							}
+						]
+					}
+				}
+			]
+		},
+		{
+			"title": "Tracking IDs",
+			"content": [
+				{
+					"type": "P",
+					"body": "The CLA application provides two methods of tracking a request through the system, one at the protocol level and another at the application level."
+				},
+				{
+					"type": "P",
+					"body": "At the protocol level, the system supports the use of the the HTTP header X-Correlation-ID to allow a caller to identify each unique request."
+				},
+				{
+					"type": "P",
+					"body": "The X-Correlation-ID, sometimes also referred to as the Transit-ID specifies a globally unique attribute attached to the HTTP request that distinguishes it from every other HTTP request used in the system. The value assigned to the header is often a UUID or GUID generated by the client system, but can be any value that makes the request globally unique. Its purpose it to allow the system to identify duplicate HTTP requests that may occur due to network routing issues or application issues that can occur in large scale, high volume transactional systems. Adding an X-Correlation-ID header is optional; if a calling application does not specify one, it will allocated automatically to each HTTP request received at its point of entry into the system."
+				},
+				{
+					"type": "P",
+					"body": "Note, the HTTP response also includes an X-Correlation-ID.This allows the caller to capture the unique identifier for the requests within the system, even if the caller does not generate one themselves. Where a user supplies and X-Correlation-ID,the value supplied by the user is echoed in the corresponding header in the response."
+				},
+				{
+					"type": "P",
+					"body": "At the application level, the payload body of each application request includes a non-mandatory trackingId field."
+				},
+				{
+					"type": "P",
+					"body": "This is a client generated field up to 36 characters in length which performs a function similar to X-Correlation-ID, but is preserved as part of the submitted data throughout its lifetime within the system. Populating this field allows a the caller to provide precise information regarding the transaction should any queries be identified after submission."
+				},
+				{
+					"type": "P",
+					"body": "Unlike X-Correlation-ID, the system will not generate a value for trackingId if it is unpopulated by the calling application."
+				}
 			]
 		},
 		{
@@ -124,26 +244,36 @@
 							},
 							{
 								"type": "P",
-								"body": "Animals reported in a movement report can be identified individually or by batch.\n"
+								"body": "Animals reported in a movement report can be identified individually or by batch."
 							},
 							{
 								"type": "P",
+								"body": "Transfers can be one of two types depending on the role of the user who is submitting the request:"
+							},
+							{
+								"type": "UL",
 								"body": [
-									"Transfers can be one of two types depending on the role of the user who is submitting the request:\n", 
-									"* If the submitting user is associated with the source holding, the system treats the movement as an 'OFF' Movement.\n",
-									"* If the submitting user is associated with the source holding, the system treats the movement as an 'ON' Movement.\n",
-									"The userHolding must contain the same value as the sourceHolding when reporting an 'OFF' movement, and the same value as the destinationHolding when reporting an 'ON' movement.\n",
-									"The movementDocument must be completed and have all mandatory fields populated for the movement to be valid.\n",
-									"When reporting an 'OFF' movement, the departureDateTime must be specified and must be a date/time in the past.\n",
-									"When reporting an 'ON' movement, both departureDateTime and arrivalDateTime must be specified. Both departureDateTime and arrivalDateTime must be in the past and arrivalDateTime must be later than departureDateTime. \n"
+									"If the submitting user is associated with the source holding, the system treats the movement as an 'OFF' Movement.",
+									"If the submitting user is associated with the source holding, the system treats the movement as an 'ON' Movement."
 								]
-							}
+							},
 							{
 								"type": "P",
+								"body": "The userHolding must contain the same value as the sourceHolding when reporting an 'OFF' movement, and the same value as the destinationHolding when reporting an 'ON' movement. The movementDocument must be completed and have all mandatory fields populated for the movement to be accepted as valid."
+							},
+							{
+								"type": "P",
+								"body": "When reporting an 'ON' movement, both departureDateTime and arrivalDateTime must be specified. Both departureDateTime and arrivalDateTime must be in the past and arrivalDateTime must be later than departureDateTime."
+							},
+							{
+								"type": "P",
+								"body": "For market users reporting an off movement from a market holding:\n"
+							},
+							{
+								"type": "UL",
 								"body": [
-									"For market users reporting an movement off a market holding:\n",
-									"* saleDate and saleId must be specified.\n",
-									"* movementGroups should be used to group the animals by lot/pen and vendor holding. Each movement group should have these details specified in fromSubLocation and vendorHolding respectively."				  
+									"saleDate and saleId must be specified.",
+									"movementGroups should be used to group the animals by lot/pen and vendor holding. Each movement group should have these details specified in fromSubLocation and vendorHolding respectively."				  
 								]
 							},
 							{
@@ -152,11 +282,11 @@
 							},
 							{
 								"type": "P",
-								"body": [
-									"This endpoint is secured by LIS user authorization security.",
-									"You will also need to Subscription key in a header.",
-									"This key can be retrieved by Subscribing to the API."
-								]
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to Subscription key in a header. This key can be retrieved by Subscribing to the API."
 							},
 							{
 								"type": "H4",
@@ -171,14 +301,10 @@
 									],
 									"rows": [
 										{
-											"data": [
-												"Ocp-Apim-Subscription-Key",
-												"Livestock Information Service API subscription key"
-											],
-											[
-												"x-correlation-id",
-												"a unique identifer for this request (we recommend generating a GUID for this)." 
-											]
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
 										}
 									]
 								}
@@ -197,26 +323,1034 @@
 							},
 							{
 								"type": "P",
-								"body": "HTTP status: <code class='code--slim'>201 (Created)</code>\n",
-										"This response indicates that the data content has passed an initial syntax check, and has been successfully queued by the system for further processing.", 
-										"The requestId field in the response contains a unique identifier generated by the system that the caller then uses to track the progress of the movement request as it is validated by the system."
+								"body": "HTTP status: <code class='code--slim'>201 (Created)</code>\n"
 							},
 							{
 								"type": "P",
-								"body": "HTTP status: <code class='code--slim'>400 (Bad Request)</code>\n", 
-										"This response indicates that the submission has been rejected by the system as some, or all of the data supplied was found to be in error.","The CLAErrorResponse structure in the returned message provides a list of error codes, together with a textual description of each error.", "Additional information is provided in the the errors and identifies the field or fields in the original submission that that generated each error.", 
-										"Following an error response, the system discards the submitted data.",
-										"The caller must correct the errors identified and resubmit the movement again.", 
-										"If the caller supplied a value in the trackingId field of the submitted movement, this can be reused in a future submission as the system maintains no record of it."
+								"body": "This response indicates that the data content has passed an initial syntax check and has been successfully queued by the system for further processing."
+							},
+							{
+								"type": "P",
+								"body": "The requestId field in the response contains a unique identifier generated by the system that the caller can use to track the progress of the movement request as it is validated by the system. The requestStatus field in the response body indicates that a request corresponding to the supplied requestId parameter has been located and shows its current validation status."
+							},
+							{
+								"type": "P",
+								"body": "Possible values are:"
+							},
+							{
+								"type": "UL",
+								"body": [
+									"<strong>Pending</strong> - the requests is still queued and the caller should query again after a short delay",
+									"<strong>Processing</strong> - the system is currently processing the request and the caller should query again after a short delay",
+									"<strong>Success</strong> - the system has accepted the request and the system view of the animals on the users holding has been adjusted to account for the details in the movement.",
+									"<strong>Fail</strong> - the request has failed. The failure reasons are detailed in the errors section of the response.",
+									"<strong>QueueFail</strong> - the system could not proceed with validation. The caller should submit the resubmit the request again using POST /v1/TransferRequests",
+									"<strong>CompletedError</strong> - the request contained invalid or inconsistent data. The errors are detailed in the errors section of the response.",
+									"<strong>Rejected</strong> - the request contained invalid or inconsistent data. The errors are detailed in the errors section of the response.",
+									"<strong>Cancelled</strong> - a user action such as 'undoing' the request caused the processing to be cancelled during validation.",
+									"<strong>CompletedWarning</strong> - the request was accepted, but some of the content generated warnings. The warning are detailed in the warnings section of the response. The system view of the animals on the users holding has been adjusted to account for the details in the movement.",
+									"<strong>NotAvailable</strong> - this error should be reported to the LI Service Desk, together with the requestId that resulted in the error"
+								]
+							},
+							{
+								"type": "P",
+								"body": "If the result is <strong>'Success'</strong> or <strong>'CompletedWarning'</strong>, the submission is complete and there are no further processing steps required by the client. The errors and warnings elements of the response body may be populated with content highlighting issues with the data, but these are for information only. No corrective action is required that requires re-sbubmission of the data."
+							},
+							{
+								"type": "P",
+								"body": "If the requestStatus returns a value of <strong>'Pending'</strong> or <strong>'Processing'</strong>, this indicates that the movement request has been queued by the system for further validation and processing. The caller must then call GET /v1/TransferRequests({requestId}) repeatedly to track the progress of the request through the validation process. The requestId parameter is the unique identifier returned in response to a successful POST /v1/TransferRequests."
+							},
+							{
+								"type": "P",
+								"body": "Processing is complete once a call to GET /v1/TransferRequests({requestId}) returns a requestStatus of <strong>'Success', 'Fail', 'QueueFail', 'CompletedError', 'Rejected', 'Cancelled' or 'Completed'</strong>." 
+							},
+							{
+								"type": "P",
+								"body": "To prevent overloading the system, the caller should call GET /v1/TransferRequests at a frequency no less that once per second."
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 (Bad Request)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that the submission has been rejected by the system as some, or all of the data supplied was found to be in error."
+							},
+							{
+								"type": "P",
+								"body": "The CLAErrorResponse structure in the returned message provides a list of error codes, together with a textual description of each error. Additional information is provided in the the errors body and identifies the field or fields in the original submission that that generated each error."
+							},
+							{
+								"type": "P",
+								"body": "Following an error response, the system discards the submitted data. The caller must correct the errors identified and resubmit the movement again."
+							},
+							{
+								"type": "P",
+								"body": "If the caller supplied a value in the trackingId field of the submitted movement, this can be reused in a future submission as the system maintains no record of it."
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+					"title": "/v1/<strong>TransferRequests({requestId})</strong>",
+						"tag": "GET",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "Requests the status of the specified TransferRequests POST call to allow the caller to determine whether the system has finished processing it."
+							},
+							{
+								"type": "P",
+								"body": "This is the endpoint that is called to monitor the progress of a TransferRequests call that returned a requestStatus value of <strong>'Pending'</strong> or <strong>'Processing'</strong>. Pass the returned requestId as the parmeter to this call. The system will respond with the current processing state."
+							},
+							{
+								"type": "P",
+								"body": "Note, that when processing complex movements, or during periods of high system activity, the system may return <strong>'Pending'</strong> or <strong>'Processing'</strong> in reponse to this call."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to Subscription key in a header. This key can be retrieved by Subscribing to the API."
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Type",
+										"Required",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["requestId", "integer", "true", "the unique identifier of the request being queried"]
+										},
+										{
+											"data": ["$select", "string", "false", "query string to limite the search"]
+										},
+										{
+											"data": ["$expand", "string", "false", "Indicates the related entities to be represented inline. The maximum depth is 2."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>200 (Success)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that the system has located the livestock movement data associated with the supplied requestId and has returns its current processing status in the return body"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 (Bad request)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that the supplied parameters could not be understood by the system. Correct the parameters and resubmit the request."
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>404 (No found)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates the system could not locate a livestock movement record corresponding tho the supplied requestId."
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v1/<strong>CorrectTransferRequests</strong>",
+						"tag": "POST",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "The system provides a facility to amend movement data submitted using TransferRequests after it has been accepted by the system. Note that this facility can only correct requests that have been successfully validated and returned a status of 'Success' or 'CompletedWarning'; any movements that have been rejected by the system are not stored, therefore must be resubmitted with the identified errors corrected."
+							},
+							{
+								"type": "P",
+								"body": "To correct a movement record, the following conditions must be true:"
+							},
+							{
+								"type": "UL",
+								"body": [
+									"The authenticated user must have originally created the transfer request being corrected.",
+									"The original and corrected movement must be for the same species, sourceHolding and destinationHolding.",
+									"The system may not allow a transfer request to be corrected if other events have subsequently happened to animals involved in the original transfer request.",
+									"The content of the correcting request must contain all the details of the movement that the original movement should be replaced with (i.e. not just the changes)"
+								]
+							},
+							{
+								"type": "P",
+								"body": "To make a correction, the caller uses the POST /v1/CorrectTransferRequests endpoint, specifying the requestId returned in the success response of the original TransferRequests submission. The remainder of the message body is populated with the details of the amended movement in a similar structure to that of the original call to TransferRequests."
+							},
+							{
+								"type": "P",
+								"body": "Just as for the original TransferRequests, following submission of the movement using POST /v1/CorrectTransferRequests, the system will validate the data content and return an immediate response. indicating whether the content has been accepted for validation. Two response codes are possible:"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>201 (Created)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that the data content has passed an initial syntax check and has been successfully queued by the system for further processing."
+							},
+							{
+								"type": "P",
+								"body": "The requestId field in the response contains a unique identifier generated by the system that the caller can use to track the progress of the movement request as it is validated by the system. The requestStatus field in the response body shows its current validation status."
+							},
+							{
+								"type": "P",
+								"body": "Possible values are:"
+							},
+							{
+								"type": "UL",
+								"body": [
+									"<strong>Pending</strong> - the request has been queued and the caller should query again after a short delay",
+									"<strong>Processing</strong> - the system is currently processing the request and the caller should query again after a short delay",
+									"<strong>Success</strong> - the system has accepted the request and the system view of the animals on the users holding has been adjusted to account for the details in the corrected movement.",
+									"<strong>Fail</strong> - the request has failed. The failure reasons are detailed in the errors section of the response.",
+									"<strong>QueueFail</strong> - the system could not proceed with validation. The caller should submit the resubmit the request again using POST /v1/CorrectTransferRequests",
+									"<strong>CompletedError</strong> - the request contained invalid or inconsistent data. The errors are detailed in the errors section of the response.",
+									"<strong>Rejected</strong> - the request contained invalid or inconsistent data. The errors are detailed in the errors section of the response.",
+									"<strong>Cancelled</strong> - a user action such as 'undoing' the request caused the processing to be cancelled during validation.",
+									"<strong>CompletedWarning</strong> - the request was accepted, but some of the content generated warnings. The warning are detailed in the warnings section of the response. The system view of the animals on the users holding has been adjusted to account for the details in the movement.",
+									"<strong>NotAvailable</strong> - this error should be reported to the LI Service Desk, together with the requestId that resulted in the error"
+								]
+							},
+							{
+								"type": "P",
+								"body": "If the result is <strong>'Success'</strong> or <strong>'CompletedWarning'</strong>, the submission is complete and there are no further processing steps required by the client. The errors and warnings elements of the response body may be populated with content highlighting issues with the data, but these are for information only. No corrective action is required that requires re-sbubmission of the data."
+							},
+							{
+								"type": "P",
+								"body": "If the requestStatus returns a value of <strong>'Pending'</strong> or <strong>'Processing'</strong>, this indicates that the movement request has been queued by the system for further validation and processing. The caller must then call GET /v1/CorrectTransferRequests({requestId}) repeatedly to track the progress of the request through the validation process. The requestId parameter is the unique identifier returned in response to a successful POST /v1/CorrectTransferRequests."
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 (Bad Request)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that the correction has been rejected by the system as some, or all of the data supplied was found to be in error. "
+							},
+							{
+								"type": "P",
+								"body": "The CLAErrorResponse structure in the returned message provides a list of error codes, together with a textual description of each error. Additional information is provided in the the errors body and identifies the field or fields in the submitted data that generated each error."
+							},
+							{
+								"type": "P",
+								"body": "Following an error response, the system discards the submitted data. The caller must correct the errors identified and resubmit the movement again. NOTE: The movement data submitted during the original TransferRequest remains present in the system."
+							},
+							{
+								"type": "P",
+								"body": "If the caller supplied a value in the trackingId field of the submitted movement, this can be reused in a future submission as the system maintains no record of it."
+							}						
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v1/<strong>CorrectTransferRequests({requestId})</strong>",
+						"tag": "GET",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "Requests the status of the specified CorrectTransferRequests POST call to allow the caller to determine whether the system has finished processing it."
+							},
+							{
+								"type": "P",
+								"body": "This is the endpoint that is called to monitor the progress of a CorrectTransferRequests call that returned a requestStatus value of <strong>'Pending'</strong> or <strong>'Processing'</strong>."
+							},
+							{
+								"type": "P",
+								"body": "Note: be sure to pass the returned requestId of the POST CorrectTransferRequests as the parameter to this call, <strong>not</strong> the requestId of the original TransferRequests. The system will respond with the current processing state."
+							},
+							{
+								"type": "P",
+								"body": "When processing complex movements, or during periods of high system activity, the system may return <strong>'Pending'</strong> or <strong>'Processing'</strong> in reponse to this call."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to Subscription key in a header. This key can be retrieved by Subscribing to the API."
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Type",
+										"Required",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["requestId", "integer", "true", "the unique identifier of the CorrectTransferRequests request being queried"]
+										},
+										{
+											"data": ["$select", "string", "false", "query string to limite the search"]
+										},
+										{
+											"data": ["$expand", "string", "false", "Indicates the related entities to be represented inline. The maximum depth is 2."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>200 (Success)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that the system has located the livestock movement data associated with the supplied requestId and has returned its current processing status in the return body"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 (Bad request)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that the supplied parameters could not be understood by the system. Correct the parameters and resubmit the request."
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>404 (No found)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates the system could not locate a livestock movement record corresponding tho the supplied requestId."
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v1/<strong>HoldingMovementForReviews</strong>",
+						"tag": "GET",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is used to begin the process of confirming receipt of a livestock movement. It returns a list of the unconfirmed livestock movements that the system has recorded for holding(s) associated with the user making the call."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to Subscription key in a header. This key can be retrieved by Subscribing to the API."
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Type",
+										"Required",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["species", "string", "true", "the species for which movement records are required."]
+										},
+										{
+											"data": ["holding", "string", "false", "a valid CPH or MHS number that the user is associated with. If this parameter is not supplied, the system will return unconfirmed movements for <strong>all</strong> holdings that the user is associated with."]
+										},
+										{
+											"data": ["$select", "string", "false", "query string to limite the search"]
+										},
+										{
+											"data": ["$expand", "string", "false", "Indicates the related entities to be represented inline. The maximum depth is 2."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>200 (Success)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that the system has identified unconfirmed movements associated with the supplied users holding(s). The return body contains the list, with each list entry containing a requestId that the user will need when confirming the movement."
+							},
+							{
+								"type": "P",
+								"body": "Once a list of unconfirmed movements has been obtained, the calling application calls POST /v1/ReviewHoldingMovementRequests supplying the requestId of the movement being confirmed and the tag or batch numbers of the animals that are being accepted or rejected. It is permitted to accept some tags or batches and reject others in the same transaction."
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 (Bad request)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that the supplied parameters could not be understood by the system. Correct the parameters and resubmit the request."
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>404 (No found)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates the system could not any uncofimed livestock movements for the holding(s)"
+							},
+							{
+								"type": "H4",
+								"body": "Duplicate movements"
+							},
+							{
+								"type": "P",
+								"body": "Where both the departure keeper and the destination keeper have reported movements of the same livestock independently, the system can identify this. This can occur when a destination keeper has recorded the 'ON' movement to their holding before the departure keeper has submitted the 'OFF' movement from their holding."
+							},
+							{
+								"type": "P",
+								"body": "The system flags this in the response to HoldingMovementForReviews by setting the isDuplicate flag for the affected movements and providing the duplicateRequestIds of the requests that the systems considers are duplicates."
+							},
+							{
+								"type": "P",
+								"body": "The destination keeper accepts or rejects the movement using POST /v1/ReviewHoldingMovementRequests, using the <departureRequestId>from the departure keepers movement as the key to identify the target."
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v1/<strong>ReviewHoldingMovementRequests</strong>",
+						"tag": "POST",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is used to accept or reject livestock movements returned by HoldingMovementForReviews."
+							},
+							{
+								"type": "P",
+								"body": "The message body identifies the movement being confirmed or rejected using the requestId returned in the HoldingMovementForReviews. The caller also identifies the tag or batch numbers of the animals that are being accepted or rejected. It is permitted to accept some tags or batches and reject others in the same transaction."
+							},
+							{
+								"type": "P",
+								"body": "Adding additional tags or batches not present in the originalHoldingMovementForReviews is <strong>not</strong> possible using ReviewHoldingMovementRequests. To add additional animals to the transfer, a new TransferRequest must be created detailing the missing livestock. The system will treat this as a new 'ON' movement reported by the destination keeper, adjusts the holding register of the arrival keepers holding accordingly, then notifies the departure keeper of the adjustment. The departure keeper will need to confirm the adjustment using  HoldingMovementForReviews and ReviewHoldingMovementRequests as for any other movement."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to Subscription key in a header. This key can be retrieved by Subscribing to the API."
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "P",
+								"body": "None"
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>200 (Success)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that the system has accepted confirmation or rejection"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 (Bad request)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that the supplied parameters could not be understood by the system. Correct the parameters and resubmit the request."
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>404 (No found)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates the system could not a livestock movements wih the requestId specified in the body of the ReviewHoldingMovementRequests call."
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v1/<strong>UndoRequests</strong>",
+						"tag": "POST",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint supports the ability for users to undo or rollback requests that have previously been submitted."
+							},
+							{
+								"type": "P",
+								"body": "In order to succeed, the user submitting the request must be the same as the user who created the request to be undone. In addition, the system may reject an undo request if other events have happened to the animals in the original requests between the time of submission and the time the undo request is processed."
+							},
+							{
+								"type": "P",
+								"body": "To undo a request, supply a message body containing the requestId that the system returned in response to original request that should be rolled back."
 							},
 							{
 								"type": "CODE",
 								"body": [
-									"{\r\n  \"error\": {\r\n    \"code\": \"string\",\r\n    \"message\": \"string\",\r\n    \"target\": \"string\",\r\n    \"details\": [\r\n      {\r\n        \"code\": \"string\",\r\n        \"target\": \"string\",\r\n        \"message\": \"string\"\r\n      }\r\n    ]\r\n  }\r\n}"
+									"{\r\n  \"content\": {\r\n    \"undoRequestId\": \"<original request id>\",\r\n  }\r\n}"
 								]
+							},
+							{
+								"type": "P",
+								"body": "where '<original request id>' is the requestId value returned in the success response to the call that is to be rolled back."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to Subscription key in a header. This key can be retrieved by Subscribing to the API."
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "P",
+								"body": "None"
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>201 (Success)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that the undo request has been received by the system and is being processed."
+							},							
+							{
+								"type": "P",
+								"body": "The requestId field in the response body contains a unique identifier generated by the system that the caller can uses to track the progress of the undo request as it is validated by the system. The requestStatus field in the response body indicates that a request corresponding to the supplied requestId parameter has been located and shows its current validation status."
+							},
+							{
+								"type": "P",
+								"body": "Possible values are:"
+							},
+							{
+								"type": "UL",
+								"body": [
+									"<strong>Pending</strong> - the requests is still queued and the caller should query again after a short delay",
+									"<strong>Processing</strong> - the system is currently processing the request and the caller should query again after a short delay",
+									"<strong>Success</strong> - the system has accepted the request and the system view of the animals on the users holding has been adjusted to account for the details in the movement.",
+									"<strong>Fail</strong> - the request has failed. The failure reasons are detailed in the errors section of the response.",
+									"<strong>QueueFail</strong> - the system could not proceed with validation. The caller should submit the resubmit the request again using POST /v1/UndoRequests",
+									"<strong>CompletedError</strong> - the request contained invalid or inconsistent data. The errors are detailed in the errors section of the response.",
+									"<strong>Rejected</strong> - the request contained invalid or inconsistent data. The errors are detailed in the errors section of the response.",
+									"<strong>Cancelled</strong> - a user action such as 'undoing' the request caused the processing to be cancelled during validation.",
+									"<strong>CompletedWarning</strong> - the request was accepted, but some of the content generated warnings. The warning are detailed in the warnings section of the response.",
+									"<strong>NotAvailable</strong> - this error should be reported to the LI Service Desk, together with the requestId that resulted in the error"
+								]
+							},
+							{
+								"type": "P",
+								"body": "If the result is <strong>'Success'</strong> or <strong>'CompletedWarning'</strong>, the request asociated with the supplied undoRequestId has been successfully undone and there are no further processing steps required by the client. The errors and warnings elements of the response body may be populated with content highlighting issues relevant to the request, but these are for information only. No corrective action is required that requires re-sbubmission of the data."
+							},
+							{
+								"type": "P",
+								"body": "If the requestStatus returns a value of <strong>'Pending'</strong> or <strong>'Processing'</strong>, this indicates that the undo request has been queued by the system for further validation and processing. The caller must then call GET /v1/UndoRequests({requestId}) repeatedly to track the progress of the request through the validation process. The requestId parameter is the unique identifier returned in response to a successful POST /v1/UndoRequests."
+							},
+							{
+								"type": "P",
+								"body": "Processing is complete once a call to GET /v1/UndoRequests({requestId}) returns a requestStatus of <strong>'Success', 'Fail', 'QueueFail', 'CompletedError', 'Rejected', 'Cancelled' or 'Completed'</strong>." 
+							},
+							{
+								"type": "P",
+								"body": "To prevent overloading the system, the caller should call GET /v1/UndoRequests at a frequency no less that once per second."
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 (Bad Request)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that either the system could not interpret the request (because it was malformed) or could find no record of the supplied requestId."
+							}							
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v1/<strong>UndoRequests({requestId})</strong>",
+						"tag": "GET",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "Requests the status of the specified UndoRequests POST call to allow the caller to determine whether the system has finished processing it."
+							},
+							{
+								"type": "P",
+								"body": "This is the endpoint that is called to monitor the progress of an UndoRequests call that returned a requestStatus value of <strong>'Pending'</strong> or <strong>'Processing'</strong>. Pass the returned requestId as the parameter to this call. The system will respond with the current processing state."
+							},
+							{
+								"type": "P",
+								"body": "Note, that when processing complex undo transactions, or during periods of high system activity, the system may return <strong>'Pending'</strong> or <strong>'Processing'</strong> in reponse to this call."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to Subscription key in a header. This key can be retrieved by Subscribing to the API."
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Type",
+										"Required",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["requestId", "integer", "true", "the unique identifier of the undo request being queried"]
+										},
+										{
+											"data": ["$select", "string", "false", "query string to limit the search"]
+										},
+										{
+											"data": ["$expand", "string", "false", "Indicates the related entities to be represented inline. The maximum depth is 2."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>200 (Success)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that the system has located the undo request associated with the supplied requestId and has returned its current processing status in the return body"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 (Bad request)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that the supplied parameters could not be understood by the system. Correct the parameters and resubmit the request."
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>404 (No found)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates the system could not locate an undo request record corresponding to the supplied requestId."
 							}
 						]
 					}
+				}
+			]
+		},
+		{
+			"title": "Common terms",
+			"content": [
+				{
+					"type": "P",
+					"body": [ 
+						"The table below lists the common terms and data formats that are widely used across all interfaces to the LIS service."
+					]
+				},
+				{
+					"type": "H4",
+					"body": "Holding CPH"
+				},
+				{
+					"type": "P",
+					"body": "A ‘holding’ is the land and buildings that are used to house livestock."
+				},
+				{
+					"type": "P",
+					"body": "CPH (County Parish Holding) is a unique identifier that refers to a holding."
+				},
+				{
+					"type": "P",
+					"body": "Every holding that keeps livestock must obtain a CPH number from the Rural Payments Agency. The CPH is a 9-digit number (e.g. 12/345/6789). The first 2 digits relate to the county, the next 3 relate to the parish, and the last 4 digits identify the holding."
+				},
+				{
+					"type": "H4",
+					"body": "Holding HMS"
+				},
+				{
+					"type": "P",
+					"body": "A 4-digit number that is usually assigned to an Abattoir by the Meat Hygiene Service. "
+				},
+				{
+					"type": "P",
+					"body": "Commonly known as an MHS number, this can be used as an alternative to a CPH when recording livestock movements to an abattoir."
+				},
+				{
+					"type": "H4",
+					"body": "Dates and Times"
+				},
+				{
+					"type": "P",
+					"body": "Dates and times are represented in the CLA interface as .NET DateTimeOffset objects."
+				},
+				{
+					"type": "P",
+					"body": "String representation of the date time is ISO8601 and the format string is 'yyyy-MM-ddTHH:mm:ssK', where:"
+				},
+				{
+					"type": "UL",
+					"body": [
+						"<code class='code--slim'>yyyy</code> - 4 digit year",
+						"<code class='code--slim'>MM</code> - 2-digit month",
+						"<code class='code--slim'>dd</code> - 2-digit day",
+						"<code class='code--slim'>HH</code> - 2-digit hour",
+						"<code class='code--slim'>mm</code> - 2-digit minutes",
+						"<code class='code--slim'>ss</code> - 2-digit seconds",
+						"<code class='code--slim'>K</code> - the timezone as [+/-]hz:mz difference from UTC"
+					]
+				},
+				{
+					"type": "P",
+					"body": "Note: UTC can can be expressed as either using the character 'Z' or +00:00"
+				},
+				{
+					"type": "H4",
+					"body": "Tag numbers"
+				},
+				{
+					"type": "P",
+					"body": "Tag numbers are a unique identifier used for individual animals."
+				},
+				{
+					"type": "P",
+					"body": "For sheep and goats, the Tag number format starts with the letters UK, followed by either 0 or 1, then 6 digits, an optional space, then 5 more digits"
+				},
+				{
+					"type": "P",
+					"body": "Valid examples are: UK0123456 12345, UK012345612345"
+				},
+				{
+					"type": "H4",
+					"body": "Radio Frequency Identifier (RFID)"
+				},
+				{
+					"type": "P",
+					"body": "The RF_ID (or RFID) is the ‘Radio Frequency Identifier’ and is the unique number returned by an RFID reader when an electronic tag is read."
+				},
+				{
+					"type": "P",
+					"body": "CLA can accept RF_ID value in HEX, Decimal and UK WYSIWYG format, such as:"
+				},
+				{
+					"type": "UL",
+					"body": [
+						"<code class='code--slim'>8200ce82dfdae801</code>",
+						"<code class='code--slim'>0826012345612345</code>",
+						"<code class='code--slim'>UK012345612345</code>",
+						"<code class='code--slim'>UK0123456 12345</code>"
+					]
+				},
+				{
+					"type": "H4",
+					"body": "Batch numbers"
+				},
+				{
+					"type": "P",
+					"body": "A batch is used to denote a flock or herd of animals in a movement record, rather than individuals."
+				},
+				{
+					"type": "P",
+					"body": "A batch can be defined as <code class='code--slim'>&ltBatchNumber&gt x &ltAnimalCount&gt [&ltI.D. Mark&gt - &ltStockType&gt]</code>, where <code class='code--slim'>&ltI.D. Mark&gt</code> and <code class='code--slim'>&ltStockType&gt</code> are both optional."
+				},
+				{
+					"type": "P",
+					"body": "Examples of batch numbers include:"
+				},
+				{
+					"type": "UL",
+					"body": [
+						"<code class='code--slim'>UK999999 x 2 (Blue)</code>",
+						"<code class='code--slim'>UK999999 x 2 (Blue – Total Sheep)</code>",
+						"<code class='code--slim'>UK999999 x 2</code>"
+					]
+				},
+				{
+					"type": "P",
+					"body": "For movements relating to sheep and goats, a valid batch number always begins with the characters 'UK' and is followed by 6 digits."
+				},
+				{
+					"type": "P",
+					"body": "Where a batch number is unknown, the reserved valued 'unknown' can be used. This value is case-insensitive; 'UNKNOWN', 'unknown' and Unknown' will all be accepted."
+				},
+				{
+					"type": "H4",
+					"body": "Devices"
+				},
+				{
+					"type": "P",
+					"body": "A device is used to represent a tag that is attached to an animal."
+				},
+				{
+					"type": "P",
+					"body": "A key concept of CLA is that a 'tag upload' is the act of registering a tag and a 'device application' is the act of attaching a tag to an animal. A 'tag number' is the actual number of the tag, and so applies regardless of whether the tag is attached to an animal or not."
+				},
+				{
+					"type": "P",
+					"body": "Tag numbers used in movements must be known to the system in some capacity."
+				},
+				{
+					"type": "H4",
+					"body": "Processing Flags"
+				},
+				{
+					"type": "P",
+					"body": "Some endpoints include one or more Processing Flags attributes that are used modify how a request is validated and processed."
+				},
+				{
+					"type": "P",
+					"body": "Exemption Codes on a movement are an example of ProcessingFlags usage. Specifying and Exemption Code in the ProcessingFlags entry of a livestock movement changes the validation behaviour to accept a movement, where a movement without an Exemption Code would otherwise be rejected."
+				},
+				{
+					"type": "P",
+					"body": "Any Processing Flags values supplied as part of the movement record are stored within the system as pertaining to that movement. It is important, therefore that the submitter of the movement is certain that any ProcessingFlags values supplied are applicable to the livestock movement they are attached."
 				}
 			]
 		}
