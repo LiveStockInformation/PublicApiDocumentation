@@ -1192,7 +1192,7 @@
 				{
 					"type": "DETAIL",
 					"body": {
-						"title": "/<strong>Breeds</strong>",
+						"title": "<strong>Breeds</strong>",
 						"tag": "breeds",
 						"body": [
 							{
@@ -1208,6 +1208,32 @@
 										},
 										{
 											"data": ["Dorper", "Includes White Dorper"]
+										}
+									]
+								}
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "<strong>Counties</strong>",
+						"tag": "counties",
+						"body": [
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Value",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["North Somerset", "Formerly Avon unitary authority"]
+										},
+										{
+											"data": ["BANES", "Bath and North East Somerset"]
 										}
 									]
 								}
