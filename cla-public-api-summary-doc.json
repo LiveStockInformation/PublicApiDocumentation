@@ -1187,6 +1187,37 @@
 			]
 		},
 		{
+			"title": "Standing data",
+			"content": [
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/<strong>Breeds</strong>",
+						"tag": "breeds",
+						"body": [
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Value",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Cheviot", "Includes Brecknock Hill Cheviot"]
+										},
+										{
+											"data": ["Dorper", "Includes White Dorper"]
+										}
+									]
+								}
+							}
+						]
+					}
+				}
+			]
+		},		
+		{
 			"title": "Common terms",
 			"content": [
 				{
