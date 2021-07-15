@@ -1187,6 +1187,63 @@
 			]
 		},
 		{
+			"title": "Standing data",
+			"content": [
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "<strong>Breeds</strong>",
+						"tag": "breeds",
+						"body": [
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Value",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Cheviot", "Includes Brecknock Hill Cheviot"]
+										},
+										{
+											"data": ["Dorper", "Includes White Dorper"]
+										}
+									]
+								}
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "<strong>Counties</strong>",
+						"tag": "counties",
+						"body": [
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Value",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["North Somerset", "Formerly Avon unitary authority"]
+										},
+										{
+											"data": ["BANES", "Bath and North East Somerset"]
+										}
+									]
+								}
+							}
+						]
+					}
+				}
+			]
+		},		
+		{
 			"title": "Common terms",
 			"content": [
 				{
@@ -1356,4 +1413,3 @@
 		}
 	]
 }
-
