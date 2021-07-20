@@ -1244,6 +1244,28 @@
 				{
 					"type": "DETAIL",
 					"body": {
+						"title": "<strong>Document Types</strong>",
+						"tag": "documentType",
+						"body": [
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Value"
+									],
+									"rows": [
+										{
+											"data": ["CLA"]
+										}
+									]
+								}
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
 						"title": "<strong>Holding Types</strong>",
 						"tag": "departureHoldingType / destinationHoldingType",
 						"body": [
@@ -1287,6 +1309,41 @@
 										},
 										{
 											"data": ["SHOWGROUND", "Showground"]
+										}
+									]
+								}
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "<strong>Request Types</strong>",
+						"tag": "requestType",
+						"body": [
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"id value",
+										"name value"
+									],
+									"rows": [
+										{
+											"data": ["4", "Movement / Transfer"]
+										},
+										{
+											"data": ["15", "Correct Movement"]
+										},
+										{
+											"data": ["32", "Undo Request"]
+										},
+										{
+											"data": ["145", "Review Holding Movement"]
+										},
+										{
+											"data": ["160", "Undo Request Partial"]
 										}
 									]
 								}
@@ -1448,7 +1505,7 @@
 				},
 				{
 					"type": "H4",
-					"body": "Holding HMS"
+					"body": "Holding MHS"
 				},
 				{
 					"type": "P",
