@@ -1240,9 +1240,187 @@
 							}
 						]
 					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "<strong>Holding Types</strong>",
+						"tag": "departureHoldingType / destinationHoldingType",
+						"body": [
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Value",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["ABATTOIR", "Abattoir"]
+										},
+										{
+											"data": ["AI CENTRE", "Artificial Insemination Centre"]
+										},
+										{
+											"data": ["ASSEMBLY", "Assembly Centre"]
+										},
+										{
+											"data": ["COLLECTION", "Collection Centre"]
+										},
+										{
+											"data": ["COMMON", "Common Land"]
+										},
+										{
+											"data": ["OTHER", "Other"]
+										},
+										{
+											"data": ["PORT", "Port"]
+										},
+										{
+											"data": ["PRODUCER", "Agricultural Holding"]
+										},
+										{
+											"data": ["QUARANTINE", "Quarantine Unit"]
+										},
+										{
+											"data": ["SALEYARD", "Market"]
+										},
+										{
+											"data": ["SHOWGROUND", "Showground"]
+										}
+									]
+								}
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "<strong>Species</strong>",
+						"tag": "species",
+						"body": [
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Value"
+									],
+									"rows": [
+										{
+											"data": ["Deer"]
+										},
+										{
+											"data": ["Goats"]
+										},
+										{
+											"data": ["Sheep"]
+										}
+									]
+								}
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "<strong>Titles (person prefixes such as Mr, Mrs, Dr, etc.)</strong>",
+						"tag": "title",
+						"body": [
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Value"
+									],
+									"rows": [
+										{
+											"data": ["Baron"]
+										},
+										{
+											"data": ["Baroness"]
+										},
+										{
+											"data": ["Captain"]
+										},
+										{
+											"data": ["Colonel"]
+										},
+										{
+											"data": ["Count"]
+										},
+										{
+											"data": ["Countess"]
+										},
+										{
+											"data": ["Dame"]
+										},
+										{
+											"data": ["Dr"]
+										},
+										{
+											"data": ["Duke"]
+										},
+										{
+											"data": ["Earl"]
+										},
+										{
+											"data": ["Father"]
+										},
+										{
+											"data": ["FR"]
+										},
+										{
+											"data": ["Lady"]
+										},
+										{
+											"data": ["Lord"]
+										},
+										{
+											"data": ["Lt Colonel"]
+										},
+										{
+											"data": ["Major"]
+										},
+										{
+											"data": ["Messrs"]
+										},
+										{
+											"data": ["Miss"]
+										},
+										{
+											"data": ["Mr"]
+										},
+										{
+											"data": ["Mrs"]
+										},
+										{
+											"data": ["Ms"]
+										},
+										{
+											"data": ["Prof"]
+										},
+										{
+											"data": ["Rev"]
+										},
+										{
+											"data": ["Rt Hon"]
+										},
+										{
+											"data": ["Sir"]
+										},
+										{
+											"data": ["Viscount"]
+										}
+									]
+								}
+							}
+						]
+					}
 				}
 			]
-		},		
+		},	
 		{
 			"title": "Common terms",
 			"content": [
