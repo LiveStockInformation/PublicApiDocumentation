@@ -1192,7 +1192,7 @@
 				{
 					"type": "DETAIL",
 					"body": {
-						"title": "<strong>Breeds</strong>",
+						"title": "<strong>Breeds (goats)</strong>",
 						"tag": "breeds",
 						"body": [
 							{
@@ -1204,10 +1204,819 @@
 									],
 									"rows": [
 										{
-											"data": ["Cheviot", "Includes Brecknock Hill Cheviot"]
+											"data": ["Anglo Nubian"]
 										},
 										{
-											"data": ["Dorper", "Includes White Dorper"]
+											"data": ["Anglo Nubian X"]
+										},
+										{
+											"data": ["Angora"]
+										},
+										{
+											"data": ["Angora X"]
+										},
+										{
+											"data": ["Bagot"]
+										},
+										{
+											"data": ["Bagot X"]
+										},
+										{
+											"data": ["Boer"]
+										},
+										{
+											"data": ["Boer X"]
+										},
+										{
+											"data": ["British"]
+										},
+										{
+											"data": ["British X"]
+										},
+										{
+											"data": ["British Alpine"]
+										},
+										{
+											"data": ["British Alpine X"]
+										},
+										{
+											"data": ["British Guernsey"]
+										},
+										{
+											"data": ["British Guernsey X"]
+										},
+										{
+											"data": ["British Saanen"]
+										},
+										{
+											"data": ["British Saanen X"]
+										},
+										{
+											"data": ["British Toggenburg"]
+										},
+										{
+											"data": ["British Toggenburg X"]
+										},
+										{
+											"data": ["Cashmere"]
+										},
+										{
+											"data": ["Cashmere X"]
+										},
+										{
+											"data": ["English"]
+										},
+										{
+											"data": ["English X"]
+										},
+										{
+											"data": ["Golden Guernsey"]
+										},
+										{
+											"data": ["British Toggenburg"]
+										},
+										{
+											"data": ["British Toggenburg X"]
+										},
+										{
+											"data": ["Cashmere"]
+										},
+										{
+											"data": ["Cashmere X"]
+										},
+										{
+											"data": ["English"]
+										},
+										{
+											"data": ["English X"]
+										},
+										{
+											"data": ["Golden Guernsey"]
+										},
+										{
+											"data": ["Golden Guernsey X"]
+										},
+										{
+											"data": ["Harness"]
+										},
+										{
+											"data": ["Harness X"]
+										},
+										{
+											"data": ["Pygmy"]
+										},
+										{
+											"data": ["Pygmy X"]
+										},
+										{
+											"data": ["Saanen"]
+										},
+										{
+											"data": ["Saanen X"]
+										},
+										{
+											"data": ["Toggenburg"]
+										},
+										{
+											"data": ["Toggenburg X"]
+										}
+									]
+								}
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "<strong>Breeds (sheep)</strong>",
+						"tag": "breeds",
+						"body": [
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Value",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Aberblack"]
+										},
+										{
+											"data": ["Aberblack X"]
+										},
+										{
+											"data": ["Aberdale"]
+										},
+										{
+											"data": ["Aberdale X"]
+										},
+										{
+											"data": ["Aberfield"]
+										},
+										{
+											"data": ["Aberfield X"]
+										},
+										{
+											"data": ["Aberfield SR"]
+										},
+										{
+											"data": ["Aberfield SR X"]
+										},
+										{
+											"data": ["Abermax"]
+										},
+										{
+											"data": ["Abermax X"]
+										},
+										{
+											"data": ["Abertex"]
+										},
+										{
+											"data": ["Abertex X"]
+										},
+										{
+											"data": ["Badger Face Welsh Mountain"]
+										},
+										{
+											"data": ["Badger Face Welsh Mountain X"]
+										},
+										{
+											"data": ["Balwen Welsh Mountain"]
+										},
+										{
+											"data": ["Balwen Welsh Mountain X"]
+										},
+										{
+											"data": ["Beltex"]
+										},
+										{
+											"data": ["Beltex X"]
+										},
+										{
+											"data": ["Berrichon"]
+										},
+										{
+											"data": ["Berrichon X"]
+										},
+										{
+											"data": ["Beulah Speckled Face"]
+										},
+										{
+											"data": ["Beulah Speckled Face X"]
+										},
+										{
+											"data": ["Black Welsh Mountain"]
+										},
+										{
+											"data": ["Black Welsh Mountain X"]
+										},
+										{
+											"data": ["Blackface"]
+										},
+										{
+											"data": ["Blackface X"]
+										},
+										{
+											"data": ["Bleu du Maine"]
+										},
+										{
+											"data": ["Bleu du Maine X"]
+										},
+										{
+											"data": ["Blue Texel"]
+										},
+										{
+											"data": ["Blue Texel X"]
+										},
+										{
+											"data": ["Bluefaced Leicester"]
+										},
+										{
+											"data": ["Bluefaced Leicester X"]
+										},
+										{
+											"data": ["Border Leicester"]
+										},
+										{
+											"data": ["Border Leicester X"]
+										},
+										{
+											"data": ["Brecknock Hill Cheviot"]
+										},
+										{
+											"data": ["Brecknock Hill Cheviot X"]
+										},
+										{
+											"data": ["British Bleu De Maine"]
+										},
+										{
+											"data": ["British Bleu De Maine X"]
+										},
+										{
+											"data": ["British Charollais"]
+										},
+										{
+											"data": ["British Charollais X"]
+										},
+										{
+											"data": ["British Gotland"]
+										},
+										{
+											"data": ["British Gotland X"]
+										},
+										{
+											"data": ["British Icelandic"]
+										},
+										{
+											"data": ["British Icelandic X"]
+										},
+										{
+											"data": ["British Inra 401"]
+										},
+										{
+											"data": ["British Inra 401 X"]
+										},
+										{
+											"data": ["British Milksheep"]
+										},
+										{
+											"data": ["British Milksheep X"]
+										},
+										{
+											"data": ["British Rouge De L'Ouest"]
+										},
+										{
+											"data": ["British Rouge De L'Ouest X"]
+										},
+										{
+											"data": ["British Saanen"]
+										},
+										{
+											"data": ["British Saanen X"]
+										},
+										{
+											"data": ["British Texel"]
+										},
+										{
+											"data": ["British Texel X"]
+										},
+										{
+											"data": ["British Vendeen"]
+										},
+										{
+											"data": ["British Vendeen X"]
+										},
+										{
+											"data": ["Cambridge"]
+										},
+										{
+											"data": ["Cambridge X"]
+										},
+										{
+											"data": ["Castlemilk Moorit"]
+										},
+										{
+											"data": ["Castlemilk Moorit X"]
+										},
+										{
+											"data": ["Charmoise"]
+										},
+										{
+											"data": ["Charmoise X"]
+										},
+										{
+											"data": ["Charollais"]
+										},
+										{
+											"data": ["Charollais X"]
+										},
+										{
+											"data": ["Cheviot"]
+										},
+										{
+											"data": ["Cheviot X"]
+										},
+										{
+											"data": ["Clun Forest"]
+										},
+										{
+											"data": ["Clun Forest X"]
+										},
+										{
+											"data": ["Colbred"]
+										},
+										{
+											"data": ["Colbred X"]
+										},
+										{
+											"data": ["Corriedale"]
+										},
+										{
+											"data": ["Corriedale X"]
+										},
+										{
+											"data": ["Cotentin"]
+										},
+										{
+											"data": ["Cotentin X"]
+										},	
+										{
+											"data": ["Cotswold"]
+										},
+										{
+											"data": ["Cotswold X"]
+										},
+										{
+											"data": ["Dalesbred"]
+										},
+										{
+											"data": ["Dalesbred X"]
+										},
+										{
+											"data": ["Dartmoor (Greyfaced)"]
+										},
+										{
+											"data": ["Dartmoor (Greyfaced) X"]
+										},
+										{
+											"data": ["Derbyshire Gritstone"]
+										},
+										{
+											"data": ["Derbyshire Gritstone X"]
+										},
+										{
+											"data": ["Devon & Cornwall Longwool"]
+										},
+										{
+											"data": ["Devon & Cornwall Longwool X"]
+										},
+										{
+											"data": ["Devon Closewool"]
+										},
+										{
+											"data": ["Devon Closewool X"]
+										},
+										{
+											"data": ["Dorper"]
+										},
+										{
+											"data": ["Dorper X"]
+										},
+										{
+											"data": ["Dorset Down"]
+										},
+										{
+											"data": ["Dorset Down X"]
+										},
+										{
+											"data": ["Dorset Horn & Poll Dorset"]
+										},
+										{
+											"data": ["Dorset Horn & Poll Dorset X"]
+										},
+										{
+											"data": ["Dutch Spotted"]
+										},
+										{
+											"data": ["Dutch Spotted X"]
+										},
+										{
+											"data": ["Easy Care"]
+										},
+										{
+											"data": ["Easy Care X"]
+										},
+										{
+											"data": ["Eppynt Hardy Speckled Face"]
+										},
+										{
+											"data": ["Eppynt Hardy Speckled Face X"]
+										},
+										{
+											"data": ["Est A Laine Merino"]
+										},
+										{
+											"data": ["Est A Laine Merino X"]
+										},
+										{
+											"data": ["Exmoor Horn"]
+										},
+										{
+											"data": ["Exmoor Horn X"]
+										},
+										{
+											"data": ["Gotland"]
+										},
+										{
+											"data": ["Gotland X"]
+										},
+										{
+											"data": ["Hampshire Down"]
+										},
+										{
+											"data": ["Hampshire Down X"]
+										},
+										{
+											"data": ["Hebridean"]
+										},
+										{
+											"data": ["Hebridean X"]
+										},
+										{
+											"data": ["Herdwick"]
+										},
+										{
+											"data": ["Herdwick X"]
+										},
+										{
+											"data": ["Highlander"]
+										},
+										{
+											"data": ["Highlander X"]
+										},
+										{
+											"data": ["Hill Radnor"]
+										},
+										{
+											"data": ["Hill Radnor X"]
+										},	
+										{
+											"data": ["Ile de France"]
+										},
+										{
+											"data": ["Ile de France X"]
+										},
+										{
+											"data": ["Jacob"]
+										},
+										{
+											"data": ["Jacob X"]
+										},
+										{
+											"data": ["Kent Halfbred"]
+										},
+										{
+											"data": ["Kent Halfbred X"]
+										},
+										{
+											"data": ["Kerry Hill"]
+										},
+										{
+											"data": ["Kerry Hill X"]
+										},
+										{
+											"data": ["Leicester Longwool"]
+										},
+										{
+											"data": ["Leicester Longwool X"]
+										},
+										{
+											"data": ["Lincoln Longwool"]
+										},
+										{
+											"data": ["Lincoln Longwool X"]
+										},
+										{
+											"data": ["Llanwenog"]
+										},
+										{
+											"data": ["Llanwenog X"]
+										},
+										{
+											"data": ["Lleyn"]
+										},
+										{
+											"data": ["Lleyn X"]
+										},
+										{
+											"data": ["Lomond Halfbred"]
+										},
+										{
+											"data": ["Lomond Halfbred X"]
+										},
+										{
+											"data": ["Lonk"]
+										},
+										{
+											"data": ["Lonk X"]
+										},
+										{
+											"data": ["Manx Loaghtan"]
+										},
+										{
+											"data": ["Manx Loaghtan X"]
+										},
+										{
+											"data": ["Masham"]
+										},
+										{
+											"data": ["Masham X"]
+										},
+										{
+											"data": ["Meatlinc"]
+										},
+										{
+											"data": ["Meatlinc X"]
+										},
+										{
+											"data": ["Nelson South Wales Mountain"]
+										},
+										{
+											"data": ["Nelson South Wales Mountain X"]
+										},
+										{
+											"data": ["Norfolk Horn"]
+										},
+										{
+											"data": ["Norfolk Horn X"]
+										},
+										{
+											"data": ["North Country Cheviot"]
+										},
+										{
+											"data": ["North Country Cheviot X"]
+										},
+										{
+											"data": ["North Country Cheviot Hill"]
+										},
+										{
+											"data": ["North Country Cheviot Park"]
+										},
+										{
+											"data": ["North of England Mule"]
+										},
+										{
+											"data": ["North of England Mule X"]
+										},
+										{
+											"data": ["Other"]
+										},
+										{
+											"data": ["Ouessant"]
+										},	
+										{
+											"data": ["Ouessant X"]
+										},
+										{
+											"data": ["Oxford Down"]
+										},
+										{
+											"data": ["Oxford Down X"]
+										},
+										{
+											"data": ["Polwarth"]
+										},
+										{
+											"data": ["Polwarth X"]
+										},
+										{
+											"data": ["Portland"]
+										},
+										{
+											"data": ["Portland X"]
+										},
+										{
+											"data": ["Primera"]
+										},
+										{
+											"data": ["Primera X"]
+										},
+										{
+											"data": ["Romney"]
+										},
+										{
+											"data": ["Romney X"]
+										},
+										{
+											"data": ["Ronaldsay"]
+										},
+										{
+											"data": ["Ronaldsay X"]
+										},
+										{
+											"data": ["Rouge de L'Ouest"]
+										},
+										{
+											"data": ["Rouge de L'Ouest X"]
+										},
+										{
+											"data": ["Rough Fell"]
+										},
+										{
+											"data": ["Rough Fell X"]
+										},
+										{
+											"data": ["Roussin"]
+										},
+										{
+											"data": ["Roussin X"]
+										},
+										{
+											"data": ["Ryeland"]
+										},
+										{
+											"data": ["Ryeland X"]
+										},
+										{
+											"data": ["Scotch Halfbred X"]
+										},
+										{
+											"data": ["Scotch Mule"]
+										},
+										{
+											"data": ["Scotch Mule X"]
+										},
+										{
+											"data": ["Scottish Blackface"]
+										},
+										{
+											"data": ["Scottish Blackface X"]
+										},
+										{
+											"data": ["Scottish Greyface"]
+										},
+										{
+											"data": ["Scottish Greyface X"]
+										},
+										{
+											"data": ["Shetland"]
+										},
+										{
+											"data": ["Shetland X"]
+										},
+										{
+											"data": ["Shetland-Cheviot"]
+										},
+										{
+											"data": ["Shetland-Cheviot X"]
+										},
+										{
+											"data": ["Shropshire"]
+										},
+										{
+											"data": ["Shropshire X"]
+										},
+										{
+											"data": ["Soay & Boreray"]
+										},
+										{
+											"data": ["Soay & Boreray X"]
+										},
+										{
+											"data": ["South Country Cheviot"]
+										},
+										{
+											"data": ["South Country Cheviot X"]
+										},	
+										{
+											"data": ["South Wales Mountain"]
+										},
+										{
+											"data": ["South Wales Mountain X"]
+										},
+										{
+											"data": ["Southdown"]
+										},
+										{
+											"data": ["Southdown X"]
+										},
+										{
+											"data": ["Suffolk"]
+										},
+										{
+											"data": ["Suffolk X"]
+										},
+										{
+											"data": ["Swaledale"]
+										},
+										{
+											"data": ["Swaledale X"]
+										},
+										{
+											"data": ["Talybont Welsh"]
+										},
+										{
+											"data": ["Talybont Welsh X"]
+										},
+										{
+											"data": ["Teeswater"]
+										},
+										{
+											"data": ["Teeswater X"]
+										},
+										{
+											"data": ["Texel"]
+										},
+										{
+											"data": ["Texel X"]
+										},
+										{
+											"data": ["Valais Blacknose"]
+										},
+										{
+											"data": ["Valais Blacknose X"]
+										},
+										{
+											"data": ["Vendeen"]
+										},
+										{
+											"data": ["Vendeen X"]
+										},
+										{
+											"data": ["Welsh Halfbred"]
+										},
+										{
+											"data": ["Welsh Halfbred X"]
+										},
+										{
+											"data": ["Welsh Hill Speckled"]
+										},
+										{
+											"data": ["Welsh Hill Speckled X"]
+										},
+										{
+											"data": ["Welsh Mountain"]
+										},
+										{
+											"data": ["Welsh Mountain X"]
+										},
+										{
+											"data": ["Welsh Mule"]
+										},
+										{
+											"data": ["Welsh Mule X"]
+										},
+										{
+											"data": ["Wensleydale"]
+										},
+										{
+											"data": ["Wensleydale X"]
+										},
+										{
+											"data": ["White Face Dartmoor"]
+										},
+										{
+											"data": ["White Face Dartmoor X"]
+										},
+										{
+											"data": ["Whitefaced Woodland"]
+										},
+										{
+											"data": ["Whitefaced Woodland X"]
+										},
+										{
+											"data": ["Wiltshire Horn"]
+										},
+										{
+											"data": ["Wiltshire Horn X"]
+										},
+										{
+											"data": ["Zwartbles"]
+										},
+										{
+											"data": ["Zwartbles X"]
 										}
 									]
 								}
@@ -1256,6 +2065,57 @@
 									"rows": [
 										{
 											"data": ["CLA"]
+										}
+									]
+								}
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "<strong>Gender</strong>",
+						"tag": "gender",
+						"body": [
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Value"
+									],
+									"rows": [
+										{
+											"data": ["Female"]
+										},
+										{
+											"data": ["Male"]
+										}
+									]
+								}
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "<strong>Gender Species</strong>",
+						"tag": "genderSpecies",
+						"body": [
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Value",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Female", "for species cattle"]
+										},
+										{
+											"data": ["Male", "for species cattle"]
 										}
 									]
 								}
@@ -1372,6 +2232,34 @@
 										},
 										{
 											"data": ["Sheep"]
+										}
+									]
+								}
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "<strong>Transporter Types</strong>",
+						"tag": "transporterType",
+						"body": [
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Value"
+									],
+									"rows": [
+										{
+											"data": ["Departure Keeper"]
+										},
+										{
+											"data": ["Haulier"]
+										},
+										{
+											"data": ["Receiving Keeper"]
 										}
 									]
 								}
