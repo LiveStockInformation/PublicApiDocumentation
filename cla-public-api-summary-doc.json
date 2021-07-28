@@ -1199,8 +1199,7 @@
 								"type": "TABLE",
 								"body": {
 									"headers": [
-										"Value",
-										"Description"
+										"Value"
 									],
 									"rows": [
 										{
@@ -1336,8 +1335,7 @@
 								"type": "TABLE",
 								"body": {
 									"headers": [
-										"Value",
-										"Description"
+										"Value"
 									],
 									"rows": [
 										{
