@@ -2240,6 +2240,43 @@
 				{
 					"type": "DETAIL",
 					"body": {
+						"title": "<strong>Stock Types</strong>",
+						"tag": "stockType",
+						"body": [
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Value"
+									],
+									"rows": [
+										{
+											"data": ["Ewes"]
+										},
+										{
+											"data": ["Ewe Lambs"]
+										},
+										{
+											"data": ["Others"]
+										},
+										{
+											"data": ["Rams"]
+										},
+										{
+											"data": ["Total Goats"]
+										},
+										{
+											"data": ["Total Sheep"]
+										}
+									]
+								}
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
 						"title": "<strong>Transporter Types</strong>",
 						"tag": "transporterType",
 						"body": [
