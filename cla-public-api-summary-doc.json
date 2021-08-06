@@ -150,7 +150,7 @@
 				},
 				{
 					"type": "P",
-					"body": "here is no requirement that $skip is a multiple of $top; a $top of ten and a $skip of five would be permitted and would return results six to fifteen inclusive, assuming there were at least fifteen results available."
+					"body": "There is no requirement that $skip is a multiple of $top; a $top of ten and a $skip of five would be permitted and would return results six to fifteen inclusive, assuming there were at least fifteen results available."
 				},
 				{
 					"type": "P",
