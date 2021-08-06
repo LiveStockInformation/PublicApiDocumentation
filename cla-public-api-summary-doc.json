@@ -79,11 +79,11 @@
 					"body": [
 						"<strong>200 - OK.</strong> The request has been successfuly proceessed to completion.",
 						"<strong>201 - Created.</strong> The request was successfully received by the system and has been queued for later processing.",
-						"<strong>400 - Bad Request.</strong> The incoming request body or parameters do not conform with the Open API document that describes the API",
-						"<strong>403 - Forbidden.</strong> The request is formed correctly, but the REST API refuses to honour it. This is usually because the user does not have the necessary permissions for the resource", 
+						"<strong>400 - Bad Request.</strong> The incoming request body or parameters do not conform with the Open API document that describes the API.",
+						"<strong>403 - Forbidden.</strong> The request is formed correctly, but the REST API refuses to honour it. This is usually because the user does not have the necessary permissions for the resource.", 
 						"<strong>429 - Too Many Requests.</strong> - you have made too many requests within a short time (see Request rate limit for further information).",
 						"<strong>503 - Service Unavailable.</strong> The service is currently unable to handle the request due to a temporary overloading or maintenance activity.",
-						"<strong>504 - Gateway Timeout.</strong> - there is a network connection problem within the layers of the API fulfilment stack"
+						"<strong>504 - Gateway Timeout.</strong> - there is a network connection problem within the layers of the API fulfilment stack."
 					]
 				},
 				{
