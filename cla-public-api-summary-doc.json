@@ -23,7 +23,7 @@
 				},
 				{
 					"type": "P",
-					"body": "For more information about how to develop your own client applications, including example clients for this API, see our <a href='/documentation/tutorials' class='govuk-link'>tutorials</a>."
+					"body": "For more information about how to develop your own client applications, including example clients for this API, read our <a href='/documentation/tutorials' class='govuk-link'>tutorials</a>."
 				}
 			]
 		},
