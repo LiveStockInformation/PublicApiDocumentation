@@ -11,11 +11,11 @@
         },
         {
           "type": "P",
-          "body": "For more details about the Livestock information systems api authentication and , read the <a href='/documentation/api-authentication' class='govuk-link'>authorisation</a> section."
+          "body": "For more details about the Livestock information systems api authentication and security, read the <a href='/documentation/api-authentication' class='govuk-link'>authorisation</a> section."
         },
         {
           "type": "P",
-          "body": "For more information about how to develop your own client applications, including example clients for this API, see our <a href='/documentation/tutorials' class='govuk-link'>tutorials</a>."
+          "body": "For more information about how to develop your own client applications, including example clients for this API, read our <a href='/documentation/tutorials' class='govuk-link'>tutorials</a>."
         }
       ]
     },
