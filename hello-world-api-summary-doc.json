@@ -11,7 +11,7 @@
         },
         {
           "type": "P",
-          "body": "For more details about the Livestock information systems api authentication and , read the <a href='/documentation/authorisation' class='govuk-link'>authorisation</a> section."
+          "body": "For more details about the Livestock information systems api authentication and , read the <a href='/documentation/api-authentication' class='govuk-link'>authorisation</a> section."
         },
         {
           "type": "P",
