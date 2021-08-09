@@ -209,7 +209,7 @@
 				},
 				{
 					"type": "P",
-					"body": "Note, the HTTP response also includes an X-Correlation-ID.This allows the caller to capture the unique identifier for the requests within the system, even if the caller does not generate one themselves. Where a user supplies and X-Correlation-ID,the value supplied by the user is echoed in the corresponding header in the response."
+					"body": "Note, the HTTP response also includes an X-Correlation-ID. This allows the caller to capture the unique identifier for the requests within the system, even if the caller does not generate one themselves. Where a user supplies and X-Correlation-ID,the value supplied by the user is echoed in the corresponding header in the response."
 				},
 				{
 					"type": "P",
