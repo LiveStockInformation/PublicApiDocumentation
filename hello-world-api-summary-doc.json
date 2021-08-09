@@ -129,8 +129,7 @@
                 {
                   "type": "P",
                   "body": [
-                    "This endpoint is secured by LIS user authorization security.",
-                    "You will also need to provide a Subscription Key in the requests header. Read the <a href='/documentation/api-authentication'>API Authentication</a> page for details."
+                    "This endpoint is secured by LIS user authorization security. You will also need to provide a Subscription Key in the requests header. Read the <a href='/documentation/api-authentication'>API Authentication</a> page for details."
                   ]
                 },
                 {
