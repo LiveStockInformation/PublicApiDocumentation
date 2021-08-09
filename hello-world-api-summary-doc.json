@@ -69,11 +69,11 @@
         {
             "type": "UL",
             "body": [
-                "200 - OK - the request has been processed successfully",
-                "400 - bad request - the incoming request body or parameters do not conform with the Open API document that describes the API",
-                "403 - Service Unavailable - the service is currently unavailable",
-                "429 - Too Many Requests - the client’s limit has been exceeded",
-                "504 - Gateway Timeout - there is a network connection problem within the layers of the API fulfilment stack"
+                "200 - OK - the request has been processed successfully.",
+                "400 - bad request - the incoming request body or parameters do not conform with the Open API document that describes the API.",
+                "403 - Service Unavailable - the service is currently unavailable.",
+                "429 - Too Many Requests - the client’s limit has been exceeded.",
+                "504 - Gateway Timeout - there is a network connection problem within the layers of the API fulfilment stack."
             ]
         },
         {
