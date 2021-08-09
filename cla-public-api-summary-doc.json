@@ -1047,7 +1047,7 @@
 							},
 							{
 								"type": "P",
-								"body": "If the result is <strong>'Success'</strong> or <strong>'CompletedWarning'</strong>, the request asociated with the supplied undoRequestId has been successfully undone and there are no further processing steps required by the client. The errors and warnings elements of the response body may be populated with content highlighting issues relevant to the request, but these are for information only. No corrective action is required that requires re-sbubmission of the data."
+								"body": "If the result is <strong>'Success'</strong> or <strong>'CompletedWarning'</strong>, the request asociated with the supplied undoRequestId has been successfully undone and there are no further processing steps required by the client. The errors and warnings elements of the response body may be populated with content highlighting issues relevant to the request, but these are for information only. No corrective action is required that requires re-submission of the data."
 							},
 							{
 								"type": "P",
