@@ -822,7 +822,7 @@
 							},
 							{
 								"type": "P",
-								"body": "This response indicates the system could not any uncofimed livestock movements for the holding(s)"
+								"body": "This response indicates the system could not any unconfimed livestock movements for the holding(s)"
 							},
 							{
 								"type": "H4",
