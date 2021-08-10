@@ -273,8 +273,8 @@
 								"type": "UL",
 								"body": [
 									"saleDate and saleId must be specified.",
-									"movementGroups should be used to group the animals by lot/pen and vendor holding. Each movement group should have these details specified in fromSubLocation and vendorHolding respectively."				  
-								]
+									"movementGroups should be used to group the animals by lot/pen and vendor holding. Each movement group should have these details specified in fromSubLocation and vendorHolding respectively.",
+									"processingFlags must contain a value indicating the type of market involved in the transfer. See Exemption codes section for the supported values."								]
 							},
 							{
 								"type": "H4",
@@ -2041,6 +2041,47 @@
 										},
 										{
 											"data": ["BANES", "Bath and North East Somerset"]
+										}
+									]
+								}
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "<strong>Exemption Codes</strong>",
+						"tag": "processingFlags",
+						"body": [
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Code",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["1", "Slaughter market"]
+										},
+										{
+											"data": ["2", "Store market"]
+										},
+										{
+											"data": ["3", "Collection Centre"]
+										},
+										{
+											"data": ["4", "Assembly Cenre"]
+										},
+										{
+											"data": ["101", "Foster lambs"]
+										},
+										{
+											"data": ["173", "Return after rounding up from common land"]
+										},
+										{
+											"data": ["185", "Moving for immediate slaughter"]
 										}
 									]
 								}
