@@ -1,0 +1,69 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "Hello World API",
+        "description": "A sample API to demonstrate authentication and connectivity",
+        "version": "1.0"
+    },
+    "servers": [
+        {
+            "url": "https://dev-api.livestockinformation.org.uk/public/hello-world"
+        },
+        {
+            "url": "https://dev-cla.api.livestockinformation.org.uk/public/hello-world"
+        }
+    ],
+    "paths": {
+        "/hello-world": {
+            "get": {
+                "summary": "Hello world operation",
+                "description": "A demonstration of a GET call on a sample resource.",
+                "operationId": "get-hello-world",
+                "parameters": [
+                    {
+                        "name": "param1",
+                        "in": "query",
+                        "description": "A sample parameter that is optional and has a default value of \"sample\".",
+                        "schema": {
+                            "enum": [
+                                "sample"
+                            ],
+                            "type": "string",
+                            "default": "sample"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returned in all cases."
+                    },
+                    "401": {
+                        "description": "Request could not be authenticated."
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "apiKeyHeader": {
+                "type": "apiKey",
+                "name": "Ocp-Apim-Subscription-Key",
+                "in": "header"
+            },
+            "apiKeyQuery": {
+                "type": "apiKey",
+                "name": "subscription-key",
+                "in": "query"
+            }
+        }
+    },
+    "security": [
+        {
+            "apiKeyHeader": []
+        },
+        {
+            "apiKeyQuery": []
+        }
+    ]
+}
