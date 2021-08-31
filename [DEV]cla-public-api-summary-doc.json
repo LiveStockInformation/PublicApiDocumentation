@@ -233,6 +233,127 @@
 					"type": "DETAIL",
 					"body": {
 						"title": "/v1/<strong>TransferRequests</strong>",
+						"tag": "GET",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "GET TransferRequests returns all requests made the the registered user to register the movement of animals."
+							},
+							{
+								"type": "P",
+								"body": "the optional $select, and $filter parameters can be used to restrict the scope of the results set returned."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to provide a Subscription Key in the requests header. Read the <a href='/documentation/api-authentication'>API Authentication</a> page for details"
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Type",
+										"Required",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["$select", "string", "false", "query string to limit the entities to be included in the response"]
+										},
+										{
+											"data": ["$expand", "string", "false", "indicates the related entities to be represented inline. The maximum depth is 2."]
+										},
+										{
+											"data": ["$filter", "string", "false", "query string used to limit the number of items returned in the results set. When specifying dates, only those with a time part will be accepted."]
+										},
+										{
+											"data": ["$orderby", "string", "false", "specifies the order in which items in the results set are returned"]
+										},
+										{
+											"data": ["$top", "int32", "false", "limits the number of results returned"]
+										},
+										{
+											"data": ["$skip", "int32", "false", "excluded the specified number of items from the resuts set"]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>200 (Success)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that system has processed the requests and the results are presented in the response body"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 (Bad Request)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that the submission has been rejected by the system as some, or all of the data supplied was found to be in error."
+							},
+							{
+								"type": "P",
+								"body": "The CLAErrorResponse structure in the returned message provides a list of error codes, together with a textual description of each error. Additional information is provided in the the errors body and identifies the field or fields in the original submission that that generated each error."
+							},
+							{
+								"type": "P",
+								"body": "Following an error response, the system discards the submitted data. The caller must correct the errors identified and resubmit the movement again."
+							},
+							{
+								"type": "P",
+								"body": "If the caller supplied a value in the trackingId field of the submitted movement, this can be reused in a future submission as the system maintains no record of it."
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v1/<strong>TransferRequests</strong>",
 						"tag": "POST",
 						"body": [
 							{
@@ -500,6 +621,127 @@
 							{
 								"type": "P",
 								"body": "This response indicates the system could not locate a livestock movement record corresponding to the supplied requestId."
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v1/<strong>CorrectTransferRequests</strong>",
+						"tag": "GET",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "GET CorrectTransferRequests returns all requests to correct an exisiting movement made the the registered user"
+							},
+							{
+								"type": "P",
+								"body": "the optional $select, and $filter parameters can be used to restrict the scope of the results set returned."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to provide a Subscription Key in the requests header. Read the <a href='/documentation/api-authentication'>API Authentication</a> page for details"
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Type",
+										"Required",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["$select", "string", "false", "query string to limit the entities to be included in the response"]
+										},
+										{
+											"data": ["$expand", "string", "false", "indicates the related entities to be represented inline. The maximum depth is 2."]
+										},
+										{
+											"data": ["$filter", "string", "false", "query string used to limit the number of items returned in the results set. When specifying dates, only those with a time part will be accepted."]
+										},
+										{
+											"data": ["$orderby", "string", "false", "specifies the order in which items in the results set are returned"]
+										},
+										{
+											"data": ["$top", "int32", "false", "limits the number of results returned"]
+										},
+										{
+											"data": ["$skip", "int32", "false", "excluded the specified number of items from the resuts set"]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>200 (Success)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that system has processed the requests and the results are presented in the response body"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 (Bad Request)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that the submission has been rejected by the system as some, or all of the data supplied was found to be in error."
+							},
+							{
+								"type": "P",
+								"body": "The CLAErrorResponse structure in the returned message provides a list of error codes, together with a textual description of each error. Additional information is provided in the the errors body and identifies the field or fields in the original submission that that generated each error."
+							},
+							{
+								"type": "P",
+								"body": "Following an error response, the system discards the submitted data. The caller must correct the errors identified and resubmit the movement again."
+							},
+							{
+								"type": "P",
+								"body": "If the caller supplied a value in the trackingId field of the submitted movement, this can be reused in a future submission as the system maintains no record of it."
 							}
 						]
 					}
@@ -848,6 +1090,127 @@
 					"type": "DETAIL",
 					"body": {
 						"title": "/v1/<strong>ReviewHoldingMovementRequests</strong>",
+						"tag": "GET",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "GET ReviewHoldingMovementRequests returns all requests to review the movement of animals made the the registered user."
+							},
+							{
+								"type": "P",
+								"body": "the optional $select, and $filter parameters can be used to restrict the scope of the results set returned."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to provide a Subscription Key in the requests header. Read the <a href='/documentation/api-authentication'>API Authentication</a> page for details"
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Type",
+										"Required",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["$select", "string", "false", "query string to limit the entities to be included in the response"]
+										},
+										{
+											"data": ["$expand", "string", "false", "indicates the related entities to be represented inline. The maximum depth is 2."]
+										},
+										{
+											"data": ["$filter", "string", "false", "query string used to limit the number of items returned in the results set. When specifying dates, only those with a time part will be accepted."]
+										},
+										{
+											"data": ["$orderby", "string", "false", "specifies the order in which items in the results set are returned"]
+										},
+										{
+											"data": ["$top", "int32", "false", "limits the number of results returned"]
+										},
+										{
+											"data": ["$skip", "int32", "false", "excluded the specified number of items from the resuts set"]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>200 (Success)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that system has processed the requests and the results are presented in the response body"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 (Bad Request)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that the submission has been rejected by the system as some, or all of the data supplied was found to be in error."
+							},
+							{
+								"type": "P",
+								"body": "The CLAErrorResponse structure in the returned message provides a list of error codes, together with a textual description of each error. Additional information is provided in the the errors body and identifies the field or fields in the original submission that that generated each error."
+							},
+							{
+								"type": "P",
+								"body": "Following an error response, the system discards the submitted data. The caller must correct the errors identified and resubmit the movement again."
+							},
+							{
+								"type": "P",
+								"body": "If the caller supplied a value in the trackingId field of the submitted movement, this can be reused in a future submission as the system maintains no record of it."
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v1/<strong>ReviewHoldingMovementRequests</strong>",
 						"tag": "POST",
 						"body": [
 							{
@@ -1089,6 +1452,127 @@
 							{
 								"type": "P",
 								"body": "This response indicates the system could not locate record corresponding to the supplied requestId."
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v1/<strong>UndoRequests</strong>",
+						"tag": "GET",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "GET UndoRequests undo a previously submitted movement, correction or review request made the the registered user"
+							},
+							{
+								"type": "P",
+								"body": "the optional $select, and $filter parameters can be used to restrict the scope of the results set returned."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to provide a Subscription Key in the requests header. Read the <a href='/documentation/api-authentication'>API Authentication</a> page for details"
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Type",
+										"Required",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["$select", "string", "false", "query string to limit the entities to be included in the response"]
+										},
+										{
+											"data": ["$expand", "string", "false", "indicates the related entities to be represented inline. The maximum depth is 2."]
+										},
+										{
+											"data": ["$filter", "string", "false", "query string used to limit the number of items returned in the results set. When specifying dates, only those with a time part will be accepted."]
+										},
+										{
+											"data": ["$orderby", "string", "false", "specifies the order in which items in the results set are returned"]
+										},
+										{
+											"data": ["$top", "int32", "false", "limits the number of results returned"]
+										},
+										{
+											"data": ["$skip", "int32", "false", "excluded the specified number of items from the resuts set"]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>200 (Success)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that system has processed the requests and the results are presented in the response body"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 (Bad Request)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that the submission has been rejected by the system as some, or all of the data supplied was found to be in error."
+							},
+							{
+								"type": "P",
+								"body": "The CLAErrorResponse structure in the returned message provides a list of error codes, together with a textual description of each error. Additional information is provided in the the errors body and identifies the field or fields in the original submission that that generated each error."
+							},
+							{
+								"type": "P",
+								"body": "Following an error response, the system discards the submitted data. The caller must correct the errors identified and resubmit the movement again."
+							},
+							{
+								"type": "P",
+								"body": "If the caller supplied a value in the trackingId field of the submitted movement, this can be reused in a future submission as the system maintains no record of it."
 							}
 						]
 					}
