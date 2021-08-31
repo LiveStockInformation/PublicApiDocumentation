@@ -2672,15 +2672,338 @@
 								"type": "TABLE",
 								"body": {
 									"headers": [
-										"Value",
-										"Description"
+										"Value"										
 									],
 									"rows": [
 										{
-											"data": ["North Somerset", "Formerly Avon unitary authority"]
+											"data": ["Aberdeenshire"]
 										},
 										{
-											"data": ["BANES", "Bath and North East Somerset"]
+											"data": ["Angus"]
+										},
+										{
+											"data": ["Argyllshire"]
+										},
+										{
+											"data": ["Avon"]
+										},
+										{
+											"data": ["Ayrshire"]
+										},
+										{
+											"data": ["Banffshire"]
+										},
+										{
+											"data": ["Bedfordshire"]
+										},
+										{
+											"data": ["Berkshire"]
+										},
+										{
+											"data": ["Berwickshire"]
+										},
+										{
+											"data": ["Blaenau Gwent"]
+										},
+										{
+											"data": ["Bridgend"]
+										},
+										{
+											"data": ["Buckinghamshire"]
+										},
+										{
+											"data": ["Buteshire"]
+										},
+										{
+											"data": ["Caerphilly"]
+										},
+										{
+											"data": ["Caithness"]
+										},
+										{
+											"data": ["Cambridgeshire"]
+										},
+										{
+											"data": ["Cardiff"]
+										},
+										{
+											"data": ["Carmarthenshire"]
+										},
+										{
+											"data": ["Ceredigion"]
+										},
+										{
+											"data": ["Channel Isles"]
+										},
+										{
+											"data": ["Cheshire"]
+										},
+										{
+											"data": ["Clackmannanshire"]
+										},
+										{
+											"data": ["Co Durham"]
+										},
+										{
+											"data": ["Conwy"]
+										},
+										{
+											"data": ["Cornwall"]
+										},
+										{
+											"data": ["County Antrim"]
+										},
+										{
+											"data": ["County Armagh"]
+										},
+										{
+											"data": ["County Down"]
+										},
+										{
+											"data": ["County Fermanagh"]
+										},
+										{
+											"data": ["County Londonderry"]
+										},
+										{
+											"data": ["County Tyrone"]
+										},
+										{
+											"data": ["Cumbria"]
+										},
+										{
+											"data": ["Denbighshire"]
+										},
+										{
+											"data": ["Derbyshire"]
+										},
+										{
+											"data": ["Devon"]
+										},
+										{
+											"data": ["Dorset"]
+										},
+										{
+											"data": ["Dumfries and Galloway"]
+										},
+										{
+											"data": ["Dunbartonshire"]
+										},
+										{
+											"data": ["East Lothian"]
+										},
+										{
+											"data": ["East Sussex"]
+										},
+										{
+											"data": ["Essex"]
+										},
+										{
+											"data": ["Fife"]
+										},
+										{
+											"data": ["Flintshire"]
+										},
+										{
+											"data": ["Gloucestershire"]
+										},
+										{
+											"data": ["Greater London"]
+										},
+										{
+											"data": ["Greater Manchester"]
+										},
+										{
+											"data": ["Gwynedd"]
+										},
+										{
+											"data": ["Hampshire"]
+										},
+										{
+											"data": ["Herefordshire"]
+										},
+										{
+											"data": ["Hertfordshire"]
+										},
+										{
+											"data": ["Inverness-shire"]
+										},
+										{
+											"data": ["Isle of Anglesey"]
+										},
+										{
+											"data": ["Isle of Man"]
+										},
+										{
+											"data": ["Kent"]
+										},
+										{
+											"data": ["Kincardineshire"]
+										},
+										{
+											"data": ["Kinross-shire"]
+										},
+										{
+											"data": ["Kirkcudbrightshire"]
+										},
+										{
+											"data": ["Lanarkshire"]
+										},
+										{
+											"data": ["Lancashire"]
+										},
+										{
+											"data": ["Leicestershire"]
+										},
+										{
+											"data": ["Lincolnshire"]
+										},
+										{
+											"data": ["Merthyr Tydfil"]
+										},
+										{
+											"data": ["Mid Lothian"]
+										},
+										{
+											"data": ["Monmouthshire"]
+										},
+										{
+											"data": ["Morayshire"]
+										},
+										{
+											"data": ["Nairnshire"]
+										},
+										{
+											"data": ["Neath Port Talbot"]
+										},
+										{
+											"data": ["Newport"]
+										},
+										{
+											"data": ["Norfolk"]
+										},
+										{
+											"data": ["North Yorkshire"]
+										},
+										{
+											"data": ["Northamptonshire"]
+										},
+										{
+											"data": ["Northumberland"]
+										},
+										{
+											"data": ["Nottinghamshire"]
+										},
+										{
+											"data": ["Orkney"]
+										},
+										{
+											"data": ["Oxfordshire"]
+										},
+										{
+											"data": ["Peeblesshire"]
+										},
+										{
+											"data": ["Pembrokeshire"]
+										},
+										{
+											"data": ["Perthshire"]
+										},
+										{
+											"data": ["Powys"]
+										},
+										{
+											"data": ["Renfrewshire"]
+										},
+										{
+											"data": ["Rhondda Cynon Taff"]
+										},
+										{
+											"data": ["Ross-shire"]
+										},
+										{
+											"data": ["Roxburghshire"]
+										},
+										{
+											"data": ["Selkirkshire"]
+										},
+										{
+											"data": ["Shetland"]
+										},
+										{
+											"data": ["Shropshire"]
+										},
+										{
+											"data": ["Somerset"]
+										},
+										{
+											"data": ["South Yorkshire"]
+										},
+										{
+											"data": ["Staffordshire"]
+										},
+										{
+											"data": ["Stirlingshire"]
+										},
+										{
+											"data": ["Suffolk"]
+										},
+										{
+											"data": ["Surrey"]
+										},
+										{
+											"data": ["Sutherland"]
+										},
+										{
+											"data": ["Swansea"]
+										},
+										{
+											"data": ["Torfaen"]
+										},
+										{
+											"data": ["Tyne & Wear"]
+										},
+										{
+											"data": ["Vale of Glamorgan"]
+										},
+										{
+											"data": ["Warwickshire"]
+										},
+										{
+											"data": ["West Lothian"]
+										},
+										{
+											"data": ["West Midlands"]
+										},
+										{
+											"data": ["West Sussex"]
+										},
+										{
+											"data": ["West Yorkshire"]
+										},
+										{
+											"data": ["Wigtownshire"]
+										},
+										{
+											"data": ["Wiltshire"]
+										},
+										{
+											"data": ["Worcestershire"]
+										},
+										{
+											"data": ["Wrexham"]
+										},
+										{
+											"data": ["East Yorkshire"]
+										},
+										{
+											"data": ["Isles of Scilly"]
+										},
+										{
+											"data": ["Merseyside"]
+										},
+										{
+											"data": ["Isle of Wight"]
 										}
 									]
 								}
@@ -3111,12 +3434,96 @@
 			]
 		},	
 		{
+			"title": "Error codes and error descriptions",
+			"content": [
+				{
+					"type": "P",
+					"body": [ 
+						"Error codes relating to each of the livestock movement services are available in a collection of comma separated (CSV) files named after the service that they relate to. The files have been assembled into a compressed .zip file which is available for download from <a href='/documentation/api-authentication'>this location.</a>"
+					]
+				},
+				{
+					"type": "P",
+					"body": [ 
+						"Each file contain a list of the error codes and a textual description that can be returned in the errors body of the response the system returns when an endpoint is involked."
+					]
+				}
+			]
+		},
+		{
+			"title": "Using $filter to limit results sets",
+			"content": [
+				{
+					"type": "P",
+					"body": [ 
+						"Many of the LIS service enpoints will accept a URI with a $filter System Query Option that identifies the subset of the Entries help by the LIS service that should be returned in the results set in reponse to a request."
+					]
+				},
+				{
+					"type": "P",
+					"body": [ 
+						"Taking /HoldingMovementsForReviews as an example, a $filter string to limit the results set to be only those Entries occuring between two dates would have the following form:"
+					]
+				},
+				{
+					"type": "UL",
+					"body": [ 
+						"/HoldingMovementForReviews/ReviewBySpecies(species='Sheep',holding=’<the holding of interest>')?$filter=movementDate ge <start date> and movementDate le <end date>"
+					]
+				},
+				{
+					"type": "P",
+					"body": [ 
+						"where <start date> and <end date> are an ISO8601 time string. NOTE that the time string must include a time component; specify midnight to include all entries for the start date."
+					]
+				},
+				{
+					"type": "P",
+					"body": [ 
+						"The operations supplorted by $filter are shon in the table below:"
+					]
+				},
+				{
+					"type": "TABLE",
+					"body": {
+						"headers": [
+							"Operator",
+							"Description"
+						],
+						"rows": [
+							{
+								"data": ["Eq", "Equal to"]
+							},
+							{
+								"data": ["Ne", "Not equal to"]
+							},
+							{
+								"data": ["Gt", "Greater than"]
+							},
+							{
+								"data": ["Ge", "Greater than or equal to"]
+							},
+							{
+								"data": ["Lt", "Less than"]
+							},
+							{
+								"data": ["Le", "Less than or equal to"]
+							},
+							{
+								"data": ["Not", "Logical negation"]
+							}
+						]
+					}
+				}
+			]
+		},
+		{
 			"title": "Common terms",
 			"content": [
 				{
 					"type": "P",
 					"body": [ 
-						"The table below lists the common terms and data formats that are widely used across all interfaces to the LIS service."
+						"The paragraphs below list the common terms and data formats that are widely used across all interfaces to the LIS service."
 					]
 				},
 				{
