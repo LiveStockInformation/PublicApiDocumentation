@@ -1468,7 +1468,7 @@
 							},
 							{
 								"type": "P",
-								"body": "GET UndoRequests undo a previously submitted movement, correction or review request made the the registered user"
+								"body": "GET UndoRequests returns all previously submitted undo requests made the the registered user"
 							},
 							{
 								"type": "P",
