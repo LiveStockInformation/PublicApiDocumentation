@@ -3439,13 +3439,13 @@
 				{
 					"type": "P",
 					"body": [ 
-						"Error codes relating to each of the livestock movement services are available in a collection of comma separated (CSV) files named after the service that they relate to. The files have been assembled into a compressed .zip file which is available for download from <a href='/documentation/api-authentication'>this location.</a>"
+						"Error codes relating to each of the livestock movement services are available in a collection of comma separated (CSV) files named after the service that they relate to. The files have been assembled into a compressed .zip file which is available for download from <a href='https://github.com/LiveStockInformation/PublicApiDocumentation/blob/master/%5BDEV%5DCLA_MovementErrors.zip'>this location.</a>"
 					]
 				},
 				{
 					"type": "P",
 					"body": [ 
-						"Each file contain a list of the error codes and a textual description that can be returned in the errors body of the response the system returns when an endpoint is involked."
+						"Each file contain a list of the error codes and a textual description that can be returned in the errors body of the response the system returns when an endpoint is invoked."
 					]
 				}
 			]
@@ -3456,7 +3456,7 @@
 				{
 					"type": "P",
 					"body": [ 
-						"Many of the LIS service enpoints will accept a URI with a $filter System Query Option that identifies the subset of the Entries help by the LIS service that should be returned in the results set in reponse to a request."
+						"Many of the LIS service endpoints will accept a URI with a $filter System Query Option that identifies the subset of the Entries held by the LIS service that should be returned in the results set in response to a request."
 					]
 				},
 				{
@@ -3468,19 +3468,19 @@
 				{
 					"type": "UL",
 					"body": [ 
-						"/HoldingMovementForReviews/ReviewBySpecies(species='Sheep',holding=’<the holding of interest>')?$filter=movementDate ge <start date> and movementDate le <end date>"
+						"/HoldingMovementForReviews/ReviewBySpecies(species='Sheep',holding=’&ltthe holding of interest&gt')?$filter=movementDate ge &ltstart date&gt and movementDate le &ltend date&gt"
 					]
 				},
 				{
 					"type": "P",
 					"body": [ 
-						"where <start date> and <end date> are an ISO8601 time string. NOTE that the time string must include a time component; specify midnight to include all entries for the start date."
+						"where &ltstart date&gt and &ltend date&gt are an ISO8601 time string. NOTE that the time string must include a time component; specify midnight to include all entries for the start date."
 					]
 				},
 				{
 					"type": "P",
 					"body": [ 
-						"The operations supplorted by $filter are shon in the table below:"
+						"The operations supported by $filter are shown in the table below:"
 					]
 				},
 				{
