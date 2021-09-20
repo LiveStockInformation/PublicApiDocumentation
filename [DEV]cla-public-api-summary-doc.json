@@ -396,7 +396,9 @@
 								"body": [
 									"saleDate and saleId must be specified.",
 									"movementGroups should be used to group the animals by lot/pen and vendor holding. Each movement group should have these details specified in fromSubLocation and vendorHolding respectively.",
-									"processingFlags must contain a value indicating the type of market involved in the transfer. See Exemption codes section for the supported values."								]
+									"for Market OFF movements, movementDocument.departureDetail.departureHoldingType must be populated with the type of market that the livestock are being transported from. Permitted values are: 'SLAUGHTER MARKET', 'STORE MARKET'.",
+									"for Market ON movements, movementDocument.departureDetail.arrivalHoldingType must be populated with the type of market that the livestock are being transported to. Permitted values are: 'SLAUGHTER MARKET', 'STORE MARKET'."
+									]
 							},
 							{
 								"type": "H4",
