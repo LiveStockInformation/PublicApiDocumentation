@@ -202,7 +202,7 @@
 				},
 				{
 					"type": "P",
-					"body": "At the protocol level, the system supports the use of the the HTTP header X-Correlation-ID to allow a caller to identify each unique request."
+					"body": "At the protocol level, the system supports the use of the HTTP header X-Correlation-ID to allow a caller to identify each unique request."
 				},
 				{
 					"type": "P",
@@ -241,7 +241,7 @@
 							},
 							{
 								"type": "P",
-								"body": "GET TransferRequests returns all requests made the the registered user to register the movement of animals."
+								"body": "GET TransferRequests returns all requests made by the registered user to register the movement of animals."
 							},
 							{
 								"type": "P",
@@ -337,7 +337,7 @@
 							},
 							{
 								"type": "P",
-								"body": "The CLAErrorResponse structure in the returned message provides a list of error codes, together with a textual description of each error. Additional information is provided in the the errors body and identifies the field or fields in the original submission that that generated each error."
+								"body": "The CLAErrorResponse structure in the returned message provides a list of error codes, together with a textual description of each error. Additional information is provided in the errors body and identifies the field or fields in the original submission that that generated each error."
 							},
 							{
 								"type": "P",
@@ -500,7 +500,7 @@
 							},
 							{
 								"type": "P",
-								"body": "The CLAErrorResponse structure in the returned message provides a list of error codes, together with a textual description of each error. Additional information is provided in the the errors body and identifies the field or fields in the original submission that that generated each error."
+								"body": "The CLAErrorResponse structure in the returned message provides a list of error codes, together with a textual description of each error. Additional information is provided in the errors body and identifies the field or fields in the original submission that that generated each error."
 							},
 							{
 								"type": "P",
@@ -637,7 +637,7 @@
 							},
 							{
 								"type": "P",
-								"body": "GET CorrectTransferRequests returns all requests to correct an exisiting movement made the the registered user"
+								"body": "GET CorrectTransferRequests returns all requests to correct an exisiting movement made by the registered user"
 							},
 							{
 								"type": "P",
@@ -733,7 +733,7 @@
 							},
 							{
 								"type": "P",
-								"body": "The CLAErrorResponse structure in the returned message provides a list of error codes, together with a textual description of each error. Additional information is provided in the the errors body and identifies the field or fields in the original submission that that generated each error."
+								"body": "The CLAErrorResponse structure in the returned message provides a list of error codes, together with a textual description of each error. Additional information is provided in the errors body and identifies the field or fields in the original submission that that generated each error."
 							},
 							{
 								"type": "P",
@@ -830,7 +830,7 @@
 							},
 							{
 								"type": "P",
-								"body": "The CLAErrorResponse structure in the returned message provides a list of error codes, together with a textual description of each error. Additional information is provided in the the errors body and identifies the field or fields in the submitted data that generated each error."
+								"body": "The CLAErrorResponse structure in the returned message provides a list of error codes, together with a textual description of each error. Additional information is provided in the errors body and identifies the field or fields in the submitted data that generated each error."
 							},
 							{
 								"type": "P",
@@ -1098,7 +1098,7 @@
 							},
 							{
 								"type": "P",
-								"body": "GET ReviewHoldingMovementRequests returns all requests to review the movement of animals made the the registered user."
+								"body": "GET ReviewHoldingMovementRequests returns all requests to review the movement of animals made by the registered user."
 							},
 							{
 								"type": "P",
@@ -1194,7 +1194,7 @@
 							},
 							{
 								"type": "P",
-								"body": "The CLAErrorResponse structure in the returned message provides a list of error codes, together with a textual description of each error. Additional information is provided in the the errors body and identifies the field or fields in the original submission that that generated each error."
+								"body": "The CLAErrorResponse structure in the returned message provides a list of error codes, together with a textual description of each error. Additional information is provided in the errors body and identifies the field or fields in the original submission that that generated each error."
 							},
 							{
 								"type": "P",
@@ -1344,7 +1344,7 @@
 					"type": "DETAIL",
 					"body": {
 						"title": "/v1/<strong>ReviewHoldingMovementRequests({requestId})</strong>",
-						"tag": "POST",
+						"tag": "GET",
 						"body": [
 							{
 								"type": "H4",
@@ -1468,7 +1468,7 @@
 							},
 							{
 								"type": "P",
-								"body": "GET UndoRequests returns all previously submitted undo requests made the the registered user"
+								"body": "GET UndoRequests returns all previously submitted undo requests made by the registered user"
 							},
 							{
 								"type": "P",
@@ -1564,7 +1564,7 @@
 							},
 							{
 								"type": "P",
-								"body": "The CLAErrorResponse structure in the returned message provides a list of error codes, together with a textual description of each error. Additional information is provided in the the errors body and identifies the field or fields in the original submission that that generated each error."
+								"body": "The CLAErrorResponse structure in the returned message provides a list of error codes, together with a textual description of each error. Additional information is provided in the errors body and identifies the field or fields in the original submission that that generated each error."
 							},
 							{
 								"type": "P",
@@ -3025,18 +3025,6 @@
 										"Description"
 									],
 									"rows": [
-										{
-											"data": ["1", "Slaughter market"]
-										},
-										{
-											"data": ["2", "Store market"]
-										},
-										{
-											"data": ["3", "Collection centre"]
-										},
-										{
-											"data": ["4", "Assembly centre"]
-										},
 										{
 											"data": ["101", "Foster lambs"]
 										},
