@@ -82,9 +82,9 @@
 						"<strong>400 - Bad Request.</strong> The incoming request body or parameters do not conform with the Open API document that describes the API",
 						"<strong>403 - Forbidden.</strong> The request is formed correctly, but the REST API refuses to honour it. This is usually because the user does not have the necessary permissions for the resource", 
 						"<strong>404 - Not Found.</strong> The request is formed correctly, but the requested resource could not be found", 
-                        "<strong>429 - Too Many Requests.</strong> - you have made too many requests within a short time (see Request rate limit for further information)",
+                        			"<strong>429 - Too Many Requests.</strong> - You have made too many requests within a short time (see Request rate limit for further information)",
 						"<strong>503 - Service Unavailable.</strong> The service is currently unable to handle the request due to a temporary overloading or maintenance activity",
-						"<strong>504 - Gateway Timeout.</strong> - there is a network connection problem within the layers of the API fulfilment stack"
+						"<strong>504 - Gateway Timeout.</strong> - There is a network connection problem within the layers of the API fulfilment stack"
 					]
 				},
 				{
@@ -218,7 +218,7 @@
 				},
 				{
 					"type": "P",
-					"body": "This is a client generated field up to 36 characters in length which performs a function similar to X-Correlation-ID, but is preserved as part of the submitted data throughout its lifetime within the system. Populating this field allows a the caller to provide precise information regarding the transaction should any queries be identified after submission."
+					"body": "This is a client generated field up to 36 characters in length which performs a function similar to X-Correlation-ID, but is preserved as part of the submitted data throughout its lifetime within the system. Populating this field allows the caller to provide precise information regarding the transaction should any queries be identified after submission."
 				},
 				{
 					"type": "P",
@@ -337,7 +337,7 @@
 							},
 							{
 								"type": "P",
-								"body": "The CLAErrorResponse structure in the returned message provides a list of error codes, together with a textual description of each error. Additional information is provided in the errors body and identifies the field or fields in the original submission that that generated each error."
+								"body": "The CLAErrorResponse structure in the returned message provides a list of error codes, together with a textual description of each error. Additional information is provided in the errors body and identifies the field or fields in the original submission that generated each error."
 							},
 							{
 								"type": "P",
@@ -505,7 +505,7 @@
 							},
 							{
 								"type": "P",
-								"body": "The CLAErrorResponse structure in the returned message provides a list of error codes, together with a textual description of each error. Additional information is provided in the errors body and identifies the field or fields in the original submission that that generated each error."
+								"body": "The CLAErrorResponse structure in the returned message provides a list of error codes, together with a textual description of each error. Additional information is provided in the errors body and identifies the field or fields in the original submission that generated each error."
 							},
 							{
 								"type": "P",
@@ -550,7 +550,7 @@
 							},
 							{
 								"type": "P",
-								"body": "You will also need to Subscription key in a header. This key can be retrieved by Subscribing to the API."
+								"body": "You will also need to provide a Subscription key in a header. This key can be retrieved by Subscribing to the API."
 							},
 							{
 								"type": "H4",
@@ -738,7 +738,7 @@
 							},
 							{
 								"type": "P",
-								"body": "The CLAErrorResponse structure in the returned message provides a list of error codes, together with a textual description of each error. Additional information is provided in the errors body and identifies the field or fields in the original submission that that generated each error."
+								"body": "The CLAErrorResponse structure in the returned message provides a list of error codes, together with a textual description of each error. Additional information is provided in the errors body and identifies the field or fields in the original submission that generated each error."
 							},
 							{
 								"type": "P",
@@ -809,7 +809,7 @@
 									"<strong>Processing</strong> - the system is currently processing the request and the caller should query again after a short delay",
 									"<strong>Success</strong> - the system has accepted the request and the system view of the animals on the users holding has been adjusted to account for the details in the corrected movement.",
 									"<strong>Fail</strong> - the request has failed. The failure reasons are detailed in the errors section of the response.",
-									"<strong>QueueFail</strong> - the system could not proceed with validation. The caller should submit the resubmit the request again using POST /v1/CorrectTransferRequests",
+									"<strong>QueueFail</strong> - the system could not proceed with validation. The caller should resubmit the request using POST /v1/CorrectTransferRequests",
 									"<strong>CompletedError</strong> - the request contained invalid or inconsistent data. The errors are detailed in the errors section of the response.",
 									"<strong>Rejected</strong> - the request contained invalid or inconsistent data. The errors are detailed in the errors section of the response.",
 									"<strong>Cancelled</strong> - a user action such as 'undoing' the request caused the processing to be cancelled during validation.",
@@ -884,7 +884,7 @@
 							},
 							{
 								"type": "P",
-								"body": "You will also need to Subscription key in a header. This key can be retrieved by Subscribing to the API."
+								"body": "You will also need to provide a Subscription key in a header. This key can be retrieved by Subscribing to the API."
 							},
 							{
 								"type": "H4",
@@ -988,7 +988,7 @@
 							},
 							{
 								"type": "P",
-								"body": "You will also need to Subscription key in a header. This key can be retrieved by Subscribing to the API."
+								"body": "You will also need to provide a Subscription key in a header. This key can be retrieved by Subscribing to the API."
 							},
 							{
 								"type": "H4",
@@ -1199,7 +1199,7 @@
 							},
 							{
 								"type": "P",
-								"body": "The CLAErrorResponse structure in the returned message provides a list of error codes, together with a textual description of each error. Additional information is provided in the errors body and identifies the field or fields in the original submission that that generated each error."
+								"body": "The CLAErrorResponse structure in the returned message provides a list of error codes, together with a textual description of each error. Additional information is provided in the errors body and identifies the field or fields in the original submission that generated each error."
 							},
 							{
 								"type": "P",
@@ -1244,7 +1244,7 @@
 							},
 							{
 								"type": "P",
-								"body": "You will also need to Subscription key in a header. This key can be retrieved by Subscribing to the API."
+								"body": "You will also need to provide a Subscription key in a header. This key can be retrieved by Subscribing to the API."
 							},
 							{
 								"type": "H4",
@@ -1289,7 +1289,7 @@
 							},					
 							{
 								"type": "P",
-								"body": "The requestId field in the response body contains a unique identifier generated by the system that the caller can uses to track the progress of the confirmation or rejection request as it is validated by the system."
+								"body": "The requestId field in the response body contains a unique identifier generated by the system that the caller can use to track the progress of the confirmation or rejection request as it is validated by the system."
 							},
 							{
 								"type": "P",
@@ -1302,7 +1302,7 @@
 									"<strong>Processing</strong> - the system is currently processing the request and the caller should query again after a short delay",
 									"<strong>Success</strong> - the system has accepted the request and the system view of the animals on the users holding has been adjusted to account for the details in the movement.",
 									"<strong>Fail</strong> - the request has failed. The failure reasons are detailed in the errors section of the response.",
-									"<strong>QueueFail</strong> - the system could not proceed with validation. The caller should submit the resubmit the request again using POST /v1/ReviewHoldingMovementRequests",
+									"<strong>QueueFail</strong> - the system could not proceed with validation. The caller should resubmit the request using POST /v1/ReviewHoldingMovementRequests",
 									"<strong>CompletedError</strong> - the request contained invalid or inconsistent data. The errors are detailed in the errors section of the response.",
 									"<strong>Rejected</strong> - the request contained invalid or inconsistent data. The errors are detailed in the errors section of the response.",
 									"<strong>Cancelled</strong> - a user action such as 'undoing' the request caused the processing to be cancelled during validation.",
@@ -1381,7 +1381,7 @@
 							},
 							{
 								"type": "P",
-								"body": "You will also need to Subscription key in a header. This key can be retrieved by Subscribing to the API."
+								"body": "You will also need to provide a Subscription key in a header. This key can be retrieved by Subscribing to the API."
 							},
 							{
 								"type": "H4",
@@ -1569,7 +1569,7 @@
 							},
 							{
 								"type": "P",
-								"body": "The CLAErrorResponse structure in the returned message provides a list of error codes, together with a textual description of each error. Additional information is provided in the errors body and identifies the field or fields in the original submission that that generated each error."
+								"body": "The CLAErrorResponse structure in the returned message provides a list of error codes, together with a textual description of each error. Additional information is provided in the errors body and identifies the field or fields in the original submission that generated each error."
 							},
 							{
 								"type": "P",
@@ -1624,7 +1624,7 @@
 							},
 							{
 								"type": "P",
-								"body": "You will also need to Subscription key in a header. This key can be retrieved by Subscribing to the API."
+								"body": "You will also need to provide a Subscription key in a header. This key can be retrieved by Subscribing to the API."
 							},
 							{
 								"type": "H4",
@@ -1669,7 +1669,7 @@
 							},							
 							{
 								"type": "P",
-								"body": "The requestId field in the response body contains a unique identifier generated by the system that the caller can uses to track the progress of the undo request as it is validated by the system."
+								"body": "The requestId field in the response body contains a unique identifier generated by the system that the caller can use to track the progress of the undo request as it is validated by the system."
 							},
 							{
 								"type": "P",
@@ -1682,7 +1682,7 @@
 									"<strong>Processing</strong> - the system is currently processing the request and the caller should query again after a short delay",
 									"<strong>Success</strong> - the system has accepted the request and the system view of the animals on the users holding has been adjusted to account for the details in the movement.",
 									"<strong>Fail</strong> - the request has failed. The failure reasons are detailed in the errors section of the response.",
-									"<strong>QueueFail</strong> - the system could not proceed with validation. The caller should submit the resubmit the request again using POST /v1/UndoRequests",
+									"<strong>QueueFail</strong> - the system could not proceed with validation. The caller should resubmit the request using POST /v1/UndoRequests",
 									"<strong>CompletedError</strong> - the request contained invalid or inconsistent data. The errors are detailed in the errors section of the response.",
 									"<strong>Rejected</strong> - the request contained invalid or inconsistent data. The errors are detailed in the errors section of the response.",
 									"<strong>Cancelled</strong> - a user action such as 'undoing' the request caused the processing to be cancelled during validation.",
@@ -1749,7 +1749,7 @@
 							},
 							{
 								"type": "P",
-								"body": "You will also need to Subscription key in a header. This key can be retrieved by Subscribing to the API."
+								"body": "You will also need to provide a Subscription key in a header. This key can be retrieved by Subscribing to the API."
 							},
 							{
 								"type": "H4",
@@ -3573,7 +3573,7 @@
 				},
 				{
 					"type": "P",
-					"body": "Note: UTC can can be expressed as either using the character 'Z' or +00:00"
+					"body": "Note: UTC can be expressed as either using the character 'Z' or +00:00"
 				},
 				{
 					"type": "H4",
@@ -3666,7 +3666,7 @@
 				},
 				{
 					"type": "P",
-					"body": "Some endpoints include one or more Processing Flags attributes that are used modify how a request is validated and processed."
+					"body": "Some endpoints include one or more Processing Flags attributes that are used to modify how a request is validated and processed."
 				},
 				{
 					"type": "P",
