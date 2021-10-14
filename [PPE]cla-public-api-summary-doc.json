@@ -389,7 +389,7 @@
 							},
 							{
 								"type": "P",
-								"body": "When reporting an 'ON' movement to a market, movementDocument.departureDetail.arrivalHoldingType must be populated with the type of market that the livestock are being transported to. Permitted values are: 'SLAUGHTER MARKET', 'STORE MARKET'."
+								"body": "When reporting an 'ON' movement to a market, movementDocument.departureDetail.destinationHoldingType must be populated with the type of market that the livestock are being transported to. Permitted values are: 'SLAUGHTER MARKET', 'STORE MARKET'."
 							},
 							{
 								"type": "P",
