@@ -17089,22 +17089,6 @@
   ],
   "tags": [
     {
-      "name": "AddAnnualInventoryRequests",
-      "description": "Record a Holding's Annual Inventory\r\n"
-    },
-    {
-      "name": "AnimalDetails",
-      "description": "Retrieve animal details for an individually tagged animal.\r\n"
-    },
-    {
-      "name": "AnimalDetailsMaintenanceRequests",
-      "description": "Update animal details such as gender, breed, date of birth, dam, sire.\r\n"
-    },
-    {
-      "name": "AnimalsOnHoldings",
-      "description": "Retrieve all individually tagged animals on a particular holding.\r\n"
-    },
-    {
       "name": "ApprovedMovements",
       "description": "Retrieves details of animal movements\r\n"
     },
