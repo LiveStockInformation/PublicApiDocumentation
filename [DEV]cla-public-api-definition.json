@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "https://ext-api.livestockinformation.org.uk/cla-public/v1.0"
+      "url": "https://ext-api.livestockinformation.org.uk/cla-public/v1.0 "
     },
     {
       "url": "https://ext-cla.api.livestockinformation.org.uk/cla-public/v1.0"
