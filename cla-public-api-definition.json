@@ -7,10 +7,8 @@
   },
   "servers": [
     {
-      "url": "https://ext-api.livestockinformation.org.uk/cla-public/v1.0"
-    },
-    {
-      "url": "https://ext-cla.api.livestockinformation.org.uk/cla-public/v1.0"
+      "url": "https://**baseurl**/v1.0",
+      "description": "api url details shared upon api access approval"		
     }
   ],
   "paths": {
