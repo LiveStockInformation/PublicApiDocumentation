@@ -3037,6 +3037,26 @@
 										}
 									]
 								}
+							},
+                            {
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Code",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["101", "Foster lambs"]
+										},
+										{
+											"data": ["173", "Return after rounding up from common land"]
+										},
+										{
+											"data": ["185", "Moving for immediate slaughter"]
+										}
+									]
+								}
 							}
 						]
 					}
