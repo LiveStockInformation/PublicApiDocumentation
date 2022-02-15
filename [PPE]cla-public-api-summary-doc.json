@@ -104,10 +104,6 @@
 				},
 				{
 					"type": "P",
-					"body": "We recommend that you submit no more than one get request per elapsed second."
-				},
-				{
-					"type": "P",
 					"body": "If you exceed this limit, you may receive an HTTP 429 (Too Many Requests) status code for each request you make within the remainder of the time."
 				}
 			]
