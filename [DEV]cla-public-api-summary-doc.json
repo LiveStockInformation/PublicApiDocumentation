@@ -19,7 +19,7 @@
 				},
 				{
 					"type": "P",
-					"body": "For more details about the livestock information systems API authentication and security, read the <a href='/documentation/api-authentication' class='govuk-link'>authorisation</a> section."
+					"body": "For more details about the livestock information service API authentication and security, read the <a href='/documentation/api-authentication' class='govuk-link'>authorisation</a> section."
 				},
 				{
 					"type": "P",
@@ -36,7 +36,7 @@
 				},
 				{
 					"type": "P",
-					"body": "The current live version of the Common Livestock Application API is 1.2"
+					"body": "The current live version of the Common Livestock Application API is 1.0"
 				}
 			]
 		},
@@ -3486,7 +3486,7 @@
 				{
 					"type": "P",
 					"body": [ 
-						"Many of the LIS service endpoints will accept a URL with a $filter System Query Option that identifies the subset of the Entries held by the LIS service that should be returned in the results set in response to a request."
+						"Many of the LIS service endpoints will accept a URI with a $filter System Query Option that identifies the subset of the Entries held by the LIS service that should be returned in the results set in response to a request."
 					]
 				},
 				{
@@ -3683,7 +3683,7 @@
 				},
 				{
 					"type": "P",
-					"body": "Where a batch number is unknown, the reserved valued 'unknown' can be used. This value is case-insensitive; 'UNKNOWN', 'unknown' and Unknown' will all be accepted."
+					"body": "Where a batch number is unknown, the reserved valued 'unknown' can be used. This value is not case sensitive; 'UNKNOWN', 'unknown' and Unknown' will all be accepted."
 				},
 				{
 					"type": "H4",
@@ -3696,22 +3696,6 @@
 				{
 					"type": "P",
 					"body": "A key concept of CLA is that a 'tag upload' is the act of registering a tag and a 'device application' is the act of attaching a tag to an animal. A 'tag number' is the actual number of the tag, and so applies regardless of whether the tag is attached to an animal or not."
-				},
-				{
-					"type": "H4",
-					"body": "Processing Flags"
-				},
-				{
-					"type": "P",
-					"body": "Some endpoints include one or more Processing Flags attributes that are used to modify how a request is validated and processed."
-				},
-				{
-					"type": "P",
-					"body": "Exemption Codes on a movement are an example of ProcessingFlags usage. Specifying an Exemption Code in the ProcessingFlags entry of a livestock movement records the exemptions selected by the user as being appropriate for the movement. The use of a Processing Flag may impact the processing of the movement, especially with respect to the application of standstill rules."
-				},
-				{
-					"type": "P",
-					"body": "Any Processing Flags values supplied as part of the movement record are stored within the system as pertaining to that movement. It is important, therefore that the submitter of the movement is certain that any ProcessingFlags values supplied are applicable to the livestock movement they are attached."
 				}
 			]
 		}
