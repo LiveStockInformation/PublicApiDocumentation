@@ -1,0 +1,3703 @@
+{
+	"name": "LUIS",
+	"meta": [],
+	"sections": [
+		{
+			"title": "Overview",
+			"content": [
+				{
+					"type": "P",
+					"body": [ 
+						"We developed the Common Livestock Application (CLA) API to allow livestock holders to submit, view, modify and confirm livestock movements electronically."
+					]
+				},
+				{
+					"type": "P",
+					"body": [ 
+						"The connection is secure and access to endpoints is restricted to registered users."
+					]
+				},
+				{
+					"type": "P",
+					"body": "For more details about the livestock information service API authentication and security, read the <a href='/documentation/api-authentication' class='govuk-link'>authorisation</a> section."
+				},
+				{
+					"type": "P",
+					"body": "For more information about how to develop your own client applications, including example clients for this API, read our <a href='/documentation/tutorials' class='govuk-link'>tutorials</a>."
+				}
+			]
+		},
+		{
+			"title": "Versioning",
+			"content": [
+				{
+					"type": "P",
+					"body": "When an API changes, we will make backwards compatible changes where we can. When this is not possible, we will add a note about deprecated endpoints and make a new endpoint available."
+				},
+				{
+					"type": "P",
+					"body": "The current live version of the Common Livestock Application API is 1.0"
+				}
+			]
+		},
+		{
+			"title": "API browser and Open API file",
+			"content": [
+				{
+					"type": "P",
+					"body": "For more details about the Common Livestock Application API, open an API browser like <a href='https://editor.swagger.io' data-swagger-editor class='govuk-link' target='_blank'>Swagger Editor</a> and copy the Open API file content into it."
+				},
+				{
+					"type": "P",
+					"body":  "You can also generate a client library from the Open API file using Swagger Editor."
+				}
+			]
+		},
+		{
+			"title": "HTTP status codes",
+			"content": [
+				{
+					"type": "P",
+					"body": "The Common Livestock Application API uses standard HTTP response code conventions:"
+				},
+				{
+					"type": "UL",
+					"body": [
+						"1xx codes give information",
+						"2xx codes mean success",
+						"3xx codes mean a redirection",
+						"4xx codes mean a client-side error",
+						"5xx codes mean a server-side error"
+					]
+				},
+				{
+					"type": "P",
+					"body": "Common status codes are:"
+				},
+				{
+					"type": "UL",
+					"body": [
+						"<strong>200 - OK.</strong> The request has been successfully processed to completion",
+						"<strong>201 - Created.</strong> The request was successfully received by the system and has been queued for later processing",
+						"<strong>400 - Bad Request.</strong> The incoming request body or parameters do not conform with the Open API document that describes the API",
+						"<strong>403 - Forbidden.</strong> The request is formed correctly, but the REST API refuses to honour it. This is usually because the user does not have the necessary permissions for the resource", 
+						"<strong>404 - Not Found.</strong> The request is formed correctly, but the requested resource could not be found", 
+                        			"<strong>429 - Too Many Requests.</strong> You have made too many requests within a short time (see Request rate limit for further information below)",
+						"<strong>503 - Service Unavailable.</strong> The service is currently unable to handle the request due to a temporary overloading or maintenance activity",
+						"<strong>504 - Gateway Timeout.</strong> There is a network connection problem within the layers of the API fulfilment stack"
+					]
+				},
+				{
+					"type": "P",
+					"body": [
+						"We use HTTP status codes to signal overall success or failure of a request. Further detail describing the precise nature of the error is returned in the response body."
+					]
+				}
+			]
+		},
+		{
+			"title": "Request rate limit",
+			"content": [
+				{
+					"type": "P",
+					"body": "To protect the system against being overloaded with requests, we may limit the number of API requests you can make within a time period."
+				},
+				{
+					"type": "P",
+					"body": "If you exceed this limit, you may receive an HTTP 429 (Too Many Requests) status code for each request you make within the remainder of the time."
+				}
+			]
+		},
+		{
+			"title": "Dealing with large results sets",
+			"content": [
+				{
+					"type": "P",
+					"body": "Some endpoints may return a large number of results depending on the filter criteria provided in the $filterparameter. All collection-based endpoints (e.g. requests to return a list of movements) enforce a maximum count of results returned at once. This maximum is called a results page."
+				},
+				{
+					"type": "P",
+					"body": "When a request generates more results that can be accommodated on a page, the response includes extra information to allow the caller to identify that paging occurred and provides the URL that can be used to obtain the next page of results. This information is included in the @odata.nextLink property alongside the value property."
+				},
+				{
+					"type": "CODE",
+					"body": [
+						"{\r\n   \"@odata.context\": \"https://<host>/v1/$metadata#ReviewHoldingMovementRequests\",\r\n   \"value\": [… 50 movement entities],\r\n   \"@odata.nextLink\": \"https://<host>/v1/ReviewHoldingMovementRequest?$skip=50\"\r\n}"
+					]
+				},
+				{
+					"type": "P",
+					"body": "Absence of the @odata.nextLink indicates that the results set is complete and there are no further pages that can be requested."
+				},
+				{
+					"type": "P",
+					"body": "It is also possible for a calling application to request a smaller than the maximum number of results to be returned."
+				},
+				{
+					"type": "P",
+					"body": "Clients request a smaller page size by including the $top query parameter. Requests for further data are enabled by the caller populating the $skip query parameter. The caller would normally set the $skip parameter to a multiple of the $top parameter, but there is no restriction on the value."
+				},
+				{
+					"type": "P",
+					"body": "For example, manually requesting the third page of animal movements that require review with a client-defined page size of 2 would be done using the GET /v1/ReviewHoldingMovementRequests?$top=2&$skip=4 endpoint."
+				},
+				{
+					"type": "P",
+					"body": "The $top value indicates that a maximum of two movements should be returned, the $skip value indicates that the first four movements should be skipped."
+				},
+				{
+					"type": "P",
+					"body": "There is no requirement that $skip is a multiple of $top; a $top of ten and a $skip of five would be permitted and would return results six to fifteen inclusive, assuming there were at least fifteen results available."
+				},
+				{
+					"type": "P",
+					"body": "When a client requests a page size, the response does not include a nextLink; it is the responsibility of the client to manage any further requests for data using $top and $skip."
+				}							
+			]
+		},
+		{
+			"title": "URL encoding of data",
+			"content": [
+				{
+					"type": "P",
+					"body": "Special handling is required for parameter strings containing punctuation characters, such as CPH numbers or date/times in functions such /v1/HoldingMovementForReviews"
+				},
+				{
+					"type": "P",
+					"body": "These endpoints must have such parameter values URL encoded to ensure that punctuation characters are not mistaken for other parts of the URL."
+				},
+				{
+					"type": "P",
+					"body": "Below are examples of how to encode submitted data for these commonly used parameter strings:"
+				},
+				{
+					"type": "TABLE",
+					"body": {
+						"headers": [
+							"Sample",
+							"Description"
+						],
+						"rows": [
+							{
+								"data": ["Holding", "URL encoding of CPH replaces the forward slashes as follows: holding='26/001/8033' becomes holding='26%2f001%2f8033'"]
+							},
+							{
+								"data": ["Dates and times", "URL encoding of CPH replaces '+' and ':' with the character sequences '%2b' and '%3b' respectively"]
+							}
+						]
+					}
+				}
+			]
+		},
+		{
+			"title": "Tracking IDs",
+			"content": [
+				{
+					"type": "P",
+					"body": "For information, please read about <a href='/movements/#10'>tracking ids</a> within our movemements section."
+				}
+			]
+		},
+		{
+			"title": "Endpoints",
+			"content": [
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v1/<strong>TransferRequests</strong>",
+						"tag": "GET",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "GET TransferRequests returns all requests made by the registered user to register the movement of animals."
+							},
+							{
+								"type": "P",
+								"body": "the optional $select, and $filter parameters can be used to restrict the scope of the results set returned."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to provide a Subscription Key in the requests header. Read the <a href='/documentation/api-authentication'>API Authentication</a> page for details"
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Type",
+										"Required",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["$select", "string", "false", "query string to limit the entities to be included in the response"]
+										},
+										{
+											"data": ["$expand", "string", "false", "indicates the related entities to be represented inline. The maximum depth is 2."]
+										},
+										{
+											"data": ["$filter", "string", "false", "query string used to limit the number of items returned in the results set. When specifying dates, only those with a time part will be accepted."]
+										},
+										{
+											"data": ["$orderby", "string", "false", "specifies the order in which items in the results set are returned"]
+										},
+										{
+											"data": ["$top", "int32", "false", "limits the number of results returned"]
+										},
+										{
+											"data": ["$skip", "int32", "false", "excluded the specified number of items from the resuts set"]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>200 (Success)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that system has processed the requests and the results are presented in the response body"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 (Bad Request)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that the submission has been rejected by the system as some, or all of the data supplied was found to be in error."
+							},
+							{
+								"type": "P",
+								"body": "The CLAErrorResponse structure in the returned message provides a list of error codes, together with a textual description of each error. Additional information is provided in the errors body and identifies the field or fields in the original submission that generated each error."
+							},
+							{
+								"type": "P",
+								"body": "Following an error response, the system discards the submitted data. The caller must correct the errors identified and resubmit the movement again."
+							},
+							{
+								"type": "P",
+								"body": "If the caller supplied a value in the trackingId field of the submitted movement, this can be reused in a future submission as the system maintains no record of it."
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v1/<strong>TransferRequests</strong>",
+						"tag": "POST",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "TransferRequests registers the movement of animals between two holdings: the source holding and the destination holding."
+							},
+							{
+								"type": "P",
+								"body": "Animals reported in a movement report can be identified individually or by batch."
+							},
+							{
+								"type": "P",
+								"body": "Transfers can be one of two types depending on the role of the user who is submitting the request:"
+							},
+							{
+								"type": "UL",
+								"body": [
+									"If the submitting user is associated with the source holding, the system treats the movement as an 'OFF' Movement.",
+									"If the submitting user is associated with the destination holding, the system treats the movement as an 'ON' Movement."
+								]
+							},
+							{
+								"type": "P",
+								"body": "The userHolding must contain the same value as the sourceHolding when reporting an 'OFF' movement, and the same value as the destinationHolding when reporting an 'ON' movement. The movementDocument must be completed and have all mandatory fields populated for the movement to be accepted as valid."
+							},
+							{
+								"type": "P",
+								"body": "When reporting an 'ON' movement, both departureDateTime and arrivalDateTime must be specified. Both departureDateTime and arrivalDateTime must be in the past and arrivalDateTime must be later than departureDateTime."
+							},
+							{
+								"type": "P",
+								"body": "When reporting an 'ON' movement to a market, movementDocument.destinationDetail.destinationHoldingType must be populated with the type of market that the livestock are being transported to. Permitted values are: 'SLAUGHTER MARKET', 'STORE MARKET'."
+							},
+							{
+								"type": "P",
+								"body": "For market users reporting an off movement from a market holding:\n"
+							},
+							{
+								"type": "UL",
+								"body": [
+									"saleDate and saleId must be specified.",
+									"movementGroups should be used to group the animals by lot/pen and vendor holding. Each movement group should have these details specified in fromSubLocation and vendorHolding respectively.",
+									"for Market OFF movements, movementDocument.departureDetail.departureHoldingType must be populated with the type of market that the livestock are being transported from. Permitted values are: 'SLAUGHTER MARKET', 'STORE MARKET'."
+									]
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to provide a Subscription Key in the requests header. Read the <a href='/documentation/api-authentication'>API Authentication</a> page for details"
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "P",
+								"body": "None"
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>201 (Created)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that the data content has passed an initial syntax check and has been successfully queued by the system for further processing."
+							},
+							{
+								"type": "P",
+								"body": "The requestId field in the response contains a unique identifier generated by the system that the caller can use to track the progress of the movement request as it is processed by the system. The requestStatus field shows the request's current processing status."
+							},
+							{
+								"type": "P",
+								"body": "Possible values are:"
+							},
+							{
+								"type": "UL",
+								"body": [
+									"<strong>Pending</strong> - the requests is still queued and the caller should query again after a short delay",
+									"<strong>Processing</strong> - the system is currently processing the request and the caller should query again after a short delay",
+									"<strong>Success</strong> - the system has accepted the request and the system view of the animals on the users holding has been adjusted to account for the details in the movement.",
+									"<strong>Fail</strong> - the request has failed. The failure reasons are detailed in the errors section of the response.",
+									"<strong>QueueFail</strong> - the system could not proceed with validation. The caller should resubmit the request again using POST /v1/TransferRequests",
+									"<strong>CompletedError</strong> - the request contained invalid or inconsistent data. The errors are detailed in the errors section of the response. Any animals referenced by the errors will not have had any action recorded for them but any other animals in the same request, but without an error, will have been recorded.",
+									"<strong>Rejected</strong> - the request contained invalid or inconsistent data. The errors are detailed in the errors section of the response.",
+									"<strong>Cancelled</strong> - a user action such as 'undoing' the request caused the processing to be cancelled during validation.",
+									"<strong>CompletedWarning</strong> - the request was accepted, but some of the content generated warnings. The warning are detailed in the warnings section of the response. The system view of the animals on the users holding has been adjusted to account for the details in the movement.",
+									"<strong>NotAvailable</strong> - this error should be reported to the LI Service Desk, together with the requestId that resulted in the error"
+								]
+							},
+							{
+								"type": "P",
+								"body": "If the result is <strong>'Success'</strong> or <strong>'CompletedWarning'</strong>, the submission is complete and there are no further processing steps required by the client. The errors and warnings elements of the response body may be populated with content highlighting issues with the data, but these are for information only. No corrective action is required that requires re-submission of the data."
+							},
+							{
+								"type": "P",
+								"body": "If the requestStatus returns a value of <strong>'Pending'</strong> or <strong>'Processing'</strong>, this indicates that the movement request has been queued by the system for further validation and processing. The caller must then call GET /v1/TransferRequests({requestId}) repeatedly to track the progress of the request through the validation process. The requestId parameter is the unique identifier returned in response to a successful POST /v1/TransferRequests."
+							},
+							{
+								"type": "P",
+								"body": "Processing is complete once a call to GET /v1/TransferRequests({requestId}) returns a requestStatus of <strong>'Success', 'Fail', 'QueueFail', 'CompletedError', 'Rejected', 'Cancelled' or 'CompletedWarning'</strong>." 
+							},
+							{
+								"type": "P",
+								"body": "To prevent overloading the system, the caller should call GET /v1/TransferRequests at a frequency no higher that once per second."
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 (Bad Request)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that the submission has been rejected by the system as some, or all of the data supplied was found to be in error."
+							},
+							{
+								"type": "P",
+								"body": "The CLAErrorResponse structure in the returned message provides a list of error codes, together with a textual description of each error. Additional information is provided in the errors body and identifies the field or fields in the original submission that generated each error."
+							},
+							{
+								"type": "P",
+								"body": "Following an error response, the system discards the submitted data. The caller must correct the errors identified and resubmit the movement again."
+							},
+							{
+								"type": "P",
+								"body": "If the caller supplied a value in the trackingId field of the submitted movement, this can be reused in a future submission as the system maintains no record of it."
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+					"title": "/v1/<strong>TransferRequests({requestId})</strong>",
+						"tag": "GET",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "Requests the status of the specified TransferRequests POST call to allow the caller to determine whether the system has finished processing it."
+							},
+							{
+								"type": "P",
+								"body": "This is the endpoint that is called to monitor the progress of a TransferRequests call that returned a requestStatus value of <strong>'Pending'</strong> or <strong>'Processing'</strong>. Pass the returned requestId as the parmeter to this call. The system will respond with the current processing state."
+							},
+							{
+								"type": "P",
+								"body": "Note, that when processing complex movements, or during periods of high system activity, the system may return <strong>'Pending'</strong> or <strong>'Processing'</strong> in reponse to this call."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to provide a Subscription key in a header. This key can be retrieved by Subscribing to the API."
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Type",
+										"Required",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["requestId", "integer", "true", "the unique identifier of the request being queried"]
+										},
+										{
+											"data": ["$select", "string", "false", "query string to limit the entities to be included in the response"]
+										},
+										{
+											"data": ["$expand", "string", "false", "Indicates the related entities to be represented inline. The maximum depth is 2."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>200 (Success)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that the system has located the livestock movement data associated with the supplied requestId and returns its current processing status in the return body"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 (Bad request)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that the supplied parameters could not be understood by the system. Correct the parameters and resubmit the request."
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>404 (No found)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates the system could not locate a livestock movement record corresponding to the supplied requestId."
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v1/<strong>CorrectTransferRequests</strong>",
+						"tag": "GET",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "GET CorrectTransferRequests returns all requests to correct an exisiting movement made by the registered user"
+							},
+							{
+								"type": "P",
+								"body": "the optional $select, and $filter parameters can be used to restrict the scope of the results set returned."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to provide a Subscription Key in the requests header. Read the <a href='/documentation/api-authentication'>API Authentication</a> page for details"
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Type",
+										"Required",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["$select", "string", "false", "query string to limit the entities to be included in the response"]
+										},
+										{
+											"data": ["$expand", "string", "false", "indicates the related entities to be represented inline. The maximum depth is 2."]
+										},
+										{
+											"data": ["$filter", "string", "false", "query string used to limit the number of items returned in the results set. When specifying dates, only those with a time part will be accepted."]
+										},
+										{
+											"data": ["$orderby", "string", "false", "specifies the order in which items in the results set are returned"]
+										},
+										{
+											"data": ["$top", "int32", "false", "limits the number of results returned"]
+										},
+										{
+											"data": ["$skip", "int32", "false", "excluded the specified number of items from the resuts set"]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>200 (Success)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that system has processed the requests and the results are presented in the response body"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 (Bad Request)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that the submission has been rejected by the system as some, or all of the data supplied was found to be in error."
+							},
+							{
+								"type": "P",
+								"body": "The CLAErrorResponse structure in the returned message provides a list of error codes, together with a textual description of each error. Additional information is provided in the errors body and identifies the field or fields in the original submission that generated each error."
+							},
+							{
+								"type": "P",
+								"body": "Following an error response, the system discards the submitted data. The caller must correct the errors identified and resubmit the movement again."
+							},
+							{
+								"type": "P",
+								"body": "If the caller supplied a value in the trackingId field of the submitted movement, this can be reused in a future submission as the system maintains no record of it."
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v1/<strong>CorrectTransferRequests</strong>",
+						"tag": "POST",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "The system provides a facility to amend movement data submitted using TransferRequests after it has been accepted by the system. Note that this facility can only correct requests that have been successfully validated and returned a status of 'Success', 'CompletedError' or 'CompletedWarning'; any movements that have been rejected by the system are not stored, therefore must be resubmitted with the identified errors corrected."
+							},
+							{
+								"type": "P",
+								"body": "To correct a movement record, the following conditions must be true:"
+							},
+							{
+								"type": "UL",
+								"body": [
+									"The authenticated user must have originally created the transfer request being corrected.",
+									"The original and corrected movement must be for the same species, sourceHolding and destinationHolding.",
+									"The system may not allow a transfer request to be corrected if other events have subsequently happened to animals involved in the original transfer request.",
+									"The content of the correcting request must contain all the details of the movement that the original movement should be replaced with (i.e. not just the changes)"
+								]
+							},
+							{
+								"type": "P",
+								"body": "To make a correction, the caller uses the POST /v1/CorrectTransferRequests endpoint, specifying the requestId returned in the success response of the original TransferRequests submission. The remainder of the message body is populated with the details of the amended movement in a similar structure to that of the original call to TransferRequests."
+							},
+							{
+								"type": "P",
+								"body": "Just as for the original TransferRequests, following submission of the movement using POST /v1/CorrectTransferRequests, the system will validate the data content and return an immediate response. indicating whether the content has been accepted for validation. Two response codes are possible:"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>201 (Created)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that the data content has passed an initial syntax check and has been successfully queued by the system for further processing."
+							},
+							{
+								"type": "P",
+								"body": "The requestId field in the response contains a unique identifier generated by the system that the caller can use to track the progress of the movement request as it is validated by the system. The requestStatus field in the response body shows its current validation status."
+							},
+							{
+								"type": "P",
+								"body": "Possible values are:"
+							},
+							{
+								"type": "UL",
+								"body": [
+									"<strong>Pending</strong> - the request has been queued and the caller should query again after a short delay",
+									"<strong>Processing</strong> - the system is currently processing the request and the caller should query again after a short delay",
+									"<strong>Success</strong> - the system has accepted the request and the system view of the animals on the users holding has been adjusted to account for the details in the corrected movement.",
+									"<strong>Fail</strong> - the request has failed. The failure reasons are detailed in the errors section of the response.",
+									"<strong>QueueFail</strong> - the system could not proceed with validation. The caller should resubmit the request using POST /v1/CorrectTransferRequests",
+									"<strong>CompletedError</strong> - the request contained invalid or inconsistent data. The errors are detailed in the errors section of the response.",
+									"<strong>Rejected</strong> - the request contained invalid or inconsistent data. The errors are detailed in the errors section of the response.",
+									"<strong>Cancelled</strong> - a user action such as 'undoing' the request caused the processing to be cancelled during validation.",
+									"<strong>CompletedWarning</strong> - the request was accepted, but some of the content generated warnings. The warning are detailed in the warnings section of the response. The system view of the animals on the users holding has been adjusted to account for the details in the movement.",
+									"<strong>NotAvailable</strong> - this error should be reported to the LI Service Desk, together with the requestId that resulted in the error"
+								]
+							},
+							{
+								"type": "P",
+								"body": "If the result is <strong>'Success'</strong> or <strong>'CompletedWarning'</strong>, the submission is complete and there are no further processing steps required by the client. The errors and warnings elements of the response body may be populated with content highlighting issues with the data, but these are for information only. No corrective action is required that requires re-submission of the data."
+							},
+							{
+								"type": "P",
+								"body": "If the requestStatus returns a value of <strong>'Pending'</strong> or <strong>'Processing'</strong>, this indicates that the movement request has been queued by the system for further validation and processing. The caller must then call GET /v1/CorrectTransferRequests({requestId}) repeatedly to track the progress of the request through the validation process. The requestId parameter is the unique identifier returned in response to a successful POST /v1/CorrectTransferRequests."
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 (Bad Request)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that the correction has been rejected by the system as some, or all of the data supplied was found to be in error. "
+							},
+							{
+								"type": "P",
+								"body": "The CLAErrorResponse structure in the returned message provides a list of error codes, together with a textual description of each error. Additional information is provided in the errors body and identifies the field or fields in the submitted data that generated each error."
+							},
+							{
+								"type": "P",
+								"body": "Following an error response, the system discards the submitted data. The caller must correct the errors identified and resubmit the movement again. NOTE: The movement data submitted during the original TransferRequest remains present in the system."
+							},
+							{
+								"type": "P",
+								"body": "If the caller supplied a value in the trackingId field of the submitted movement, this can be reused in a future submission as the system maintains no record of it."
+							}						
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v1/<strong>CorrectTransferRequests({requestId})</strong>",
+						"tag": "GET",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "Requests the status of the specified CorrectTransferRequests POST call to allow the caller to determine whether the system has finished processing it."
+							},
+							{
+								"type": "P",
+								"body": "This is the endpoint that is called to monitor the progress of a CorrectTransferRequests call that returned a requestStatus value of <strong>'Pending'</strong> or <strong>'Processing'</strong>."
+							},
+							{
+								"type": "P",
+								"body": "Note: be sure to pass the returned requestId of the POST CorrectTransferRequests as the parameter to this call, <strong>not</strong> the requestId of the original TransferRequests. The system will respond with the current processing state."
+							},
+							{
+								"type": "P",
+								"body": "When processing complex movements, or during periods of high system activity, the system may return <strong>'Pending'</strong> or <strong>'Processing'</strong> in reponse to this call."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to provide a Subscription key in a header. This key can be retrieved by Subscribing to the API."
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Type",
+										"Required",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["requestId", "integer", "true", "the unique identifier of the CorrectTransferRequests request being queried"]
+										},
+										{
+											"data": ["$select", "string", "false", "query string to limite the search"]
+										},
+										{
+											"data": ["$expand", "string", "false", "Indicates the related entities to be represented inline. The maximum depth is 2."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>200 (Success)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that the system has located the livestock movement data associated with the supplied requestId and has returned its current processing status in the return body"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 (Bad request)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that the supplied parameters could not be understood by the system. Correct the parameters and resubmit the request."
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>404 (No found)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates the system could not locate a livestock movement record corresponding to the supplied requestId."
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v1/<strong>HoldingMovementForReviews(species='{species}',holding='{holding}')</strong>",
+						"tag": "GET",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is used to begin the process of confirming receipt of a livestock movement. It returns a list of the unconfirmed livestock movements that the system has recorded for holding(s) associated with the user making the call."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to provide a Subscription key in a header. This key can be retrieved by Subscribing to the API."
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Type",
+										"Required",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["species", "string", "true", "the species for which movement records are required."]
+										},
+										{
+											"data": ["holding", "string", "false", "a valid CPH or MHS number that the user is associated with. If this parameter is not supplied, the system will return unconfirmed movements for <strong>all</strong> holdings that the user is associated with."]
+										},
+										{
+											"data": ["$select", "string", "false", "query string to limite the search"]
+										},
+										{
+											"data": ["$expand", "string", "false", "Indicates the related entities to be represented inline. The maximum depth is 2."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>200 (Success)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that the system has identified unconfirmed movements associated with the supplied users holding(s). The return body contains the list, with each list entry containing a requestId that the user will need when confirming the movement. The list could be empty if there are not any reviews waiting."
+							},
+							{
+								"type": "P",
+								"body": "Once a list of unconfirmed movements has been obtained, the calling application calls POST /v1/ReviewHoldingMovementRequests supplying the requestId of the movement being confirmed and the tag or batch numbers of the animals that are being accepted or rejected. It is permitted to accept some tags or batches and reject others in the same transaction."
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 (Bad request)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that the supplied parameters could not be understood by the system. Correct the parameters and resubmit the request."
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>404 (No found)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This will be returned if the parameters are malformed"
+							},
+							{
+								"type": "H4",
+								"body": "Duplicate movements"
+							},
+							{
+								"type": "P",
+								"body": "Where both the departure keeper and the destination keeper have reported movements between the same two holdings on the same day, the system can identify this. This can occur when a destination keeper has recorded the 'ON' movement to their holding before the departure keeper has submitted the 'OFF' movement from their holding."
+							},
+							{
+								"type": "P",
+								"body": "The system flags this in the response to HoldingMovementForReviews by setting the isDuplicate flag for the affected movements and providing the duplicateRequestIds of the requests that the systems considers are duplicates."
+							},
+							{
+								"type": "P",
+								"body": "The destination keeper accepts or rejects the movement using POST /v1/ReviewHoldingMovementRequests, using the departureRequestId from the departure keepers movement as the key to identify the target."
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v1/<strong>ReviewHoldingMovementRequests</strong>",
+						"tag": "GET",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "GET ReviewHoldingMovementRequests returns all requests to review the movement of animals made by the registered user."
+							},
+							{
+								"type": "P",
+								"body": "the optional $select, and $filter parameters can be used to restrict the scope of the results set returned."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to provide a Subscription Key in the requests header. Read the <a href='/documentation/api-authentication'>API Authentication</a> page for details"
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Type",
+										"Required",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["$select", "string", "false", "query string to limit the entities to be included in the response"]
+										},
+										{
+											"data": ["$expand", "string", "false", "indicates the related entities to be represented inline. The maximum depth is 2."]
+										},
+										{
+											"data": ["$filter", "string", "false", "query string used to limit the number of items returned in the results set. When specifying dates, only those with a time part will be accepted."]
+										},
+										{
+											"data": ["$orderby", "string", "false", "specifies the order in which items in the results set are returned"]
+										},
+										{
+											"data": ["$top", "int32", "false", "limits the number of results returned"]
+										},
+										{
+											"data": ["$skip", "int32", "false", "excluded the specified number of items from the resuts set"]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>200 (Success)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that system has processed the requests and the results are presented in the response body"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 (Bad Request)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that the submission has been rejected by the system as some, or all of the data supplied was found to be in error."
+							},
+							{
+								"type": "P",
+								"body": "The CLAErrorResponse structure in the returned message provides a list of error codes, together with a textual description of each error. Additional information is provided in the errors body and identifies the field or fields in the original submission that generated each error."
+							},
+							{
+								"type": "P",
+								"body": "Following an error response, the system discards the submitted data. The caller must correct the errors identified and resubmit the movement again."
+							},
+							{
+								"type": "P",
+								"body": "If the caller supplied a value in the trackingId field of the submitted movement, this can be reused in a future submission as the system maintains no record of it."
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v1/<strong>ReviewHoldingMovementRequests</strong>",
+						"tag": "POST",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is used to accept or reject livestock movements returned by HoldingMovementForReviews."
+							},
+							{
+								"type": "P",
+								"body": "The message body identifies the movement being confirmed or rejected using the requestId returned in the HoldingMovementForReviews. The caller also identifies the tag or batch numbers of the animals that are being accepted or rejected. It is permitted to accept some tags or batches and reject others in the same transaction."
+							},
+							{
+								"type": "P",
+								"body": "Adding additional tags or batches not present in the originalHoldingMovementForReviews is <strong>not</strong> possible using ReviewHoldingMovementRequests. To add additional animals to the transfer, a new TransferRequest must be created detailing the missing livestock. The system will treat this as a new 'ON' movement reported by the destination keeper, adjusts the holding register of the arrival keepers holding accordingly, then notifies the departure keeper of the adjustment. The departure keeper will need to confirm the adjustment using  HoldingMovementForReviews and ReviewHoldingMovementRequests as for any other movement."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to provide a Subscription key in a header. This key can be retrieved by Subscribing to the API."
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "P",
+								"body": "None"
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>201 (Success)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that the request to confirm or reject a movement has been received by the system and is being processed."
+							},					
+							{
+								"type": "P",
+								"body": "The requestId field in the response body contains a unique identifier generated by the system that the caller can use to track the progress of the confirmation or rejection request as it is validated by the system."
+							},
+							{
+								"type": "P",
+								"body": "Possible values are:"
+							},
+							{
+								"type": "UL",
+								"body": [
+									"<strong>Pending</strong> - the requests is still queued and the caller should query again after a short delay",
+									"<strong>Processing</strong> - the system is currently processing the request and the caller should query again after a short delay",
+									"<strong>Success</strong> - the system has accepted the request and the system view of the animals on the users holding has been adjusted to account for the details in the movement.",
+									"<strong>Fail</strong> - the request has failed. The failure reasons are detailed in the errors section of the response.",
+									"<strong>QueueFail</strong> - the system could not proceed with validation. The caller should resubmit the request using POST /v1/ReviewHoldingMovementRequests",
+									"<strong>CompletedError</strong> - the request contained invalid or inconsistent data. The errors are detailed in the errors section of the response.",
+									"<strong>Rejected</strong> - the request contained invalid or inconsistent data. The errors are detailed in the errors section of the response.",
+									"<strong>Cancelled</strong> - a user action such as 'undoing' the request caused the processing to be cancelled during validation.",
+									"<strong>CompletedWarning</strong> - the request was accepted, but some of the content generated warnings. The warning are detailed in the warnings section of the response.",
+									"<strong>NotAvailable</strong> - this error should be reported to the LI Service Desk, together with the requestId that resulted in the error"
+								]
+							},
+							{
+								"type": "P",
+								"body": "If the result is <strong>'Success'</strong> or <strong>'CompletedWarning'</strong>, the confirmation or rejection is complete and there are no further processing steps required by the client. The errors and warnings elements of the response body may be populated with content highlighting issues relevant to the request, but these are for information only. No corrective action is required that requires re-submission of the data."
+							},
+							{
+								"type": "P",
+								"body": "If the requestStatus returns a value of <strong>'Pending'</strong> or <strong>'Processing'</strong>, this indicates that the confirmation or rejection request has been queued by the system for further validation and processing. The caller must then call GET /v1/ReviewHoldingMovementRequests({requestId}) repeatedly to track the progress of the request through the validation process. The requestId parameter is the unique identifier returned in response to a successful POST /v1/ReviewHoldingMovementRequests."
+							},
+							{
+								"type": "P",
+								"body": "Processing is complete once a call to GET /v1/ReviewHoldingMovementRequests({requestId}) returns a requestStatus of <strong>'Success', 'Fail', 'QueueFail', 'CompletedError', 'Rejected', 'Cancelled' or 'CompletedWarning'</strong>." 
+							},
+							{
+								"type": "P",
+								"body": "To prevent overloading the system, the caller should call GET /v1/ReviewHoldingMovementRequests at a frequency no higher that once per second."
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 (Bad request)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that the supplied parameters could not be understood by the system. Correct the parameters and resubmit the request."
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>404 (No found)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This will be returned if the parameters are malformed"
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v1/<strong>ReviewHoldingMovementRequests({requestId})</strong>",
+						"tag": "GET",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "Requests the status of the specified ReviewHoldingMovementRequests POST call to allow the caller to determine whether the system has finished processing it."
+							},
+							{
+								"type": "P",
+								"body": "This is the endpoint that is called to monitor the progress of a ReviewHoldingMovementRequests call that returned a requestStatus value of <strong>'Pending'</strong> or <strong>'Processing'</strong>."
+							},
+							{
+								"type": "P",
+								"body": "Note: be sure to pass the returned requestId of the POST ReviewHoldingMovementRequests as the parameter to this call, <strong>not</strong> the requestId of the original HoldingMovementForReviews. The system will respond with the current processing state."
+							},
+							{
+								"type": "P",
+								"body": "When processing complex movements, or during periods of high system activity, the system may return <strong>'Pending'</strong> or <strong>'Processing'</strong> in reponse to this call."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to provide a Subscription key in a header. This key can be retrieved by Subscribing to the API."
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Type",
+										"Required",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["requestId", "integer", "true", "the unique identifier of the confirmation or rejection request being queried"]
+										},
+										{
+											"data": ["$select", "string", "false", "query string to limit the search"]
+										},
+										{
+											"data": ["$expand", "string", "false", "Indicates the related entities to be represented inline. The maximum depth is 2."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>201 (Success)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that the system has located the request to confirm or reject a movement associated with the supplied requestId and has returned its current processing status in the return body"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 (Bad request)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that the supplied parameters could not be understood by the system. Correct the parameters and resubmit the request."
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>404 (No found)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates the system could not locate record corresponding to the supplied requestId."
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v1/<strong>UndoRequests</strong>",
+						"tag": "GET",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "GET UndoRequests returns all previously submitted undo requests made by the registered user"
+							},
+							{
+								"type": "P",
+								"body": "the optional $select, and $filter parameters can be used to restrict the scope of the results set returned."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to provide a Subscription Key in the requests header. Read the <a href='/documentation/api-authentication'>API Authentication</a> page for details"
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Type",
+										"Required",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["$select", "string", "false", "query string to limit the entities to be included in the response"]
+										},
+										{
+											"data": ["$expand", "string", "false", "indicates the related entities to be represented inline. The maximum depth is 2."]
+										},
+										{
+											"data": ["$filter", "string", "false", "query string used to limit the number of items returned in the results set. When specifying dates, only those with a time part will be accepted."]
+										},
+										{
+											"data": ["$orderby", "string", "false", "specifies the order in which items in the results set are returned"]
+										},
+										{
+											"data": ["$top", "int32", "false", "limits the number of results returned"]
+										},
+										{
+											"data": ["$skip", "int32", "false", "excluded the specified number of items from the resuts set"]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>200 (Success)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that system has processed the requests and the results are presented in the response body"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 (Bad Request)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that the submission has been rejected by the system as some, or all of the data supplied was found to be in error."
+							},
+							{
+								"type": "P",
+								"body": "The CLAErrorResponse structure in the returned message provides a list of error codes, together with a textual description of each error. Additional information is provided in the errors body and identifies the field or fields in the original submission that generated each error."
+							},
+							{
+								"type": "P",
+								"body": "Following an error response, the system discards the submitted data. The caller must correct the errors identified and resubmit the movement again."
+							},
+							{
+								"type": "P",
+								"body": "If the caller supplied a value in the trackingId field of the submitted movement, this can be reused in a future submission as the system maintains no record of it."
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v1/<strong>UndoRequests</strong>",
+						"tag": "POST",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint supports the ability for users to undo or rollback requests that have previously been submitted."
+							},
+							{
+								"type": "P",
+								"body": "In order to succeed, the user submitting the request must be the same as the user who created the request to be undone. In addition, the system may reject an undo request if other events have happened to the animals in the original requests between the time of submission and the time the undo request is processed."
+							},
+							{
+								"type": "P",
+								"body": "To undo a request, supply a message body containing the requestId that the system returned in response to original request that should be rolled back."
+							},
+							{
+								"type": "CODE",
+								"body": [
+									"{\r\n  \"content\": {\r\n    \"undoRequestId\": \"<original request id>\",\r\n  }\r\n}"
+								]
+							},
+							{
+								"type": "P",
+								"body": "where original request id is the requestId value returned in the success response to the call that is to be rolled back."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to provide a Subscription key in a header. This key can be retrieved by Subscribing to the API."
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "P",
+								"body": "None"
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>201 (Success)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that the undo request has been received by the system and is being processed."
+							},							
+							{
+								"type": "P",
+								"body": "The requestId field in the response body contains a unique identifier generated by the system that the caller can use to track the progress of the undo request as it is validated by the system."
+							},
+							{
+								"type": "P",
+								"body": "Possible values are:"
+							},
+							{
+								"type": "UL",
+								"body": [
+									"<strong>Pending</strong> - the requests is still queued and the caller should query again after a short delay",
+									"<strong>Processing</strong> - the system is currently processing the request and the caller should query again after a short delay",
+									"<strong>Success</strong> - the system has accepted the request and the system view of the animals on the users holding has been adjusted to account for the details in the movement.",
+									"<strong>Fail</strong> - the request has failed. The failure reasons are detailed in the errors section of the response.",
+									"<strong>QueueFail</strong> - the system could not proceed with validation. The caller should resubmit the request using POST /v1/UndoRequests",
+									"<strong>CompletedError</strong> - the request contained invalid or inconsistent data. The errors are detailed in the errors section of the response.",
+									"<strong>Rejected</strong> - the request contained invalid or inconsistent data. The errors are detailed in the errors section of the response.",
+									"<strong>Cancelled</strong> - a user action such as 'undoing' the request caused the processing to be cancelled during validation.",
+									"<strong>CompletedWarning</strong> - the request was accepted, but some of the content generated warnings. The warning are detailed in the warnings section of the response.",
+									"<strong>NotAvailable</strong> - this error should be reported to the LI Service Desk, together with the requestId that resulted in the error"
+								]
+							},
+							{
+								"type": "P",
+								"body": "If the result is <strong>'Success'</strong> or <strong>'CompletedWarning'</strong>, the request associated with the supplied undoRequestId has been successfully undone and there are no further processing steps required by the client. The errors and warnings elements of the response body may be populated with content highlighting issues relevant to the request, but these are for information only. No corrective action is required that requires re-submission of the data."
+							},
+							{
+								"type": "P",
+								"body": "If the requestStatus returns a value of <strong>'Pending'</strong> or <strong>'Processing'</strong>, this indicates that the undo request has been queued by the system for further validation and processing. The caller must then call GET /v1/UndoRequests({requestId}) repeatedly to track the progress of the request through the validation process. The requestId parameter is the unique identifier returned in response to a successful POST /v1/UndoRequests."
+							},
+							{
+								"type": "P",
+								"body": "Processing is complete once a call to GET /v1/UndoRequests({requestId}) returns a requestStatus of <strong>'Success', 'Fail', 'QueueFail', 'CompletedError', 'Rejected', 'Cancelled' or 'CompletedWarning'</strong>." 
+							},
+							{
+								"type": "P",
+								"body": "To prevent overloading the system, the caller should call GET /v1/UndoRequests at a frequency no higher that once per second."
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 (Bad Request)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that either the system could not interpret the request (because it was malformed) or could find no record of the supplied requestId."
+							}							
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v1/<strong>UndoRequests({requestId})</strong>",
+						"tag": "GET",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "Requests the status of the specified UndoRequests POST call to allow the caller to determine whether the system has finished processing it."
+							},
+							{
+								"type": "P",
+								"body": "This is the endpoint that is called to monitor the progress of an UndoRequests call that returned a requestStatus value of <strong>'Pending'</strong> or <strong>'Processing'</strong>. Pass the returned requestId as the parameter to this call. The system will respond with the current processing state."
+							},
+							{
+								"type": "P",
+								"body": "Note, that when processing complex undo transactions, or during periods of high system activity, the system may return <strong>'Pending'</strong> or <strong>'Processing'</strong> in reponse to this call."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to provide a Subscription key in a header. This key can be retrieved by Subscribing to the API."
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Type",
+										"Required",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["requestId", "integer", "true", "the unique identifier of the undo request being queried"]
+										},
+										{
+											"data": ["$select", "string", "false", "query string to limit the search"]
+										},
+										{
+											"data": ["$expand", "string", "false", "Indicates the related entities to be represented inline. The maximum depth is 2."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>200 (Success)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that the system has located the undo request associated with the supplied requestId and has returned its current processing status in the return body"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 (Bad request)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that the supplied parameters could not be understood by the system. Correct the parameters and resubmit the request."
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>404 (No found)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates the system could not locate an undo request record corresponding to the supplied requestId."
+							}
+						]
+					}
+				}
+			]
+		},
+		{
+			"title": "Standing data",
+			"content": [
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "<strong>Breeds (goats)</strong>",
+						"tag": "breeds",
+						"body": [
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Value"
+									],
+									"rows": [
+										{
+											"data": ["Anglo Nubian"]
+										},
+										{
+											"data": ["Anglo Nubian X"]
+										},
+										{
+											"data": ["Angora"]
+										},
+										{
+											"data": ["Angora X"]
+										},
+										{
+											"data": ["Bagot"]
+										},
+										{
+											"data": ["Bagot X"]
+										},
+										{
+											"data": ["Boer"]
+										},
+										{
+											"data": ["Boer X"]
+										},
+										{
+											"data": ["British"]
+										},
+										{
+											"data": ["British X"]
+										},
+										{
+											"data": ["British Alpine"]
+										},
+										{
+											"data": ["British Alpine X"]
+										},
+										{
+											"data": ["British Guernsey"]
+										},
+										{
+											"data": ["British Guernsey X"]
+										},
+										{
+											"data": ["British Saanen"]
+										},
+										{
+											"data": ["British Saanen X"]
+										},
+										{
+											"data": ["British Toggenburg"]
+										},
+										{
+											"data": ["British Toggenburg X"]
+										},
+										{
+											"data": ["Cashmere"]
+										},
+										{
+											"data": ["Cashmere X"]
+										},
+										{
+											"data": ["English"]
+										},
+										{
+											"data": ["English X"]
+										},
+										{
+											"data": ["Golden Guernsey"]
+										},
+										{
+											"data": ["British Toggenburg"]
+										},
+										{
+											"data": ["British Toggenburg X"]
+										},
+										{
+											"data": ["Cashmere"]
+										},
+										{
+											"data": ["Cashmere X"]
+										},
+										{
+											"data": ["English"]
+										},
+										{
+											"data": ["English X"]
+										},
+										{
+											"data": ["Golden Guernsey"]
+										},
+										{
+											"data": ["Golden Guernsey X"]
+										},
+										{
+											"data": ["Harness"]
+										},
+										{
+											"data": ["Harness X"]
+										},
+										{
+											"data": ["Pygmy"]
+										},
+										{
+											"data": ["Pygmy X"]
+										},
+										{
+											"data": ["Saanen"]
+										},
+										{
+											"data": ["Saanen X"]
+										},
+										{
+											"data": ["Toggenburg"]
+										},
+										{
+											"data": ["Toggenburg X"]
+										}
+									]
+								}
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "<strong>Breeds (sheep)</strong>",
+						"tag": "breeds",
+						"body": [
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Value"
+									],
+									"rows": [
+										{
+											"data": ["Aberblack"]
+										},
+										{
+											"data": ["Aberblack X"]
+										},
+										{
+											"data": ["Aberdale"]
+										},
+										{
+											"data": ["Aberdale X"]
+										},
+										{
+											"data": ["Aberfield"]
+										},
+										{
+											"data": ["Aberfield X"]
+										},
+										{
+											"data": ["Aberfield SR"]
+										},
+										{
+											"data": ["Aberfield SR X"]
+										},
+										{
+											"data": ["Abermax"]
+										},
+										{
+											"data": ["Abermax X"]
+										},
+										{
+											"data": ["Abertex"]
+										},
+										{
+											"data": ["Abertex X"]
+										},
+										{
+											"data": ["Badger Face Welsh Mountain"]
+										},
+										{
+											"data": ["Badger Face Welsh Mountain X"]
+										},
+										{
+											"data": ["Balwen Welsh Mountain"]
+										},
+										{
+											"data": ["Balwen Welsh Mountain X"]
+										},
+										{
+											"data": ["Beltex"]
+										},
+										{
+											"data": ["Beltex X"]
+										},
+										{
+											"data": ["Berrichon"]
+										},
+										{
+											"data": ["Berrichon X"]
+										},
+										{
+											"data": ["Beulah Speckled Face"]
+										},
+										{
+											"data": ["Beulah Speckled Face X"]
+										},
+										{
+											"data": ["Black Welsh Mountain"]
+										},
+										{
+											"data": ["Black Welsh Mountain X"]
+										},
+										{
+											"data": ["Blackface"]
+										},
+										{
+											"data": ["Blackface X"]
+										},
+										{
+											"data": ["Bleu du Maine"]
+										},
+										{
+											"data": ["Bleu du Maine X"]
+										},
+										{
+											"data": ["Blue Texel"]
+										},
+										{
+											"data": ["Blue Texel X"]
+										},
+										{
+											"data": ["Bluefaced Leicester"]
+										},
+										{
+											"data": ["Bluefaced Leicester X"]
+										},
+										{
+											"data": ["Border Leicester"]
+										},
+										{
+											"data": ["Border Leicester X"]
+										},
+										{
+											"data": ["Brecknock Hill Cheviot"]
+										},
+										{
+											"data": ["Brecknock Hill Cheviot X"]
+										},
+										{
+											"data": ["British Bleu De Maine"]
+										},
+										{
+											"data": ["British Bleu De Maine X"]
+										},
+										{
+											"data": ["British Charollais"]
+										},
+										{
+											"data": ["British Charollais X"]
+										},
+										{
+											"data": ["British Gotland"]
+										},
+										{
+											"data": ["British Gotland X"]
+										},
+										{
+											"data": ["British Icelandic"]
+										},
+										{
+											"data": ["British Icelandic X"]
+										},
+										{
+											"data": ["British Inra 401"]
+										},
+										{
+											"data": ["British Inra 401 X"]
+										},
+										{
+											"data": ["British Milksheep"]
+										},
+										{
+											"data": ["British Milksheep X"]
+										},
+										{
+											"data": ["British Rouge De L'Ouest"]
+										},
+										{
+											"data": ["British Rouge De L'Ouest X"]
+										},
+										{
+											"data": ["British Saanen"]
+										},
+										{
+											"data": ["British Saanen X"]
+										},
+										{
+											"data": ["British Texel"]
+										},
+										{
+											"data": ["British Texel X"]
+										},
+										{
+											"data": ["British Vendeen"]
+										},
+										{
+											"data": ["British Vendeen X"]
+										},
+										{
+											"data": ["Cambridge"]
+										},
+										{
+											"data": ["Cambridge X"]
+										},
+										{
+											"data": ["Castlemilk Moorit"]
+										},
+										{
+											"data": ["Castlemilk Moorit X"]
+										},
+										{
+											"data": ["Charmoise"]
+										},
+										{
+											"data": ["Charmoise X"]
+										},
+										{
+											"data": ["Charollais"]
+										},
+										{
+											"data": ["Charollais X"]
+										},
+										{
+											"data": ["Cheviot"]
+										},
+										{
+											"data": ["Cheviot X"]
+										},
+										{
+											"data": ["Clun Forest"]
+										},
+										{
+											"data": ["Clun Forest X"]
+										},
+										{
+											"data": ["Colbred"]
+										},
+										{
+											"data": ["Colbred X"]
+										},
+										{
+											"data": ["Corriedale"]
+										},
+										{
+											"data": ["Corriedale X"]
+										},
+										{
+											"data": ["Cotentin"]
+										},
+										{
+											"data": ["Cotentin X"]
+										},	
+										{
+											"data": ["Cotswold"]
+										},
+										{
+											"data": ["Cotswold X"]
+										},
+										{
+											"data": ["Dalesbred"]
+										},
+										{
+											"data": ["Dalesbred X"]
+										},
+										{
+											"data": ["Dartmoor (Greyfaced)"]
+										},
+										{
+											"data": ["Dartmoor (Greyfaced) X"]
+										},
+										{
+											"data": ["Derbyshire Gritstone"]
+										},
+										{
+											"data": ["Derbyshire Gritstone X"]
+										},
+										{
+											"data": ["Devon & Cornwall Longwool"]
+										},
+										{
+											"data": ["Devon & Cornwall Longwool X"]
+										},
+										{
+											"data": ["Devon Closewool"]
+										},
+										{
+											"data": ["Devon Closewool X"]
+										},
+										{
+											"data": ["Dorper"]
+										},
+										{
+											"data": ["Dorper X"]
+										},
+										{
+											"data": ["Dorset Down"]
+										},
+										{
+											"data": ["Dorset Down X"]
+										},
+										{
+											"data": ["Dorset Horn & Poll Dorset"]
+										},
+										{
+											"data": ["Dorset Horn & Poll Dorset X"]
+										},
+										{
+											"data": ["Dutch Spotted"]
+										},
+										{
+											"data": ["Dutch Spotted X"]
+										},
+										{
+											"data": ["Easy Care"]
+										},
+										{
+											"data": ["Easy Care X"]
+										},
+										{
+											"data": ["Eppynt Hardy Speckled Face"]
+										},
+										{
+											"data": ["Eppynt Hardy Speckled Face X"]
+										},
+										{
+											"data": ["Est A Laine Merino"]
+										},
+										{
+											"data": ["Est A Laine Merino X"]
+										},
+										{
+											"data": ["Exmoor Horn"]
+										},
+										{
+											"data": ["Exmoor Horn X"]
+										},
+										{
+											"data": ["Gotland"]
+										},
+										{
+											"data": ["Gotland X"]
+										},
+										{
+											"data": ["Hampshire Down"]
+										},
+										{
+											"data": ["Hampshire Down X"]
+										},
+										{
+											"data": ["Hebridean"]
+										},
+										{
+											"data": ["Hebridean X"]
+										},
+										{
+											"data": ["Herdwick"]
+										},
+										{
+											"data": ["Herdwick X"]
+										},
+										{
+											"data": ["Highlander"]
+										},
+										{
+											"data": ["Highlander X"]
+										},
+										{
+											"data": ["Hill Radnor"]
+										},
+										{
+											"data": ["Hill Radnor X"]
+										},	
+										{
+											"data": ["Ile de France"]
+										},
+										{
+											"data": ["Ile de France X"]
+										},
+										{
+											"data": ["Jacob"]
+										},
+										{
+											"data": ["Jacob X"]
+										},
+										{
+											"data": ["Kent Halfbred"]
+										},
+										{
+											"data": ["Kent Halfbred X"]
+										},
+										{
+											"data": ["Kerry Hill"]
+										},
+										{
+											"data": ["Kerry Hill X"]
+										},
+										{
+											"data": ["Leicester Longwool"]
+										},
+										{
+											"data": ["Leicester Longwool X"]
+										},
+										{
+											"data": ["Lincoln Longwool"]
+										},
+										{
+											"data": ["Lincoln Longwool X"]
+										},
+										{
+											"data": ["Llanwenog"]
+										},
+										{
+											"data": ["Llanwenog X"]
+										},
+										{
+											"data": ["Lleyn"]
+										},
+										{
+											"data": ["Lleyn X"]
+										},
+										{
+											"data": ["Lomond Halfbred"]
+										},
+										{
+											"data": ["Lomond Halfbred X"]
+										},
+										{
+											"data": ["Lonk"]
+										},
+										{
+											"data": ["Lonk X"]
+										},
+										{
+											"data": ["Manx Loaghtan"]
+										},
+										{
+											"data": ["Manx Loaghtan X"]
+										},
+										{
+											"data": ["Masham"]
+										},
+										{
+											"data": ["Masham X"]
+										},
+										{
+											"data": ["Meatlinc"]
+										},
+										{
+											"data": ["Meatlinc X"]
+										},
+										{
+											"data": ["Nelson South Wales Mountain"]
+										},
+										{
+											"data": ["Nelson South Wales Mountain X"]
+										},
+										{
+											"data": ["Norfolk Horn"]
+										},
+										{
+											"data": ["Norfolk Horn X"]
+										},
+										{
+											"data": ["North Country Cheviot"]
+										},
+										{
+											"data": ["North Country Cheviot X"]
+										},
+										{
+											"data": ["North Country Cheviot Hill"]
+										},
+										{
+											"data": ["North Country Cheviot Park"]
+										},
+										{
+											"data": ["North of England Mule"]
+										},
+										{
+											"data": ["North of England Mule X"]
+										},
+										{
+											"data": ["Other"]
+										},
+										{
+											"data": ["Ouessant"]
+										},	
+										{
+											"data": ["Ouessant X"]
+										},
+										{
+											"data": ["Oxford Down"]
+										},
+										{
+											"data": ["Oxford Down X"]
+										},
+										{
+											"data": ["Polwarth"]
+										},
+										{
+											"data": ["Polwarth X"]
+										},
+										{
+											"data": ["Portland"]
+										},
+										{
+											"data": ["Portland X"]
+										},
+										{
+											"data": ["Primera"]
+										},
+										{
+											"data": ["Primera X"]
+										},
+										{
+											"data": ["Romney"]
+										},
+										{
+											"data": ["Romney X"]
+										},
+										{
+											"data": ["Ronaldsay"]
+										},
+										{
+											"data": ["Ronaldsay X"]
+										},
+										{
+											"data": ["Rouge de L'Ouest"]
+										},
+										{
+											"data": ["Rouge de L'Ouest X"]
+										},
+										{
+											"data": ["Rough Fell"]
+										},
+										{
+											"data": ["Rough Fell X"]
+										},
+										{
+											"data": ["Roussin"]
+										},
+										{
+											"data": ["Roussin X"]
+										},
+										{
+											"data": ["Ryeland"]
+										},
+										{
+											"data": ["Ryeland X"]
+										},
+										{
+											"data": ["Scotch Halfbred X"]
+										},
+										{
+											"data": ["Scotch Mule"]
+										},
+										{
+											"data": ["Scotch Mule X"]
+										},
+										{
+											"data": ["Scottish Blackface"]
+										},
+										{
+											"data": ["Scottish Blackface X"]
+										},
+										{
+											"data": ["Scottish Greyface"]
+										},
+										{
+											"data": ["Scottish Greyface X"]
+										},
+										{
+											"data": ["Shetland"]
+										},
+										{
+											"data": ["Shetland X"]
+										},
+										{
+											"data": ["Shetland-Cheviot"]
+										},
+										{
+											"data": ["Shetland-Cheviot X"]
+										},
+										{
+											"data": ["Shropshire"]
+										},
+										{
+											"data": ["Shropshire X"]
+										},
+										{
+											"data": ["Soay & Boreray"]
+										},
+										{
+											"data": ["Soay & Boreray X"]
+										},
+										{
+											"data": ["South Country Cheviot"]
+										},
+										{
+											"data": ["South Country Cheviot X"]
+										},	
+										{
+											"data": ["South Wales Mountain"]
+										},
+										{
+											"data": ["South Wales Mountain X"]
+										},
+										{
+											"data": ["Southdown"]
+										},
+										{
+											"data": ["Southdown X"]
+										},
+										{
+											"data": ["Suffolk"]
+										},
+										{
+											"data": ["Suffolk X"]
+										},
+										{
+											"data": ["Swaledale"]
+										},
+										{
+											"data": ["Swaledale X"]
+										},
+										{
+											"data": ["Talybont Welsh"]
+										},
+										{
+											"data": ["Talybont Welsh X"]
+										},
+										{
+											"data": ["Teeswater"]
+										},
+										{
+											"data": ["Teeswater X"]
+										},
+										{
+											"data": ["Texel"]
+										},
+										{
+											"data": ["Texel X"]
+										},
+										{
+											"data": ["Valais Blacknose"]
+										},
+										{
+											"data": ["Valais Blacknose X"]
+										},
+										{
+											"data": ["Vendeen"]
+										},
+										{
+											"data": ["Vendeen X"]
+										},
+										{
+											"data": ["Welsh Halfbred"]
+										},
+										{
+											"data": ["Welsh Halfbred X"]
+										},
+										{
+											"data": ["Welsh Hill Speckled"]
+										},
+										{
+											"data": ["Welsh Hill Speckled X"]
+										},
+										{
+											"data": ["Welsh Mountain"]
+										},
+										{
+											"data": ["Welsh Mountain X"]
+										},
+										{
+											"data": ["Welsh Mule"]
+										},
+										{
+											"data": ["Welsh Mule X"]
+										},
+										{
+											"data": ["Wensleydale"]
+										},
+										{
+											"data": ["Wensleydale X"]
+										},
+										{
+											"data": ["White Face Dartmoor"]
+										},
+										{
+											"data": ["White Face Dartmoor X"]
+										},
+										{
+											"data": ["Whitefaced Woodland"]
+										},
+										{
+											"data": ["Whitefaced Woodland X"]
+										},
+										{
+											"data": ["Wiltshire Horn"]
+										},
+										{
+											"data": ["Wiltshire Horn X"]
+										},
+										{
+											"data": ["Zwartbles"]
+										},
+										{
+											"data": ["Zwartbles X"]
+										}
+									]
+								}
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "<strong>Counties</strong>",
+						"tag": "counties",
+						"body": [
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Value"										
+									],
+									"rows": [
+										{
+											"data": ["Aberdeenshire"]
+										},
+										{
+											"data": ["Angus"]
+										},
+										{
+											"data": ["Argyllshire"]
+										},
+										{
+											"data": ["Avon"]
+										},
+										{
+											"data": ["Ayrshire"]
+										},
+										{
+											"data": ["Banffshire"]
+										},
+										{
+											"data": ["Bedfordshire"]
+										},
+										{
+											"data": ["Berkshire"]
+										},
+										{
+											"data": ["Berwickshire"]
+										},
+										{
+											"data": ["Blaenau Gwent"]
+										},
+										{
+											"data": ["Bridgend"]
+										},
+										{
+											"data": ["Buckinghamshire"]
+										},
+										{
+											"data": ["Buteshire"]
+										},
+										{
+											"data": ["Caerphilly"]
+										},
+										{
+											"data": ["Caithness"]
+										},
+										{
+											"data": ["Cambridgeshire"]
+										},
+										{
+											"data": ["Cardiff"]
+										},
+										{
+											"data": ["Carmarthenshire"]
+										},
+										{
+											"data": ["Ceredigion"]
+										},
+										{
+											"data": ["Channel Isles"]
+										},
+										{
+											"data": ["Cheshire"]
+										},
+										{
+											"data": ["Clackmannanshire"]
+										},
+										{
+											"data": ["Co Durham"]
+										},
+										{
+											"data": ["Conwy"]
+										},
+										{
+											"data": ["Cornwall"]
+										},
+										{
+											"data": ["County Antrim"]
+										},
+										{
+											"data": ["County Armagh"]
+										},
+										{
+											"data": ["County Down"]
+										},
+										{
+											"data": ["County Fermanagh"]
+										},
+										{
+											"data": ["County Londonderry"]
+										},
+										{
+											"data": ["County Tyrone"]
+										},
+										{
+											"data": ["Cumbria"]
+										},
+										{
+											"data": ["Denbighshire"]
+										},
+										{
+											"data": ["Derbyshire"]
+										},
+										{
+											"data": ["Devon"]
+										},
+										{
+											"data": ["Dorset"]
+										},
+										{
+											"data": ["Dumfries and Galloway"]
+										},
+										{
+											"data": ["Dunbartonshire"]
+										},
+										{
+											"data": ["East Lothian"]
+										},
+										{
+											"data": ["East Sussex"]
+										},
+										{
+											"data": ["Essex"]
+										},
+										{
+											"data": ["Fife"]
+										},
+										{
+											"data": ["Flintshire"]
+										},
+										{
+											"data": ["Gloucestershire"]
+										},
+										{
+											"data": ["Greater London"]
+										},
+										{
+											"data": ["Greater Manchester"]
+										},
+										{
+											"data": ["Gwynedd"]
+										},
+										{
+											"data": ["Hampshire"]
+										},
+										{
+											"data": ["Herefordshire"]
+										},
+										{
+											"data": ["Hertfordshire"]
+										},
+										{
+											"data": ["Inverness-shire"]
+										},
+										{
+											"data": ["Isle of Anglesey"]
+										},
+										{
+											"data": ["Isle of Man"]
+										},
+										{
+											"data": ["Kent"]
+										},
+										{
+											"data": ["Kincardineshire"]
+										},
+										{
+											"data": ["Kinross-shire"]
+										},
+										{
+											"data": ["Kirkcudbrightshire"]
+										},
+										{
+											"data": ["Lanarkshire"]
+										},
+										{
+											"data": ["Lancashire"]
+										},
+										{
+											"data": ["Leicestershire"]
+										},
+										{
+											"data": ["Lincolnshire"]
+										},
+										{
+											"data": ["Merthyr Tydfil"]
+										},
+										{
+											"data": ["Mid Lothian"]
+										},
+										{
+											"data": ["Monmouthshire"]
+										},
+										{
+											"data": ["Morayshire"]
+										},
+										{
+											"data": ["Nairnshire"]
+										},
+										{
+											"data": ["Neath Port Talbot"]
+										},
+										{
+											"data": ["Newport"]
+										},
+										{
+											"data": ["Norfolk"]
+										},
+										{
+											"data": ["North Yorkshire"]
+										},
+										{
+											"data": ["Northamptonshire"]
+										},
+										{
+											"data": ["Northumberland"]
+										},
+										{
+											"data": ["Nottinghamshire"]
+										},
+										{
+											"data": ["Orkney"]
+										},
+										{
+											"data": ["Oxfordshire"]
+										},
+										{
+											"data": ["Peeblesshire"]
+										},
+										{
+											"data": ["Pembrokeshire"]
+										},
+										{
+											"data": ["Perthshire"]
+										},
+										{
+											"data": ["Powys"]
+										},
+										{
+											"data": ["Renfrewshire"]
+										},
+										{
+											"data": ["Rhondda Cynon Taff"]
+										},
+										{
+											"data": ["Ross-shire"]
+										},
+										{
+											"data": ["Roxburghshire"]
+										},
+										{
+											"data": ["Selkirkshire"]
+										},
+										{
+											"data": ["Shetland"]
+										},
+										{
+											"data": ["Shropshire"]
+										},
+										{
+											"data": ["Somerset"]
+										},
+										{
+											"data": ["South Yorkshire"]
+										},
+										{
+											"data": ["Staffordshire"]
+										},
+										{
+											"data": ["Stirlingshire"]
+										},
+										{
+											"data": ["Suffolk"]
+										},
+										{
+											"data": ["Surrey"]
+										},
+										{
+											"data": ["Sutherland"]
+										},
+										{
+											"data": ["Swansea"]
+										},
+										{
+											"data": ["Torfaen"]
+										},
+										{
+											"data": ["Tyne & Wear"]
+										},
+										{
+											"data": ["Vale of Glamorgan"]
+										},
+										{
+											"data": ["Warwickshire"]
+										},
+										{
+											"data": ["West Lothian"]
+										},
+										{
+											"data": ["West Midlands"]
+										},
+										{
+											"data": ["West Sussex"]
+										},
+										{
+											"data": ["West Yorkshire"]
+										},
+										{
+											"data": ["Wigtownshire"]
+										},
+										{
+											"data": ["Wiltshire"]
+										},
+										{
+											"data": ["Worcestershire"]
+										},
+										{
+											"data": ["Wrexham"]
+										},
+										{
+											"data": ["East Yorkshire"]
+										},
+										{
+											"data": ["Isles of Scilly"]
+										},
+										{
+											"data": ["Merseyside"]
+										},
+										{
+											"data": ["Isle of Wight"]
+										}
+									]
+								}
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "<strong>Exemption Codes</strong>",
+						"tag": "processingFlags",
+						"body": [
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Sheep code",
+										"Sheep Exemption"
+									],
+									"rows": [
+										{
+											"data": ["198", "Moving breeding rams to or from a market"]
+										},
+										{
+											"data": ["197", "Moving breeding rams to or from a holding for breeding via an approved Isolation Unit"]
+										},
+										{
+											"data": ["199", "Returning Breeding Rams unsold from a Market via an approved Isolation Unit"]
+										},
+                                        {
+											"data": ["173", "Returning to their correct home after being inadvertently rounded up from common land"]
+										},
+										{
+											"data": ["185", "Moving for immediate dedicated slaughter (direct, or via dedicated collection centre or dedicated market)"]
+										},
+										{
+											"data": ["168", "Moving to a show via an approved Isolation Unit"]
+										},
+                                        {
+											"data": ["AOF017", "Moving from a show via an approved Isolation Unit"]
+										},
+										{
+											"data": ["195", "Returning from an AI centre via an approved Isolation Unit"]
+										},
+                                        {
+											"data": ["187", "Moving to an exhibition or performance with permit (non CPH)"]
+										},
+										{
+											"data": ["CPRC", "Moving animals to a Central Point Recording Centre (CPRC)"]
+										},
+										{
+											"data": ["InBus", "Moving animals within your business that remain under your day to day care and control"]
+										}
+									]
+								}
+							},
+                            {
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Goats code",
+										"Goats Exemption"
+									],
+									"rows": [
+                                        {
+											"data": ["200", "Moving breeding goats to or from a holding for breeding via an approved Isolation Unit"]
+										},
+										{
+											"data": ["173", "Returning to their correct home after being inadvertently rounded up from common land"]
+										},
+										{
+											"data": ["185", "Moving for immediate dedicated slaughter (direct, or via dedicated collection centre or dedicated market)"]
+										},
+                                        {
+											"data": ["168", "Moving to a show via an approved Isolation Unit"]
+										},
+										{
+											"data": ["185", "Moving  from a show via an approved Isolation Unit)"]
+										},
+										{
+											"data": ["AOF017", "Moving  from a show via an approved Isolation Unit"]
+										},
+                                        {
+											"data": ["195", "Returning from an AI centre via an approved Isolation Unit"]
+										},
+										{
+											"data": ["187", "Moving to an exhibition or performance with permit (non CPH)"]
+										},
+                                        {
+											"data": ["CPRC", "Moving animals to a Central Point Recording Centre (CPRC)"]
+										},
+										{
+											"data": ["InBus", "Moving animals within your business that remain under your day to day care and control"]
+										}
+									]
+								}
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "<strong>FCI Withdrawal Periods</strong>",
+						"tag": "MetFCIWithdrawalPeriod",
+						"body": [
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Code",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["WITHDRAWAL_NOT_RELEVANT", "Withdrawal periods are not relevant to this movement"]
+										},
+										{
+											"data": ["WITHDRAWAL_MET", "Withdrawal periods have been met"]
+										},
+										{
+											"data": ["WITHDRAWAL_NOT_MET", "Withdrawal periods have not been met"]
+										}
+									]
+								}
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "<strong>Document Types</strong>",
+						"tag": "documentType",
+						"body": [
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Value"
+									],
+									"rows": [
+										{
+											"data": ["CLA"]
+										}
+									]
+								}
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "<strong>Gender</strong>",
+						"tag": "gender",
+						"body": [
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Value"
+									],
+									"rows": [
+										{
+											"data": ["Female"]
+										},
+										{
+											"data": ["Male"]
+										}
+									]
+								}
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "<strong>Gender Species</strong>",
+						"tag": "genderSpecies",
+						"body": [
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Value"
+									],
+									"rows": [
+										{
+											"data": ["Female"]
+										},
+										{
+											"data": ["Male"]
+										}
+									]
+								}
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "<strong>Holding Types</strong>",
+						"tag": "departureHoldingType / destinationHoldingType",
+						"body": [
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Value",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["ABATTOIR", "Abattoir"]
+										},
+										{
+											"data": ["AI CENTRE", "Artificial Insemination Centre"]
+										},
+										{
+											"data": ["ASSEMBLY", "Assembly Centre"]
+										},
+										{
+											"data": ["COLLECTION", "Collection Centre"]
+										},
+										{
+											"data": ["COMMON", "Common Land"]
+										},
+										{
+											"data": ["OTHER", "Other"]
+										},
+										{
+											"data": ["PORT", "Port"]
+										},
+										{
+											"data": ["PRODUCER", "Agricultural Holding"]
+										},
+										{
+											"data": ["QUARANTINE", "Quarantine Unit"]
+										},
+										{
+											"data": ["SALEYARD", "Market"]
+										},
+										{
+											"data": ["SHOWGROUND", "Showground"]
+										}
+									]
+								}
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "<strong>Request Types</strong>",
+						"tag": "requestType",
+						"body": [
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"id value",
+										"name value"
+									],
+									"rows": [
+										{
+											"data": ["4", "Movement / Transfer"]
+										},
+										{
+											"data": ["15", "Correct Movement"]
+										},
+										{
+											"data": ["32", "Undo Request"]
+										},
+										{
+											"data": ["145", "Review Holding Movement"]
+										},
+										{
+											"data": ["160", "Undo Request Partial"]
+										}
+									]
+								}
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "<strong>Species</strong>",
+						"tag": "species",
+						"body": [
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Value"
+									],
+									"rows": [
+										{
+											"data": ["Deer"]
+										},
+										{
+											"data": ["Goats"]
+										},
+										{
+											"data": ["Sheep"]
+										}
+									]
+								}
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "<strong>Stock Types</strong>",
+						"tag": "stockType",
+						"body": [
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Value"
+									],
+									"rows": [
+										{
+											"data": ["Ewes"]
+										},
+										{
+											"data": ["Ewe Lambs"]
+										},
+										{
+											"data": ["Others"]
+										},
+										{
+											"data": ["Rams"]
+										},
+										{
+											"data": ["Total Goats"]
+										},
+										{
+											"data": ["Total Sheep"]
+										}
+									]
+								}
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "<strong>Transporter Types</strong>",
+						"tag": "transporterType",
+						"body": [
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Value"
+									],
+									"rows": [
+										{
+											"data": ["Departure Keeper"]
+										},
+										{
+											"data": ["Haulier"]
+										},
+										{
+											"data": ["Receiving Keeper"]
+										}
+									]
+								}
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "<strong>Titles (person prefixes such as Mr, Mrs, Dr, etc.)</strong>",
+						"tag": "title",
+						"body": [
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Value"
+									],
+									"rows": [
+										{
+											"data": ["Baron"]
+										},
+										{
+											"data": ["Baroness"]
+										},
+										{
+											"data": ["Captain"]
+										},
+										{
+											"data": ["Colonel"]
+										},
+										{
+											"data": ["Count"]
+										},
+										{
+											"data": ["Countess"]
+										},
+										{
+											"data": ["Dame"]
+										},
+										{
+											"data": ["Dr"]
+										},
+										{
+											"data": ["Duke"]
+										},
+										{
+											"data": ["Earl"]
+										},
+										{
+											"data": ["Father"]
+										},
+										{
+											"data": ["FR"]
+										},
+										{
+											"data": ["Lady"]
+										},
+										{
+											"data": ["Lord"]
+										},
+										{
+											"data": ["Lt Colonel"]
+										},
+										{
+											"data": ["Major"]
+										},
+										{
+											"data": ["Messrs"]
+										},
+										{
+											"data": ["Miss"]
+										},
+										{
+											"data": ["Mr"]
+										},
+										{
+											"data": ["Mrs"]
+										},
+										{
+											"data": ["Ms"]
+										},
+										{
+											"data": ["Prof"]
+										},
+										{
+											"data": ["Rev"]
+										},
+										{
+											"data": ["Rt Hon"]
+										},
+										{
+											"data": ["Sir"]
+										},
+										{
+											"data": ["Viscount"]
+										}
+									]
+								}
+							}
+						]
+					}
+				}
+			]
+		},	
+		{
+			"title": "Error codes and error descriptions",
+			"content": [
+				{
+					"type": "P",
+					"body": [ 
+						"Error codes relating to each of the livestock movement services are available in a collection of comma separated (CSV) files named after the service that they relate to. The files have been assembled into a compressed .zip file which is available for download from <a href='https://github.com/LiveStockInformation/PublicApiDocumentation/blob/master/%5BDEV%5DCLA_MovementErrors.zip'>this location.</a>"
+					]
+				},
+				{
+					"type": "P",
+					"body": [ 
+						"Each file contain a list of the error codes and a textual description that can be returned in the errors body of the response the system returns when an endpoint is invoked."
+					]
+				}
+			]
+		},
+		{
+			"title": "Using $filter to limit results sets",
+			"content": [
+				{
+					"type": "P",
+					"body": [ 
+						"Many of the LIS service endpoints will accept a URI with a $filter System Query Option that identifies the subset of the Entries held by the LIS service that should be returned in the results set in response to a request."
+					]
+				},
+				{
+					"type": "P",
+					"body": [ 
+						"Taking /HoldingMovementsForReviews as an example, a $filter string to limit the results set to be only those Entries occuring between two dates would have the following form:"
+					]
+				},
+				{
+					"type": "UL",
+					"body": [ 
+						"/HoldingMovementForReviews/ReviewBySpecies(species='Sheep',holding=’&ltthe holding of interest&gt')?$filter=movementDate ge &ltstart date&gt and movementDate le &ltend date&gt"
+					]
+				},
+				{
+					"type": "P",
+					"body": [ 
+						"Where &ltstart date&gt and &ltend date&gt are an ISO8601 time string. NOTE that the time string must include a time component; specify midnight to include all entries for the start date."
+					]
+				},
+				{
+					"type": "P",
+					"body": [ 
+						"The operations supported by $filter are shown in the table below:"
+					]
+				},
+				{
+					"type": "TABLE",
+					"body": {
+						"headers": [
+							"Operator",
+							"Description"
+						],
+						"rows": [
+							{
+								"data": ["Eq", "Equal to"]
+							},
+							{
+								"data": ["Ne", "Not equal to"]
+							},
+							{
+								"data": ["Gt", "Greater than"]
+							},
+							{
+								"data": ["Ge", "Greater than or equal to"]
+							},
+							{
+								"data": ["Lt", "Less than"]
+							},
+							{
+								"data": ["Le", "Less than or equal to"]
+							},
+							{
+								"data": ["Not", "Logical negation"]
+							}
+						]
+					}
+				}
+			]
+		},
+		{
+			"title": "Common terms",
+			"content": [
+				{
+					"type": "P",
+					"body": [ 
+						"The paragraphs below list the common terms and data formats that are widely used across all interfaces to the Livestock Information Service."
+					]
+				},
+				{
+					"type": "H4",
+					"body": "Holding CPH"
+				},
+				{
+					"type": "P",
+					"body": "A ‘holding’ is the land and buildings that are used to house livestock."
+				},
+				{
+					"type": "P",
+					"body": "CPH (County Parish Holding) is a unique identifier that refers to a holding."
+				},
+				{
+					"type": "P",
+					"body": "Every holding that keeps livestock must obtain a CPH number from the Rural Payments Agency. The CPH is a 9-digit number (e.g. 12/345/6789). The first 2 digits relate to the county, the next 3 relate to the parish, and the last 4 digits identify the holding."
+				},
+				{
+					"type": "H4",
+					"body": "Holding MHS"
+				},
+				{
+					"type": "P",
+					"body": "A 4-digit number that is usually assigned to an Abattoir by the Food Standards Agency. "
+				},
+				{
+					"type": "P",
+					"body": "Commonly known as an MHS number, this can be used as an alternative to a CPH when recording livestock movements to an abattoir."
+				},
+				{
+					"type": "H4",
+					"body": "Dates and Times"
+				},
+				{
+					"type": "P",
+					"body": "Dates and times are represented in the CLA interface as .NET DateTimeOffset objects."
+				},
+				{
+					"type": "P",
+					"body": "String representation of the date time is ISO8601 and the format string is 'yyyy-MM-ddTHH:mm:ssK', where:"
+				},
+				{
+					"type": "UL",
+					"body": [
+						"<code class='code--slim'>yyyy</code> - 4 digit year",
+						"<code class='code--slim'>MM</code> - 2-digit month",
+						"<code class='code--slim'>dd</code> - 2-digit day",
+						"<code class='code--slim'>HH</code> - 2-digit hour",
+						"<code class='code--slim'>mm</code> - 2-digit minutes",
+						"<code class='code--slim'>ss</code> - 2-digit seconds",
+						"<code class='code--slim'>K</code> - the timezone as [+/-]hz:mz difference from UTC"
+					]
+				},
+				{
+					"type": "P",
+					"body": "Note: UTC can be expressed as either using the character 'Z' or +00:00"
+				},
+				{
+					"type": "H4",
+					"body": "Tag numbers"
+				},
+				{
+					"type": "P",
+					"body": "Tag numbers are a unique identifier used for individual animals."
+				},
+				{
+					"type": "P",
+					"body": "For sheep, the Tag number format starts with the letters UK, followed by either 0 or 1, then 6 digits, an optional space, then 5 more digits"
+				},
+				{
+					"type": "P",
+					"body": "Valid examples are: UK0123456 12345, UK012345612345"
+				},
+				{
+					"type": "P",
+					"body": "For goats, the Tag number format starts with the letters UK, followed by 6 digits, an optional space, then 5 more digits"
+				},
+				{
+					"type": "H4",
+					"body": "Radio Frequency Identifier (RFID)"
+				},
+				{
+					"type": "P",
+					"body": "The RF_ID (or RFID) is the ‘Radio Frequency Identifier’ and is the unique number returned by an RFID reader when an electronic tag is read."
+				},
+				{
+					"type": "P",
+					"body": "CLA can accept RF_ID value in HEX, Decimal and UK WYSIWYG format, such as:"
+				},
+				{
+					"type": "UL",
+					"body": [
+						"<code class='code--slim'>8200ce82dfdae801</code>",
+						"<code class='code--slim'>0826012345612345</code>",
+						"<code class='code--slim'>UK012345612345</code>",
+						"<code class='code--slim'>UK0123456 12345</code>"
+					]
+				},
+				{
+					"type": "H4",
+					"body": "Batch numbers"
+				},
+				{
+					"type": "P",
+					"body": "A batch is used to denote a flock or herd of animals in a movement record, rather than individuals."
+				},
+				{
+					"type": "P",
+					"body": "A batch can be defined as <code class='code--slim'>&ltBatchNumber&gt x &ltAnimalCount&gt [&ltI.D. Mark&gt - &ltStockType&gt]</code>, where <code class='code--slim'>&ltI.D. Mark&gt</code> and <code class='code--slim'>&ltStockType&gt</code> are both optional."
+				},
+				{
+					"type": "P",
+					"body": "Examples of batch numbers include:"
+				},
+				{
+					"type": "UL",
+					"body": [
+						"<code class='code--slim'>UK999999 x 2 (Blue)</code>",
+						"<code class='code--slim'>UK999999 x 2 (Blue – Total Sheep)</code>",
+						"<code class='code--slim'>UK999999 x 2</code>"
+					]
+				},
+				{
+					"type": "P",
+					"body": "For movements relating to sheep and goats, a valid batch number always begins with the characters 'UK' and is followed by 6 digits."
+				},
+				{
+					"type": "P",
+					"body": "Where a batch number is unknown, the reserved valued 'unknown' can be used. This value is not case sensitive; 'UNKNOWN', 'unknown' and Unknown' will all be accepted."
+				},
+				{
+					"type": "H4",
+					"body": "Devices"
+				},
+				{
+					"type": "P",
+					"body": "A device is used to represent a tag that is attached to an animal."
+				},
+				{
+					"type": "P",
+					"body": "A key concept of CLA is that a 'tag upload' is the act of registering a tag and a 'device application' is the act of attaching a tag to an animal. A 'tag number' is the actual number of the tag, and so applies regardless of whether the tag is attached to an animal or not."
+				}
+			]
+		}
+	]
+}
