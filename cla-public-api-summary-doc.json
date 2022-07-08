@@ -104,10 +104,6 @@
 				},
 				{
 					"type": "P",
-					"body": "We recommend that you submit no more than one get request per elapsed second."
-				},
-				{
-					"type": "P",
 					"body": "If you exceed this limit, you may receive an HTTP 429 (Too Many Requests) status code for each request you make within the remainder of the time."
 				}
 			]
@@ -3026,18 +3022,83 @@
 								"type": "TABLE",
 								"body": {
 									"headers": [
-										"Code",
-										"Description"
+										"Sheep code",
+										"Sheep Exemption"
 									],
 									"rows": [
 										{
-											"data": ["101", "Foster lambs"]
+											"data": ["198", "Moving breeding rams to or from a market"]
 										},
 										{
-											"data": ["173", "Return after rounding up from common land"]
+											"data": ["197", "Moving breeding rams to or from a holding for breeding via an approved Isolation Unit"]
 										},
 										{
-											"data": ["185", "Moving for immediate slaughter"]
+											"data": ["199", "Returning Breeding Rams unsold from a Market via an approved Isolation Unit"]
+										},
+                                        {
+											"data": ["173", "Returning to their correct home after being inadvertently rounded up from common land"]
+										},
+										{
+											"data": ["185", "Moving for immediate dedicated slaughter (direct, or via dedicated collection centre or dedicated market)"]
+										},
+										{
+											"data": ["168", "Moving to a show via an approved Isolation Unit"]
+										},
+                                        {
+											"data": ["AOF017", "Moving from a show via an approved Isolation Unit"]
+										},
+										{
+											"data": ["195", "Returning from an AI centre via an approved Isolation Unit"]
+										},
+                                        {
+											"data": ["187", "Moving to an exhibition or performance with permit (non CPH)"]
+										},
+										{
+											"data": ["CPRC", "Moving animals to a Central Point Recording Centre (CPRC)"]
+										},
+										{
+											"data": ["InBus", "Moving animals within your business that remain under your day to day care and control"]
+										}
+									]
+								}
+							},
+                            {
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Goats code",
+										"Goats Exemption"
+									],
+									"rows": [
+                                        {
+											"data": ["200", "Moving breeding goats to or from a holding for breeding via an approved Isolation Unit"]
+										},
+										{
+											"data": ["173", "Returning to their correct home after being inadvertently rounded up from common land"]
+										},
+										{
+											"data": ["185", "Moving for immediate dedicated slaughter (direct, or via dedicated collection centre or dedicated market)"]
+										},
+                                        {
+											"data": ["168", "Moving to a show via an approved Isolation Unit"]
+										},
+										{
+											"data": ["185", "Moving  from a show via an approved Isolation Unit)"]
+										},
+										{
+											"data": ["AOF017", "Moving  from a show via an approved Isolation Unit"]
+										},
+                                        {
+											"data": ["195", "Returning from an AI centre via an approved Isolation Unit"]
+										},
+										{
+											"data": ["187", "Moving to an exhibition or performance with permit (non CPH)"]
+										},
+                                        {
+											"data": ["CPRC", "Moving animals to a Central Point Recording Centre (CPRC)"]
+										},
+										{
+											"data": ["InBus", "Moving animals within your business that remain under your day to day care and control"]
 										}
 									]
 								}
