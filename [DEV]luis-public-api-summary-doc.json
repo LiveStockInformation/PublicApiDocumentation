@@ -14,7 +14,8 @@
           {
             "type": "P",
             "body": [ 
-              "The Livestock Unique Identifier System (LUIS) has been developed to replace the current ageing legacy systems for animal identification systems for cattle, sheep and goats (CETAS and S&GETAS). LUIS will be a single GB-wide service for all species.  "
+              "The Livestock Unique Identifier System (LUIS) has been developed to replace the current ageing legacy systems for animal identification systems for cattle, sheep and goats (CETAS and S&GETAS). LUIS will be a single GB-wide service for all species.",
+              "The LUIS system will deliver the many improvements including:"
             ]
           }
         ]
