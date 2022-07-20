@@ -20,7 +20,19 @@
           {
             "type": "P",
             "body": [ 
-              "The LUIS system will deliver the many improvements including: "
+              "The LUIS system will deliver the many improvements including:"
+            ]
+          },
+          {
+            "type": "UL",
+            "body": [ 
+              "A browser-based user interface ",
+              "Faster number allocation",
+              "Faster response times with the ability to identify invalid tags, CPH or other issues in real time.",
+              "Online control - LUIS enables self-serve which previously required assistance, including Cancelling tags and recovering tags, including those cancelled in error.",
+              "Identifying problems with out-of-sync number ranges, such as when a keeper orders primary and secondary tags from different Ear Tag Manufacturers (ETM’s).",
+              "Online declaration documents that mean ETMs can process their own cancellations ",
+              "A set of Restful APIs to allow ETMs to integrate their own systems with LUIS "
             ]
           }
         ]
