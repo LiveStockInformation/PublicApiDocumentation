@@ -37,6 +37,47 @@
           }
         ]
       },
+      {
+        "title": "Implementing the APIs",
+        "content": [
+          {
+            "type": "H3",
+            "body": [ 
+              "Purpose"
+            ]
+          },
+          {
+            "type": "P",
+            "body": [ 
+              "The purpose of the document is to provide Ear Tag Manufacturers (ETM’s) and their development teams the necessary information to integrate their systems into LUIS, using the APIs. This document specifies the interfaces and their expected behaviours, listing the errors or warning conditions that may occur should they fail. "
+            ]
+          },
+          {
+            "type": "H3",
+            "body": [ 
+              "Technical Knowledge Requirements and Limitations"
+            ]
+          },
+          {
+            "type": "P",
+            "body": [ 
+              "The document assumes that the reader has the necessary technical knowledge required to write the software required to use these APIs. It should be read in conjunction with the online Swagger documentation. It is a developer’s guide to the service and its functions.  It does not provide details on how to implement this within a ETMs application, as each one will be unique and is the responsibility of the ETMs. It describes and specifies the API service interfaces that will be exposed for Ear Tag Manufacturers (ETM’s) to integrate their systems with the LUIS application. These APIs are used within the LUIS User Interface (UI). ETMS can use the UI to validate results and see how the APIs perform. The APIs are an optional method of interacting with LUIS and a web application is available for those who choose not to do so. "
+            ]
+          },
+          {
+            "type": "H3",
+            "body": [ 
+              "Document Versions"
+            ]
+          },
+          {
+            "type": "P",
+            "body": [ 
+              "While every effort will be made to keep this document up to date, it should be remembered that LUIS is still under development and will therefore change. Swagger will have the most up to date APIs definitions."
+            ]
+          }
+        ]
+      },
         {
           "title": "API Specifications",
           "content" : [ {
