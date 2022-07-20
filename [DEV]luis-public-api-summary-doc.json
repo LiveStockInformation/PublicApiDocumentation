@@ -273,6 +273,54 @@
           }
         ]
       },
+      {
+        "title": "Connecting to the APIs",
+        "content": [
+          {
+            "type": "P",
+            "body": [ 
+              "To use the APIs an ETM requires:"
+            ]
+          },
+          {
+            "type": "OL",
+            "body": [ 
+              "A service account - the LUIS admin team, who will issue a User Id and a password, creates this. This information will be sent in 2 separate emails ",
+              "Provide LI ltd the ip address(es) and or the ip range(s) that will be access the APIs "
+            ]
+          },
+          {
+            "type": "P",
+            "body": [ 
+              "Section 6.1 below describes the process for obtaining a token. The token issued by the LUIS application is valid for 30 minutes. However, to prevent a time out mid order, it is recommended that a new token is requested for each API call.  "
+            ]
+          },
+          {
+            "type": "P",
+            "body": [ 
+              "This bearer token must be included in the security header of the Json to authenticate each call. The format is Bearer(space)Token "
+            ]
+          },
+          {
+            "type": "P",
+            "body": [ 
+              "Only calls originating from the registered IP addresses will be accepted by the application. "
+            ]
+          },
+          {
+            "type": "P",
+            "body": [ 
+              "No help message is given at this stage as to the user, if this call fails for obvious security reasons.  "
+            ]
+          },
+          {
+            "type": "P",
+            "body": [ 
+              "The password for the API will be changed from time to time. The frequency of this change is yet to be determined but ETMs will be advised in advance of any change."
+            ]
+          }
+        ]
+      },
         {
           "title": "API Specifications",
           "content" : [ {
