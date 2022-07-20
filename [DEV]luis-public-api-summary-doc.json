@@ -38,6 +38,19 @@
         ]
       },
       {
+        "title": "API browser and Open API file",
+        "content": [
+          {
+            "type": "P",
+            "body": "For more details about the Hello World API, open an API browser like <a href='https://editor.swagger.io' data-swagger-editor class='govuk-link' target='_blank'>Swagger Editor</a> and copy the Open API file content into it."
+          },
+          {
+            "type": "P",
+            "body":  "You can also generate a client library from the Open API file using Swagger Editor."
+          }
+        ]
+      },
+      {
         "title": "Implementing the APIs",
         "content": [
           {
