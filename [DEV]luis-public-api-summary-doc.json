@@ -217,6 +217,62 @@
           }
         ]
       },
+      {
+        "title": "Scope",
+        "content": [
+          {
+            "type": "H3",
+            "body": [ 
+              "In scope "
+            ]
+          },
+          {
+            "type": "P",
+            "body": [ 
+              "For release 1 of LUIS (Sheep and Goats), the APIs that will be available to ETMs are: "
+            ]
+          },
+          {
+            "type": "UL",
+            "body": [ 
+              "Keeper validation  ",
+              "Ordering of new tags ",
+              "Ordering replica tags "
+            ]
+          },
+          {
+            "type": "H3",
+            "body": [ 
+              "Out of scope"
+            ]
+          },
+          {
+            "type": "P",
+            "body": [ 
+              "Out of scope for this release: "
+            ]
+          },
+          {
+            "type": "UL",
+            "body": [ 
+              "Order cancellations",
+              "Order recoveries"
+            ]
+          },
+          {
+            "type": "P",
+            "body": [ 
+              "For this initial testing phase, it will be possible to use the APIs to order cattle tags. This is to allow ETMs to provide feedback and to allow them to embed the functionality into their systems. To that end, the APIs will also allow for testing of cattle EID orders. This again is to allow early testing of this functionality and give ETMs the opportunity to provide feedback."
+            ]
+          },
+          {
+            "type": "P",
+            "body": [ 
+              "During this development phase, we expect to make some improvements to the APIs in response to feedback from ETMS. These changes will be advised to ETMs and made available as quickly as possible.  "
+            ]
+          }
+        ]
+      },
         {
           "title": "API Specifications",
           "content" : [ {
