@@ -170,7 +170,7 @@
             "type": "UL",
             "body": [ 
               "Manufacturer Id",
-              "New tag reference numbers for all tags. This is known as “Approved_Tag_Id” and is used on all orders placed using the APIs "
+              "New tag reference numbers for all tags. This is known as 'Approved_Tag_Id' and is used on all orders placed using the APIs "
             ]
           },
           {
@@ -182,7 +182,7 @@
           {
             "type": "H3",
             "body": [ 
-              "Auditing and System Use  "
+              "Auditing and System Use"
             ]
           },
           {
