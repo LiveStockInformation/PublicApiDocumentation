@@ -2,6 +2,23 @@
     "name": "Luis",
     "meta": [],
     "sections": [
+      {
+        "title": "Background",
+        "content": [
+          {
+            "type": "H3",
+            "body": [ 
+              "History"
+            ]
+          },
+          {
+            "type": "P",
+            "body": [ 
+              "The Livestock Unique Identifier System (LUIS) has been developed to replace the current ageing legacy systems for animal identification systems for cattle, sheep and goats (CETAS and S&GETAS). LUIS will be a single GB-wide service for all species.  "
+            ]
+          }
+        ]
+      },
         {
           "title": "API Specifications",
           "content" : [ {
