@@ -75,6 +75,145 @@
             "body": [ 
               "While every effort will be made to keep this document up to date, it should be remembered that LUIS is still under development and will therefore change. Swagger will have the most up to date APIs definitions."
             ]
+          },
+          {
+            "type": "H3",
+            "body": [ 
+              "API Suite"
+            ]
+          },
+          {
+            "type": "P",
+            "body": [ 
+              "There are a wide range of APIs for ETMs to use and not all will be applicable to everyone. Each ETM has the option and flexibility to integrate with as many or as few of these APIs as they choose. There is no one size fits all. The information returned may be too detailed for some ETMs who may choose to only use part of the information returned in the Json."
+            ]
+          },
+          {
+            "type": "P",
+            "body": [ 
+              "A Net Standard 2.0 class library (LuisApi.dll) is available to enable developers to strongly type order inputs and specific response formats. This is available at https://www.nuget.org/packages/luisapi"
+            ]
+          },
+          {
+            "type": "H3",
+            "body": [ 
+              "Important Changes to Business Processes "
+            ]
+          },
+          {
+            "type": "P",
+            "body": [ 
+              "Developers should be aware that several of the business process that surround tag ordering have been changed: "
+            ]
+          },
+          {
+            "type": "H4",
+            "body": [ 
+              "Mandatory Fields"
+            ]
+          },
+          {
+            "type": "P",
+            "body": [ 
+              "More mandatory information is required about the tag order than in the old systems. This includes Tag Colour and red replacement tags that are now ordered seperately."
+            ]
+          },
+          {
+            "type": "H4",
+            "body": [ 
+              "Tag Ids and Colours "
+            ]
+          },
+          {
+            "type": "P",
+            "body": [ 
+              "Tag Ids and colours can be obtained using the Manufacturer’s Approved Tags API (6.3). The tag colours are case sensitive. "
+            ]
+          },
+          {
+            "type": "H4",
+            "body": [ 
+              "Unmatched Tags"
+            ]
+          },
+          {
+            "type": "P",
+            "body": [ 
+              "There is now the concept of unmatched tags. This occurs when a pair of tags is ordered from 2 separate ETMs. If the primary is ordered first, until the secondary tag is ordered no more primary tags can be ordered. Unmatched tags only relate to a single species and herd/flock. i.e. if a keeper has cattle and sheep , unmatched cattle tags would not prevent an order being placed for sheep tags.  "
+            ]
+          },
+          {
+            "type": "H4",
+            "body": [ 
+              "Tattoos"
+            ]
+          },
+          {
+            "type": "P",
+            "body": [ 
+              "If a keeper orders an EID sheep tag and applies a tattoo as the second identifier, LUIS must record the tattoo to balance the order. A Tattoo has been created as a common generic tag across all manufacturers and must be selected to remove the unmatched tags. "
+            ]
+          },
+          {
+            "type": "H3",
+            "body": [ 
+              "Important Changes to Data "
+            ]
+          },
+          {
+            "type": "P",
+            "body": [ 
+              "LUIS will issue new unique references for the following: "
+            ]
+          },
+          {
+            "type": "UL",
+            "body": [ 
+              "Manufacturer Id",
+              "New tag reference numbers for all tags. This is known as “Approved_Tag_Id” and is used on all orders placed using the APIs ",
+            ]
+          },
+          {
+            "type": "P",
+            "body": [ 
+              "It is hoped that the manufacturer id and the Approved_Tag_Id issued on the test system will be the same as the live system. Manufacturers will need to double check this before moving into production "
+            ]
+          },
+          {
+            "type": "H3",
+            "body": [ 
+              "Auditing and System Use  "
+            ]
+          },
+          {
+            "type": "P",
+            "body": [ 
+              "All use of the APIs within LUIS is recorded and a full audit history is kept.  Any misuse or attempted misuse of the APIs may result in them being withdrawn from that ETM. "
+            ]
+          },
+          {
+            "type": "P",
+            "body": [ 
+              "Data Protection "
+            ]
+          },
+          {
+            "type": "P",
+            "body": [ 
+              "ETMs can only see the full details of their own tags and orders. While it is possible sometimes to see some information about an order when ordering replica tags, the information returned has been redacted to hide the other ETM or tags previously ordered. The APIs below are returning the full data set and are based on the order being solely for that manufacturer. "
+            ]
+          },
+          {
+            "type": "Help and Support ",
+            "body": [ 
+              "Auditing and System Use  "
+            ]
+          },
+          {
+            "type": "P",
+            "body": [ 
+              "LI Ltd will endeavour to help and support ETMs and their developers while they integrate these APIs with their systems but have no responsibility for ensuring the APIs work within the ETMs application. If you encounter any issues, please contact nick.morris@livestockinformation.org.uk "
+            ]
           }
         ]
       },
