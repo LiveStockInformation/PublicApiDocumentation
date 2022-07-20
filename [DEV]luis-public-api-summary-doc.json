@@ -60,6 +60,272 @@
                 }
               ],
               "comments": ""
+            },
+            {
+              "apiName": "Keeper Herds",
+              "type": "LUIS ENDPOINT",
+              "DescriptionPurpose": "Retrieves Keeper and Herd details. This allows an ETM to validate the information given by the keeper and ensure they are ordering tags for the correct keeper. Without the correct CPH and Herd numbers, no orders can be placed for a keeper. It also returns the species that are on the holding.",
+              "InterfaceTypeExpectedResponseRate": ["Restful", "Near real-time"],
+              "HTTPmethod": "GET",
+              "URL": "The API is accessed from the URL: https://luispublic-web.azurewebsites.net/Api​/KeeperHerds​/{C}​/{P}​/{H}​/{Herd}",
+              "Direction": "2-Way",
+              "FrequencyOfInteraction": "Ad hoc",
+              "RequestBody": "{ \n\n  \"UserId\": \"BCMS_Test\", \n\n  \"Password\": \"Vc2VySWQiOiJiY21zIiwiU3VwZXJVc2VyIjoiZmFsc2UiLCJS\", \n\n  \"CallerId\": \"JG1\" \n\n} ",
+              "Request Definition": [
+                {
+                  "Field": "C",
+                  "Mandatory": "M",
+                  "Type": "string",
+                  "Description": "County reference number",
+                  "Example": "06"
+                },
+                {
+                  "Field": "P",
+                  "Mandatory": "M",
+                  "Type": "string",
+                  "Description": "Parish reference number",
+                  "Example": "036"
+                },
+                {
+                  "Field": "H",
+                  "Mandatory": "M",
+                  "Type": "string",
+                  "Description": "Holding reference number",
+                  "Example": "0006"
+                },
+                {
+                  "Field": "Herd",
+                  "Mandatory": "M",
+                  "Type": "string",
+                  "Description": "Herd Reference",
+                  "Example": "160131"
+                }
+              ],
+              "ResponseExample": "{  \n\n  \"Keeper\": {  \n\n    \"DATE_UPDATED\": \"\",  \n\n    \"CPH\": \"06/036/0006\",  \n\n    \"OCCUPIER_TITLE\": \"Mr\",  \n\n    \"OCCUPIER_NAME\": \"Richard Green\",  \n\n    \"SAON_START_NUMBER\": \"\",  \n\n    \"SAON_START_NUMBER_SUFFIX\": \"\",  \n\n    \"SAON_END_NUMBER\": \"\",  \n\n    \"SAON_END_NUMBER_SUFFIX\": \"\",  \n\n    \"SAON_DESCRIPTION\": \"\",  \n\n    \"PAON_START_NUMBER\": \"\",  \n\n    \"PAON_START_NUMBER_SUFFIX\": \"\",  \n\n    \"PAON_END_NUMBER\": \"\",  \n\n    \"PAON_END_NUMBER_SUFFIX\": \"\",  \n\n    \"PAON_DESCRIPTION\": \"High Heckley\",  \n\n    \"STREET\": \"Rotherfield\",  \n\n    \"LOCALITY\": \"Alnwick\",  \n\n    \"TOWN\": \"Northumberland\",  \n\n    \"ADMINISTRATIVE_AREA\": \"\",  \n\n    \"POSTCODE\": \"NE66 2WE\",  \n\n    \"TELEPHONE\": \"01665 456789\",  \n\n    \"MOBILE_NUMBER\": \"\",  \n\n    \"COUNTRY_CODE\": \"E\",  \n\n    \"UK_INTERNAL_CODE\": null,  \n\n    \"STATUS\": \"Active\",  \n\n    \"Easting\": 0,  \n\n    \"Northing\": 0,  \n\n    \"Address1\": \"High Heckley Rotherfield\",  \n\n    \"Full_Address\": \"High Heckley Rotherfield, Alnwick, Northumberland, NE66 2WE\"  \n\n  },  \n\n  \"Herd\": {  \n\n    \"Herd_Ref\": \"160131\",  \n\n    \"CPH\": \"06/036/0006\",  \n\n    \"Inactive\": false,  \n\n    \"Species\": [  \n\n      \"C\",  \n\n      \"G\"  \n\n    ]  \n\n  }  \n\n}  ",
+              "ResponseDefinition": [
+                {
+                  "Field": "Keeper",
+                  "Type": "",
+                  "Description": "",
+                  "Example": "Luis.Api.Models.KeeperHerd(ComprisingLuis.Api.Models.Keeper/Luis.Api.Modesl.Herd)"
+                },
+                {
+                  "Field": "DATE_UPDATED",
+                  "Type": "String  maxLength: 14 nullable: true",
+                  "Description": "",
+                  "Example": ""
+                },
+                {
+                  "Field": "CPH",
+                  "Type": "string nullable: true",
+                  "Description": "CPH Reference number consisting of County/Parish/Holding",
+                  "Example": "06/245/0011"
+                },
+                {
+                  "Field": "OCCUPIER_TITLE",
+                  "Type": "String  maxLength: 100 nullable: true ",
+                  "Description": "CPH Reference number consisting of County/Parish/Holding",
+                  "Example": "Mr"
+                },
+                {
+                  "Field": "OCCUPIER_NAME",
+                  "Type": "String  maxLength: 255 nullable: true ",
+                  "Description": "",
+                  "Example": "Marcus Todd"
+                },
+                {
+                  "Field": "SAON_START_NUMBER",
+                  "Type": "String  maxLength: 10 nullable: true ",
+                  "Description": "",
+                  "Example": "null"
+                },
+                {
+                  "Field": "SAON_START_NUMBER_SUFFIX",
+                  "Type": "String  maxLength: 10 nullable: true ",
+                  "Description": "",
+                  "Example": "null"
+                },
+                {
+                  "Field": "SAON_END_NUMBER",
+                  "Type": "String  maxLength: 10 nullable: true ",
+                  "Description": "",
+                  "Example": "null"
+                },
+                {
+                  "Field": "SAON_END_NUMBER_SUFFIX",
+                  "Type": "String  maxLength: 10 nullable: true ",
+                  "Description": "",
+                  "Example": "null"
+                },
+                {
+                  "Field": "SAON_DESCRIPTION",
+                  "Type": "String  maxLength: 100 nullable: true  ",
+                  "Description": "",
+                  "Example": "null"
+                },
+                {
+                  "Field": "PAON_START_NUMBER",
+                  "Type": "String  maxLength: 100 nullable: true",
+                  "Description": "",
+                  "Example": "null"
+                },
+                {
+                  "Field": "PAON_START_NUMBER_SUFFIX",
+                  "Type": "String maxLength: 10 nullable: true ",
+                  "Description": "",
+                  "Example": "null"
+                },
+                {
+                  "Field": "PAON_END_NUMBER",
+                  "Type": "String maxLength: 10 nullable: true",
+                  "Description": "",
+                  "Example": "null"
+                },
+                {
+                  "Field": "PAON_END_NUMBER_SUFFIX",
+                  "Type": "String maxLength: 10 nullable: true",
+                  "Description": "",
+                  "Example": "null"
+                },
+                {
+                  "Field": "PAON_DESCRIPTION",
+                  "Type": "String  maxLength: 100 nullable: true ",
+                  "Description": "",
+                  "Example": "Lucker Farm"
+                },
+                {
+                  "Field": "STREET",
+                  "Type": "String  maxLength: 100 nullable: true ",
+                  "Description": "",
+                  "Example": "Rotherfields"
+                },
+                {
+                  "Field": "LOCALITY",
+                  "Type": "String  maxLength: 100 nullable: true  ",
+                  "Description": "",
+                  "Example": "Lucker"
+                },
+                {
+                  "Field": "TOWN",
+                  "Type": "String  maxLength: 100 nullable: true",
+                  "Description": "",
+                  "Example": "Northumberland"
+                },
+                {
+                  "Field": "ADMINISTRATIVE_AREA",
+                  "Type": "String  maxLength: 100 nullable: true",
+                  "Description": "",
+                  "Example": "null"
+                },
+                {
+                  "Field": "POSTCODE",
+                  "Type": "String  maxLength: 30 nullable: true ",
+                  "Description": "",
+                  "Example": "NE68 4QW"
+                },
+                {
+                  "Field": "TELEPHONE",
+                  "Type": "String  maxLength: 35 nullable: true  ",
+                  "Description": "",
+                  "Example": "01668 234000"
+                },
+                {
+                  "Field": "MOBILE_NUMBER",
+                  "Type": "String  maxLength: 35 nullable: true",
+                  "Description": "",
+                  "Example": "null"
+                },
+                {
+                  "Field": "COUNTRY_CODE",
+                  "Type": "String  maxLength: 20 nullable: true ",
+                  "Description": "",
+                  "Example": "E"
+                },
+                {
+                  "Field": "UK_INTERNAL_CODE",
+                  "Type": "String  maxLength: 20 nullable: true  ",
+                  "Description": "",
+                  "Example": "null"
+                },
+                {
+                  "Field": "STATUS",
+                  "Type": "String",
+                  "Description": "Active",
+                  "Example": "null"
+                },
+                {
+                  "Field": "Easting",
+                  "Type": "integer($int32)",
+                  "Description": "",
+                  "Example": "0"
+                },
+                {
+                  "Field": "Northing",
+                  "Type": "integer($int32)",
+                  "Description": "",
+                  "Example": "0"
+                },
+                {
+                  "Field": "Address1",
+                  "Type": "string nullable: true readOnly: true ",
+                  "Description": "",
+                  "Example": "Lucker Farm"
+                },
+                {
+                  "Field": "Full_Address",
+                  "Type": "string nullable: true readOnly: true",
+                  "Description": "",
+                  "Example": "Lucker Farm, Lucker,Northumberland, NE68 4QW"
+                },
+                {
+                  "Field": "Herds",
+                  "Type": "",
+                  "Description": "",
+                  "Example": "Luis.Api.Models.Herd"
+                },
+                {
+                  "Field": "Herd_Ref",
+                  "Type": "string nullable: true ",
+                  "Description": "Herd Reference number",
+                  "Example": "161195"
+                },
+                {
+                  "Field": "CPH",
+                  "Type": "string nullable: true ",
+                  "Description": "CPH Reference number consisting of County/Parish/Holding ",
+                  "Example": "06/245/0011 "
+                },
+                {
+                  "Field": "Inactive",
+                  "Type": "Boolean",
+                  "Description": "",
+                  "Example": "false"
+                },
+                {
+                  "Field": "Species",
+                  "Type": "string nullable: true ",
+                  "Description": "Species code letter  C=Cattle S=Sheep G=Goat ",
+                  "Example": "C"
+                }
+              ],
+              "errorCodes": [
+                {
+                  "errorCode": "200",
+                  "Description": "Success",
+                  "comments": ""
+                },
+                {
+                  "errorCode": "InvalidCPHHerd",
+                  "Description": "Invalid CPH or Herd",
+                  "comments": "SAM returned no matching C/P/H and Herd.  Invalid CPH or Herd"
+                },
+                {
+                  "errorCode": "404",
+                  "Description": "Not Found",
+                  "comments": ""
+                }
+              ],
+              "comments": ""
             }
           ]
         }
