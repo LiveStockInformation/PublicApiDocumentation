@@ -1353,6 +1353,194 @@
                 }
               ],
               "comments": ""
+            },
+            {
+              "apiName": "Unmatched Tags for a Keeper",
+              "type": "LUIS ENDPOINT",
+              "DescriptionPurpose": "Returns any unmatched tags for a keeper.  A keeper can order birth tags from 2 different suppliers (primary from one and secondary from another. Likewise with EID and non EID tags). If only one side has been ordered the other side must be ordered before any further tag orders can be place.  The same situation can also occur when an order or part of an order is cancelled.  ",
+              "InterfaceTypeExpectedResponseRate": ["Restful", "Near real-time"],
+              "HTTPmethod": "GET",
+              "URL": "The API is accessed from the URL: https://luispublic-web.azurewebsites.net/​ Api​/KeeperUnmatchedTags​/{C}​/{P}​/{H}",
+              "Direction": "2-Way",
+              "FrequencyOfInteraction": "Ad hoc",
+              "RequestDefinition": [
+                {
+                  "Field": "County",
+                  "Mandatory": "M",
+                  "Type": "string",
+                  "Description": "",
+                  "Example": "06"
+                },
+                {
+                  "Field": "Parish",
+                  "Mandatory": "M",
+                  "Type": "string",
+                  "Description": "",
+                  "Example": "245"
+                },
+                {
+                  "Field": "Holding",
+                  "Mandatory": "M",
+                  "Type": "string",
+                  "Description": "",
+                  "Example": "0011"
+                }
+              ],
+              "ResponseExample": "[  \n\n  {  \n\n    \"OrderType\": \"ConventionalOrder\",  \n\n    \"Replacement\": false,  \n\n    \"Herd_Ref\": \"160131\",  \n\n    \"Species_Id\": \"C\",  \n\n    \"For_Tag\": 1,  \n\n    \"Primary\": true,  \n\n    \"Internal\": false,  \n\n    \"Count\": 1,  \n\n    \"Open\": true  \n\n  }  \n\n]  ",
+              "ResponseDefinition": [
+                {
+                  "Field": "List<Luis.Api.Models.UnmatchedTagSet>",
+                  "Type": "",
+                  "Description": "",
+                  "Example": ""
+                },
+                {
+                  "Field": "OrderType",
+                  "Type": "string nullable: true ",
+                  "Description": "",
+                  "Example": "ConventionalOrder"
+                },
+                {
+                  "Field": "Replacement",
+                  "Type": "boolean",
+                  "Description": "",
+                  "Example": "false"
+                },
+                {
+                  "Field": "Herd_Ref",
+                  "Type": "string nullable: true",
+                  "Description": "",
+                  "Example": "707186"
+                },
+                {
+                  "Field": "Species_Id",
+                  "Type": "string nullable: true",
+                  "Description": "",
+                  "Example": "C"
+                },
+                {
+                  "Field": "For_Tag",
+                  "Type": "integer($int32)",
+                  "Description": "This field indicates if the tag is being used as tag 1 or tag 2. Tag 1 is used for the primary tag and EID ",
+                  "Example": "1"
+                },
+                {
+                  "Field": "Primary",
+                  "Type": "boolean",
+                  "Description": "Indicates a primary tag",
+                  "Example": "true"
+                },
+                {
+                  "Field": "Internal",
+                  "Type": "boolean",
+                  "Description": "Indicates a primary tag",
+                  "Example": "false"
+                },
+                {
+                  "Field": "Count",
+                  "Type": "integer($int32)",
+                  "Description": "",
+                  "Example": "2"
+                },
+                {
+                  "Field": "Open",
+                  "Type": "boolean",
+                  "Description": "",
+                  "Example": "false"
+                }
+              ],
+              "errorCodes": [
+                {
+                  "errorCode": "200",
+                  "Description": "Success",
+                  "comments": ""
+                }
+              ],
+              "comments": ""
+            },
+            {
+              "apiName": "Ordered Tags",
+              "type": "LUIS ENDPOINT",
+              "DescriptionPurpose": "By entering a Defra order reference number, the details of that order can be retrieved. The manufacturer who originally placed the order can only do this.  ",
+              "InterfaceTypeExpectedResponseRate": ["Restful", "Near real-time"],
+              "HTTPmethod": "GET",
+              "URL": "The API is accessed from the URL: https://luispublic-web.azurewebsites.net/Api/Orders/{Defra_Ref}/Tags",
+              "Direction": "2-Way",
+              "FrequencyOfInteraction": "Ad hoc",
+              "RequestDefinition": [
+                {
+                  "Field": "Defra_Ref",
+                  "Mandatory": "M",
+                  "Type": "string",
+                  "Description": "",
+                  "Example": "001264"
+                }
+              ],
+              "ResponseExample": "[ \n\n  { \n\n    \"Ordered_Tag_Id\": 213203, \n\n    \"Order_Id\": 1264, \n\n    \"CPH\": \"08/205/8000\", \n\n    \"Herd_Ref\": \"666666\", \n\n    \"For_Tag\": 1, \n\n    \"Tag_Id\": 168545, \n\n    \"Approved_Tag_Id\": 1340, \n\n    \"Colour\": \"Yellow\", \n\n    \"Approved_Tag_Colour_Id\": 777, \n\n    \"Attributes_Id\": 0, \n\n    \"Manufacturer_Id\": 79, \n\n    \"Tag_Start_Date\": \"2021-09-20T10:50:58.7407821\", \n\n    \"Tag_End_Date\": null, \n\n    \"Tag_End_Reason\": null, \n\n    \"Tag_Status\": 0, \n\n    \"Tag_Replica_Count\": 0, \n\n    \"Disregard_Count\": false, \n\n    \"Last_Replica\": 0, \n\n    \"Frozen_Until\": null, \n\n    \"Cancellation_Id\": 0, \n\n    \"Recovery_Id\": 0, \n\n    \"Tag\": { \n\n      \"Printed_Tag\": \"UK066666600804\", \n\n      \"Link_Tag\": null, \n\n      \"Visual_Tag\": \"UK 0 666666 00804\", \n\n      \"CPH\": \"08/205/8000\", \n\n      \"Animal_No\": 804, \n\n      \"Country\": \"UK\", \n\n      \"Herd_Ref\": \"666666\", \n\n      \"Species_Id\": \"S\", \n\n      \"HasEID\": true, \n\n      \"HasGBTag\": false, \n\n      \"HasGBSuffix\": false, \n\n      \"Tags\": [] \n\n    }, \n\n    \"Approved_Tag\": { \n\n      \"Approved_Tag_Id\": 1340, \n\n      \"Manufacturer_Id\": 79, \n\n      \"Tag_Name\": \"Flexotronic L/R 27\", \n\n      \"Tag_EID\": true, \n\n      \"Tag_Primary\": true, \n\n      \"Tag_Slaughter\": false, \n\n      \"Tag_Approval_Date\": \"2014-07-18T00:00:00\", \n\n      \"Tag_Approval_End_Date\": null, \n\n      \"Legacy_Code\": \"046_315\", \n\n      \"Manufacturers_Code\": null, \n\n      \"Notes\": null, \n\n      \"Parent_Approved_Tag_Id\": 0, \n\n      \"Tag_Class\": null, \n\n      \"Rear_Class\": null, \n\n      \"Colours\": [], \n\n      \"Species\": [] \n\n    }, \n\n  ]",
+              "ResponseDefinition": [
+                {
+                  "Field": "Ordered_Tag_Id",
+                  "Type": "integer($int32)",
+                  "Description": "",
+                  "Example": "213203"
+                },
+                {
+                  "Field": "Order_Id",
+                  "Type": "string nullable: true",
+                  "Description": "The unique order ref number",
+                  "Example": "1264"
+                },
+                {
+                  "Field": "CPH",
+                  "Type": "string nullable: true",
+                  "Description": "",
+                  "Example": "08/205/8000"
+                },
+                {
+                  "Field": "Herd_Ref",
+                  "Type": "string nullable: true" ,
+                  "Description": "",
+                  "Example": "666666"
+                },
+                {
+                  "Field": "For_Tag",
+                  "Type": "integer($int32)" ,
+                  "Description": "",
+                  "Example": "1"
+                },
+                {
+                  "Field": "Tag_Id",
+                  "Type": "integer($int32)" ,
+                  "Description": "",
+                  "Example": "168545"
+                },
+                {
+                  "Field": "Approved_Tag_Id ",
+                  "Type": "integer($int32)" ,
+                  "Description": "The LUIS Id of the tag ",
+                  "Example": "1340"
+                },
+                {
+                  "Field": "Colour",
+                  "Type": "String nullable: true " ,
+                  "Description": "The colour of the tag ",
+                  "Example": "Yellow"
+                },
+                {
+                  "Field": "Approved_Tag_Colour_Id ",
+                  "Type": "integer($int32) nullable: true " ,
+                  "Description": "The colour of the tag Id  ",
+                  "Example": "777"
+                }
+              ],
+              "errorCodes": [
+                {
+                  "errorCode": "200",
+                  "Description": "Success",
+                  "comments": ""
+                }
+              ],
+              "comments": ""
             }
           ]
         }
