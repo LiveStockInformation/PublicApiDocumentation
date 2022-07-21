@@ -1144,6 +1144,7 @@
       
           {
             "apiName": "Tag Code",
+            "type": "LUIS ENDPOINT",
             "DescriptionPurpose": "Tag Details by Code",
             "InterfaceTypeExpectedResponseRate": ["Restful", "Near real-time"],
             "HTTPmethod": "GET",
