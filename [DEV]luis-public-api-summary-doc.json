@@ -1317,6 +1317,42 @@
                 }
               ],
               "comments": ""
+            },
+            {
+              "apiName": "Valid Tag Type Combinations",
+              "type": "LUIS ENDPOINT",
+              "DescriptionPurpose": "A list of the valid combination of tags by species. LUIS has build in rules to ensure that only the correct conbinations of tags can be used together. e.g a Bolus and Pastern is not allowed. The purpose is to ensure that ETMs do not send invalid combinations of tags when placing orders  ",
+              "InterfaceTypeExpectedResponseRate": ["Restful", "Near real-time"],
+              "HTTPmethod": "GET",
+              "URL": "The API is accessed from the URL: https://luispublic-web.azurewebsites.net/​Api​/ValidTagCombinations​/{Species}",
+              "Direction": "2-Way",
+              "FrequencyOfInteraction": "Ad hoc",
+              "RequestDefinition": [
+                {
+                  "Field": "Species",
+                  "Mandatory": "M",
+                  "Type": "string",
+                  "Description": "",
+                  "Example": "S"
+                }
+              ],
+              "ResponseExample": "[ \n\n  [ \n\n    \"Ear\", \n\n    \"Ear\" \n\n  ], \n\n   \n\n  [ \n\n    \"Bolus\", \n\n    \"Pastern\" \n\n  ] \n\n] ",
+              "ResponseDefinition": [
+                {
+                  "Field": "TBC",
+                  "Type": "string",
+                  "Description": "",
+                  "Example": "Bolus"
+                }
+              ],
+              "errorCodes": [
+                {
+                  "errorCode": "200",
+                  "Description": "Success",
+                  "comments": ""
+                }
+              ],
+              "comments": ""
             }
           ]
         }
