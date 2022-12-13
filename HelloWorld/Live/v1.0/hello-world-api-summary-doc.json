@@ -1,0 +1,176 @@
+{
+  "name": "Hello World API",
+  "meta": [],
+  "sections": [
+    {
+      "title": "Overview",
+      "content": [
+        {
+          "type": "P",
+          "body": "We have created the Hello World API to show users what the Developer Hub can do. It allows software developers to connect with the Livestock information systems identity system and consume an example api"
+        },
+        {
+          "type": "P",
+          "body": "For more details about the Livestock information systems api authentication and security, read the <a href='/documentation/api-authentication' class='govuk-link'>authorisation</a> section."
+        },
+        {
+          "type": "P",
+          "body": "For more information about how to develop your own client applications, including example clients for this API, read our <a href='/documentation/tutorials' class='govuk-link'>tutorials</a>."
+        }
+      ]
+    },
+    {
+      "title": "Versioning",
+      "content": [
+        {
+          "type": "P",
+          "body": "When an API changes, we will make backwards compatible changes where we can. When this is not possible, we will add a note about deprecated endpoints and make a new endpoint available."
+        },
+        {
+          "type": "P",
+          "body": "The current live version of the Hello World API is 1.0."
+        }
+      ]
+    },
+    {
+      "title": "API browser and Open API file",
+      "content": [
+        {
+          "type": "P",
+          "body": "For more details about the Hello World API, open an API browser like <a href='https://editor.swagger.io' data-swagger-editor class='govuk-link' target='_blank'>Swagger Editor</a> and copy the Open API file content into it."
+        },
+        {
+          "type": "P",
+          "body":  "You can also generate a client library from the Open API file using Swagger Editor."
+        }
+      ]
+    },
+    {
+      "title": "HTTP status codes",
+      "content": [
+        {
+          "type": "P",
+          "body": "The Hello World API uses standard HTTP response code conventions:"
+        },
+        {
+          "type": "UL",
+          "body": [
+            "100 codes give information",
+            "200 codes mean success",
+            "300 codes mean a redirection",
+            "400 codes mean a client-side error",
+            "500 codes mean a server-side error"
+          ]
+        },
+        {
+          "type": "P",
+          "body": "Common status codes are:"
+        },
+        {
+            "type": "UL",
+            "body": [
+                "200 - OK - the request has been processed successfully",
+                "400 - bad request - the incoming request body or parameters do not conform with the Open API document that describes the API",
+                "403 - Service Unavailable - the service is currently unavailable",
+                "429 - Too Many Requests - the client’s limit has been exceeded",
+                "504 - Gateway Timeout - there is a network connection problem within the layers of the API fulfilment stack"
+            ]
+        },
+        {
+            "type": "P",
+            "body": "We use HTTP status codes instead of API error codes."
+        }
+      ]
+    },
+    {
+      "title": "Request rate limit",
+      "content": [
+        {
+          "type": "P",
+          "body": "We limit how many API requests you can make each minute."
+        },
+        {
+          "type": "P",
+          "body": "If you go over the limit, you will receive a 429 Too Many Requests HTTP status code for each request you make within the remainder of the time."
+        },
+        {
+          "type": "P",
+          "body": "Each minute, you can make up to 10 GET requests for each endpoint."
+        }
+      ]
+    },
+    {
+      "title": "Endpoints",
+      "content": [
+        {
+          "type": "DETAIL",
+          "body": {
+            "title": "/hello-World/<strong>hello</strong>",
+            "tag": "GET",
+            "body": [
+              {
+                "type": "H4",
+                "body": "Description"
+              },
+              {
+                "type": "P",
+                "body": "A simple example for integrating with LIS APIs."
+              },
+              {
+                "type": "P",
+                "body": [
+                  "Any successfull request to this endpoint returns a text  'hello world'"
+                ]
+              },
+              {
+                "type": "H4",
+                "body": "Authorisation"
+              },
+              {
+                "type": "P",
+                "body": [
+                  "This endpoint is secured by LIS user authorization security. You will also need to provide a Subscription Key in the requests header. Read the <a href='/documentation/api-authentication'>API Authentication</a> page for details."
+                ]
+              },
+              {
+                "type": "H4",
+                "body": "Request headers"
+              },
+              {
+                "type": "TABLE",
+                "body": {
+                  "headers": [
+                    "Name",
+                    "Description"
+                  ],
+                  "rows": [
+                    {
+                      "data": [
+                        "Ocp-Apim-Subscription-Key",
+                        "Hello World API subscription key"
+                      ]
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "H4",
+                "body": "Response"
+              },
+              {
+                "type": "P",
+                "body": "HTTP status: <code class='code--slim'>200 (OK)</code>"
+              },
+              {
+                "type": "CODE",
+                "body": [
+                  "{Hello World}"
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

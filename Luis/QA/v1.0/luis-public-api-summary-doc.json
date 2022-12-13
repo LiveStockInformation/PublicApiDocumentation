@@ -1,0 +1,1548 @@
+{
+    "name": "Luis",
+    "meta": [],
+    "sections": [
+      {
+        "title": "Background",
+        "content": [
+          {
+            "type": "H3",
+            "body": [ 
+              "History"
+            ]
+          },
+          {
+            "type": "P",
+            "body": [ 
+              "The Livestock Unique Identifier System (LUIS) has been developed to replace the current ageing legacy systems for animal identification systems for cattle, sheep and goats (CETAS and S&GETAS). LUIS will be a single GB-wide service for all species."
+            ]
+          },
+          {
+            "type": "P",
+            "body": [ 
+              "The LUIS system will deliver the many improvements including:"
+            ]
+          },
+          {
+            "type": "UL",
+            "body": [ 
+              "A browser-based user interface ",
+              "Faster number allocation",
+              "Faster response times with the ability to identify invalid tags, CPH or other issues in real time.",
+              "Online control - LUIS enables self-serve which previously required assistance, including Cancelling tags and recovering tags, including those cancelled in error.",
+              "Identifying problems with out-of-sync number ranges, such as when a keeper orders primary and secondary tags from different Ear Tag Manufacturers (ETM’s).",
+              "Online declaration documents that mean ETMs can process their own cancellations ",
+              "A set of Restful APIs to allow ETMs to integrate their own systems with LUIS "
+            ]
+          }
+        ]
+      },
+      {
+        "title": "API browser and Open API file",
+        "content": [
+          {
+            "type": "P",
+            "body": "For more details about the Hello World API, open an API browser like <a href='https://editor.swagger.io' data-swagger-editor class='govuk-link' target='_blank'>Swagger Editor</a> and copy the Open API file content into it."
+          },
+          {
+            "type": "P",
+            "body":  "You can also generate a client library from the Open API file using Swagger Editor."
+          }
+        ]
+      },
+      {
+        "title": "Implementing the APIs",
+        "content": [
+          {
+            "type": "H3",
+            "body": [ 
+              "Purpose"
+            ]
+          },
+          {
+            "type": "P",
+            "body": [ 
+              "The purpose of the document is to provide Ear Tag Manufacturers (ETM’s) and their development teams the necessary information to integrate their systems into LUIS, using the APIs. This document specifies the interfaces and their expected behaviours, listing the errors or warning conditions that may occur should they fail. "
+            ]
+          },
+          {
+            "type": "H3",
+            "body": [ 
+              "Technical Knowledge Requirements and Limitations"
+            ]
+          },
+          {
+            "type": "P",
+            "body": [ 
+              "The document assumes that the reader has the necessary technical knowledge required to write the software required to use these APIs. It should be read in conjunction with the online Swagger documentation. It is a developer’s guide to the service and its functions.  It does not provide details on how to implement this within a ETMs application, as each one will be unique and is the responsibility of the ETMs. It describes and specifies the API service interfaces that will be exposed for Ear Tag Manufacturers (ETM’s) to integrate their systems with the LUIS application. These APIs are used within the LUIS User Interface (UI). ETMS can use the UI to validate results and see how the APIs perform. The APIs are an optional method of interacting with LUIS and a web application is available for those who choose not to do so. "
+            ]
+          },
+          {
+            "type": "H3",
+            "body": [ 
+              "Document Versions"
+            ]
+          },
+          {
+            "type": "P",
+            "body": [ 
+              "While every effort will be made to keep this document up to date, it should be remembered that LUIS is still under development and will therefore change. Swagger will have the most up to date APIs definitions."
+            ]
+          },
+          {
+            "type": "H3",
+            "body": [ 
+              "API Suite"
+            ]
+          },
+          {
+            "type": "P",
+            "body": [ 
+              "There are a wide range of APIs for ETMs to use and not all will be applicable to everyone. Each ETM has the option and flexibility to integrate with as many or as few of these APIs as they choose. There is no one size fits all. The information returned may be too detailed for some ETMs who may choose to only use part of the information returned in the Json."
+            ]
+          },
+          {
+            "type": "P",
+            "body": [ 
+              "A Net Standard 2.0 class library (LuisApi.dll) is available to enable developers to strongly type order inputs and specific response formats. This is available at https://www.nuget.org/packages/luisapi"
+            ]
+          },
+          {
+            "type": "H3",
+            "body": [ 
+              "Important Changes to Business Processes "
+            ]
+          },
+          {
+            "type": "P",
+            "body": [ 
+              "Developers should be aware that several of the business process that surround tag ordering have been changed: "
+            ]
+          },
+          {
+            "type": "H4",
+            "body": [ 
+              "Mandatory Fields"
+            ]
+          },
+          {
+            "type": "P",
+            "body": [ 
+              "More mandatory information is required about the tag order than in the old systems. This includes Tag Colour and red replacement tags that are now ordered seperately."
+            ]
+          },
+          {
+            "type": "H4",
+            "body": [ 
+              "Tag Ids and Colours "
+            ]
+          },
+          {
+            "type": "P",
+            "body": [ 
+              "Tag Ids and colours can be obtained using the Manufacturer’s Approved Tags API (6.3). The tag colours are case sensitive. "
+            ]
+          },
+          {
+            "type": "H4",
+            "body": [ 
+              "Unmatched Tags"
+            ]
+          },
+          {
+            "type": "P",
+            "body": [ 
+              "There is now the concept of unmatched tags. This occurs when a pair of tags is ordered from 2 separate ETMs. If the primary is ordered first, until the secondary tag is ordered no more primary tags can be ordered. Unmatched tags only relate to a single species and herd/flock. i.e. if a keeper has cattle and sheep , unmatched cattle tags would not prevent an order being placed for sheep tags.  "
+            ]
+          },
+          {
+            "type": "H4",
+            "body": [ 
+              "Tattoos"
+            ]
+          },
+          {
+            "type": "P",
+            "body": [ 
+              "If a keeper orders an EID sheep tag and applies a tattoo as the second identifier, LUIS must record the tattoo to balance the order. A Tattoo has been created as a common generic tag across all manufacturers and must be selected to remove the unmatched tags. "
+            ]
+          },
+          {
+            "type": "H3",
+            "body": [ 
+              "Important Changes to Data "
+            ]
+          },
+          {
+            "type": "P",
+            "body": [ 
+              "LUIS will issue new unique references for the following: "
+            ]
+          },
+          {
+            "type": "UL",
+            "body": [ 
+              "Manufacturer Id",
+              "New tag reference numbers for all tags. This is known as 'Approved_Tag_Id' and is used on all orders placed using the APIs "
+            ]
+          },
+          {
+            "type": "P",
+            "body": [ 
+              "It is hoped that the manufacturer id and the Approved_Tag_Id issued on the test system will be the same as the live system. Manufacturers will need to double check this before moving into production "
+            ]
+          },
+          {
+            "type": "H3",
+            "body": [ 
+              "Auditing and System Use"
+            ]
+          },
+          {
+            "type": "P",
+            "body": [ 
+              "All use of the APIs within LUIS is recorded and a full audit history is kept.  Any misuse or attempted misuse of the APIs may result in them being withdrawn from that ETM. "
+            ]
+          },
+          {
+            "type": "P",
+            "body": [ 
+              "Data Protection "
+            ]
+          },
+          {
+            "type": "P",
+            "body": [ 
+              "ETMs can only see the full details of their own tags and orders. While it is possible sometimes to see some information about an order when ordering replica tags, the information returned has been redacted to hide the other ETM or tags previously ordered. The APIs below are returning the full data set and are based on the order being solely for that manufacturer. "
+            ]
+          },
+          {
+            "type": "H3",
+            "body": [ 
+              "Help and Support"
+            ]
+          },
+          {
+            "type": "P",
+            "body": [ 
+              "LI Ltd will endeavour to help and support ETMs and their developers while they integrate these APIs with their systems but have no responsibility for ensuring the APIs work within the ETMs application. If you encounter any issues, please contact nick.morris@livestockinformation.org.uk "
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Scope",
+        "content": [
+          {
+            "type": "H3",
+            "body": [ 
+              "In scope "
+            ]
+          },
+          {
+            "type": "P",
+            "body": [ 
+              "For release 1 of LUIS (Sheep and Goats), the APIs that will be available to ETMs are: "
+            ]
+          },
+          {
+            "type": "UL",
+            "body": [ 
+              "Keeper validation  ",
+              "Ordering of new tags ",
+              "Ordering replica tags "
+            ]
+          },
+          {
+            "type": "H3",
+            "body": [ 
+              "Out of scope"
+            ]
+          },
+          {
+            "type": "P",
+            "body": [ 
+              "Out of scope for this release: "
+            ]
+          },
+          {
+            "type": "UL",
+            "body": [ 
+              "Order cancellations",
+              "Order recoveries"
+            ]
+          },
+          {
+            "type": "P",
+            "body": [ 
+              "For this initial testing phase, it will be possible to use the APIs to order cattle tags. This is to allow ETMs to provide feedback and to allow them to embed the functionality into their systems. To that end, the APIs will also allow for testing of cattle EID orders. This again is to allow early testing of this functionality and give ETMs the opportunity to provide feedback."
+            ]
+          },
+          {
+            "type": "P",
+            "body": [ 
+              "During this development phase, we expect to make some improvements to the APIs in response to feedback from ETMS. These changes will be advised to ETMs and made available as quickly as possible.  "
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Connecting to the APIs",
+        "content": [
+          {
+            "type": "P",
+            "body": [ 
+              "To use the APIs an ETM requires:"
+            ]
+          },
+          {
+            "type": "OL",
+            "body": [ 
+              "A service account - the LUIS admin team, who will issue a User Id and a password, creates this. This information will be sent in 2 separate emails ",
+              "Provide LI ltd the ip address(es) and or the ip range(s) that will be access the APIs "
+            ]
+          },
+          {
+            "type": "P",
+            "body": [ 
+              "Section 6.1 below describes the process for obtaining a token. The token issued by the LUIS application is valid for 30 minutes. However, to prevent a time out mid order, it is recommended that a new token is requested for each API call.  "
+            ]
+          },
+          {
+            "type": "P",
+            "body": [ 
+              "This bearer token must be included in the security header of the Json to authenticate each call. The format is Bearer(space)Token "
+            ]
+          },
+          {
+            "type": "P",
+            "body": [ 
+              "Only calls originating from the registered IP addresses will be accepted by the application. "
+            ]
+          },
+          {
+            "type": "P",
+            "body": [ 
+              "No help message is given at this stage as to the user, if this call fails for obvious security reasons.  "
+            ]
+          },
+          {
+            "type": "P",
+            "body": [ 
+              "The password for the API will be changed from time to time. The frequency of this change is yet to be determined but ETMs will be advised in advance of any change."
+            ]
+          }
+        ]
+      },
+        {
+          "title": "API Specifications",
+          "content" : [ {
+            "apiName": "Request Token",
+            "type": "LUIS ENDPOINT",
+            "DescriptionPurpose": "Request a token for use in header of secure API calls.",
+            "InterfaceTypeExpectedResponseRate": ["Restful", "Near real-time"],
+            "HTTPmethod": "POST",
+            "URL": "<p>The API is accessed from the URL: https://luispublic-web.azurewebsites.net​/Api​/Orders​/Slaughter</p>",
+            "Direction": "2-Way",
+            "FrequencyOfInteraction": "Ad hoc",
+            "RequestBody": "{ \n\n  \"UserId\": \"BCMS_Test\", \n\n  \"Password\": \"Vc2VySWQiOiJiY21zIiwiU3VwZXJVc2VyIjoiZmFsc2UiLCJS\", \n\n  \"CallerId\": \"JG1\" \n\n} ",
+            "RequestDefinition": [
+              {
+                "Field": "UserId",
+                "Mandatory": "M",
+                "Type": "string",
+                "Description": "User Id provided by LI",
+                "Example": "BCMS_Test"
+              },
+              {
+                "Field": "Password",
+                "Mandatory": "M",
+                "Type": "string",
+                "Description": "Password provided by LI",
+                "Example": "Vc2VySWQiOiJiY21zIiwiU3VwZXJVc2VyIjoiZmFsc2UiLCJS"
+              },
+              {
+                "Field": "CallerId",
+                "Mandatory": "M",
+                "Type": "string",
+                "Description": "Caller Id is the person that is connecting id",
+                "Example": "JG1"
+              }
+            ],
+            "ResponseExample": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiJiY21zIiwiU3VwZXJVc2VyIjoiZmFsc2UiLCJSb2xlIjoiTVNBIiwiTWFudWZhY3R1cmVySWQiOiI0MiIsIkZyb21BcHAiOiJGYWxzZSIsIkNhbGxlcklkIjoidGVzdCB0ZWFtIiwiZXhwIjoxNjA1MjcxMzc4LCJpc3MiOiJMdWlzIiwiYXVkIjoiTHVpcyJ9.GratU_4kLZQjtmaUSN54XMHOSybHHuU7lLp0A-5u5Gs",
+            "ResponseDefinition": [
+              {
+                "Field": "Token Id ",
+                "Type": "text/plain ",
+                "Description": "Token ID required to permit access to API ",
+                "Example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiJiY21zIiwiU3VwZXJVc2VyIjoiZmFsc2UiLCJSb2xlIjoiTVNBIiwiTWFudWZhY3R1cmVySWQiOiI0MiIsIkZyb21BcHAiOiJGYWxzZSIsIkNhbGxlcklkIjoidGVzdCB0ZWFtIiwiZXhwIjoxNjA1MjcxMzc4LCJpc3MiOiJMdWlzIiwiYXVkIjoiTHVpcyJ9.GratU_4kLZQjtmaUSN54XMHOSybHHuU7lLp0A-5u5Gs "
+              }
+            ],
+            "errorCodes": [
+              {
+                "errorCode": "200",
+                "Description": "Success",
+                "comments": ""
+              },
+              {
+                "errorCode": "400",
+                "Description": "Bad Request",
+                "comments": ""
+              }
+            ],
+            "comments": ""
+          },
+          {
+            "apiName": "Keeper Herds",
+            "type": "LUIS ENDPOINT",
+            "DescriptionPurpose": "Retrieves Keeper and Herd details. This allows an ETM to validate the information given by the keeper and ensure they are ordering tags for the correct keeper. Without the correct CPH and Herd numbers, no orders can be placed for a keeper. It also returns the species that are on the holding.",
+            "InterfaceTypeExpectedResponseRate": ["Restful", "Near real-time"],
+            "HTTPmethod": "GET",
+            "URL": "The API is accessed from the URL: https://luispublic-web.azurewebsites.net/Api​/KeeperHerds​/{C}​/{P}​/{H}​/{Herd}",
+            "Direction": "2-Way",
+            "FrequencyOfInteraction": "Ad hoc",
+            "RequestBody": "{ \n\n  \"UserId\": \"BCMS_Test\", \n\n  \"Password\": \"Vc2VySWQiOiJiY21zIiwiU3VwZXJVc2VyIjoiZmFsc2UiLCJS\", \n\n  \"CallerId\": \"JG1\" \n\n} ",
+            "Request Definition": [
+              {
+                "Field": "C",
+                "Mandatory": "M",
+                "Type": "string",
+                "Description": "County reference number",
+                "Example": "06"
+              },
+              {
+                "Field": "P",
+                "Mandatory": "M",
+                "Type": "string",
+                "Description": "Parish reference number",
+                "Example": "036"
+              },
+              {
+                "Field": "H",
+                "Mandatory": "M",
+                "Type": "string",
+                "Description": "Holding reference number",
+                "Example": "0006"
+              },
+              {
+                "Field": "Herd",
+                "Mandatory": "M",
+                "Type": "string",
+                "Description": "Herd Reference",
+                "Example": "160131"
+              }
+            ],
+            "ResponseExample": "{  \n\n  \"Keeper\": {  \n\n    \"DATE_UPDATED\": \"\",  \n\n    \"CPH\": \"06/036/0006\",  \n\n    \"OCCUPIER_TITLE\": \"Mr\",  \n\n    \"OCCUPIER_NAME\": \"Richard Green\",  \n\n    \"SAON_START_NUMBER\": \"\",  \n\n    \"SAON_START_NUMBER_SUFFIX\": \"\",  \n\n    \"SAON_END_NUMBER\": \"\",  \n\n    \"SAON_END_NUMBER_SUFFIX\": \"\",  \n\n    \"SAON_DESCRIPTION\": \"\",  \n\n    \"PAON_START_NUMBER\": \"\",  \n\n    \"PAON_START_NUMBER_SUFFIX\": \"\",  \n\n    \"PAON_END_NUMBER\": \"\",  \n\n    \"PAON_END_NUMBER_SUFFIX\": \"\",  \n\n    \"PAON_DESCRIPTION\": \"High Heckley\",  \n\n    \"STREET\": \"Rotherfield\",  \n\n    \"LOCALITY\": \"Alnwick\",  \n\n    \"TOWN\": \"Northumberland\",  \n\n    \"ADMINISTRATIVE_AREA\": \"\",  \n\n    \"POSTCODE\": \"NE66 2WE\",  \n\n    \"TELEPHONE\": \"01665 456789\",  \n\n    \"MOBILE_NUMBER\": \"\",  \n\n    \"COUNTRY_CODE\": \"E\",  \n\n    \"UK_INTERNAL_CODE\": null,  \n\n    \"STATUS\": \"Active\",  \n\n    \"Easting\": 0,  \n\n    \"Northing\": 0,  \n\n    \"Address1\": \"High Heckley Rotherfield\",  \n\n    \"Full_Address\": \"High Heckley Rotherfield, Alnwick, Northumberland, NE66 2WE\"  \n\n  },  \n\n  \"Herd\": {  \n\n    \"Herd_Ref\": \"160131\",  \n\n    \"CPH\": \"06/036/0006\",  \n\n    \"Inactive\": false,  \n\n    \"Species\": [  \n\n      \"C\",  \n\n      \"G\"  \n\n    ]  \n\n  }  \n\n}  ",
+            "ResponseDefinition": [
+              {
+                "Field": "Keeper",
+                "Type": "",
+                "Description": "",
+                "Example": "Luis.Api.Models.KeeperHerd(ComprisingLuis.Api.Models.Keeper/Luis.Api.Modesl.Herd)"
+              },
+              {
+                "Field": "DATE_UPDATED",
+                "Type": "String  maxLength: 14 nullable: true",
+                "Description": "",
+                "Example": ""
+              },
+              {
+                "Field": "CPH",
+                "Type": "string nullable: true",
+                "Description": "CPH Reference number consisting of County/Parish/Holding",
+                "Example": "06/245/0011"
+              },
+              {
+                "Field": "OCCUPIER_TITLE",
+                "Type": "String  maxLength: 100 nullable: true ",
+                "Description": "CPH Reference number consisting of County/Parish/Holding",
+                "Example": "Mr"
+              },
+              {
+                "Field": "OCCUPIER_NAME",
+                "Type": "String  maxLength: 255 nullable: true ",
+                "Description": "",
+                "Example": "Marcus Todd"
+              },
+              {
+                "Field": "SAON_START_NUMBER",
+                "Type": "String  maxLength: 10 nullable: true ",
+                "Description": "",
+                "Example": "null"
+              },
+              {
+                "Field": "SAON_START_NUMBER_SUFFIX",
+                "Type": "String  maxLength: 10 nullable: true ",
+                "Description": "",
+                "Example": "null"
+              },
+              {
+                "Field": "SAON_END_NUMBER",
+                "Type": "String  maxLength: 10 nullable: true ",
+                "Description": "",
+                "Example": "null"
+              },
+              {
+                "Field": "SAON_END_NUMBER_SUFFIX",
+                "Type": "String  maxLength: 10 nullable: true ",
+                "Description": "",
+                "Example": "null"
+              },
+              {
+                "Field": "SAON_DESCRIPTION",
+                "Type": "String  maxLength: 100 nullable: true  ",
+                "Description": "",
+                "Example": "null"
+              },
+              {
+                "Field": "PAON_START_NUMBER",
+                "Type": "String  maxLength: 100 nullable: true",
+                "Description": "",
+                "Example": "null"
+              },
+              {
+                "Field": "PAON_START_NUMBER_SUFFIX",
+                "Type": "String maxLength: 10 nullable: true ",
+                "Description": "",
+                "Example": "null"
+              },
+              {
+                "Field": "PAON_END_NUMBER",
+                "Type": "String maxLength: 10 nullable: true",
+                "Description": "",
+                "Example": "null"
+              },
+              {
+                "Field": "PAON_END_NUMBER_SUFFIX",
+                "Type": "String maxLength: 10 nullable: true",
+                "Description": "",
+                "Example": "null"
+              },
+              {
+                "Field": "PAON_DESCRIPTION",
+                "Type": "String  maxLength: 100 nullable: true ",
+                "Description": "",
+                "Example": "Lucker Farm"
+              },
+              {
+                "Field": "STREET",
+                "Type": "String  maxLength: 100 nullable: true ",
+                "Description": "",
+                "Example": "Rotherfields"
+              },
+              {
+                "Field": "LOCALITY",
+                "Type": "String  maxLength: 100 nullable: true  ",
+                "Description": "",
+                "Example": "Lucker"
+              },
+              {
+                "Field": "TOWN",
+                "Type": "String  maxLength: 100 nullable: true",
+                "Description": "",
+                "Example": "Northumberland"
+              },
+              {
+                "Field": "ADMINISTRATIVE_AREA",
+                "Type": "String  maxLength: 100 nullable: true",
+                "Description": "",
+                "Example": "null"
+              },
+              {
+                "Field": "POSTCODE",
+                "Type": "String  maxLength: 30 nullable: true ",
+                "Description": "",
+                "Example": "NE68 4QW"
+              },
+              {
+                "Field": "TELEPHONE",
+                "Type": "String  maxLength: 35 nullable: true  ",
+                "Description": "",
+                "Example": "01668 234000"
+              },
+              {
+                "Field": "MOBILE_NUMBER",
+                "Type": "String  maxLength: 35 nullable: true",
+                "Description": "",
+                "Example": "null"
+              },
+              {
+                "Field": "COUNTRY_CODE",
+                "Type": "String  maxLength: 20 nullable: true ",
+                "Description": "",
+                "Example": "E"
+              },
+              {
+                "Field": "UK_INTERNAL_CODE",
+                "Type": "String  maxLength: 20 nullable: true  ",
+                "Description": "",
+                "Example": "null"
+              },
+              {
+                "Field": "STATUS",
+                "Type": "String",
+                "Description": "Active",
+                "Example": "null"
+              },
+              {
+                "Field": "Easting",
+                "Type": "integer($int32)",
+                "Description": "",
+                "Example": "0"
+              },
+              {
+                "Field": "Northing",
+                "Type": "integer($int32)",
+                "Description": "",
+                "Example": "0"
+              },
+              {
+                "Field": "Address1",
+                "Type": "string nullable: true readOnly: true ",
+                "Description": "",
+                "Example": "Lucker Farm"
+              },
+              {
+                "Field": "Full_Address",
+                "Type": "string nullable: true readOnly: true",
+                "Description": "",
+                "Example": "Lucker Farm, Lucker,Northumberland, NE68 4QW"
+              },
+              {
+                "Field": "Herds",
+                "Type": "",
+                "Description": "",
+                "Example": "Luis.Api.Models.Herd"
+              },
+              {
+                "Field": "Herd_Ref",
+                "Type": "string nullable: true ",
+                "Description": "Herd Reference number",
+                "Example": "161195"
+              },
+              {
+                "Field": "CPH",
+                "Type": "string nullable: true ",
+                "Description": "CPH Reference number consisting of County/Parish/Holding ",
+                "Example": "06/245/0011 "
+              },
+              {
+                "Field": "Inactive",
+                "Type": "Boolean",
+                "Description": "",
+                "Example": "false"
+              },
+              {
+                "Field": "Species",
+                "Type": "string nullable: true ",
+                "Description": "Species code letter  C=Cattle S=Sheep G=Goat ",
+                "Example": "C"
+              }
+            ],
+            "errorCodes": [
+              {
+                "errorCode": "200",
+                "Description": "Success",
+                "comments": ""
+              },
+              {
+                "errorCode": "InvalidCPHHerd",
+                "Description": "Invalid CPH or Herd",
+                "comments": "SAM returned no matching C/P/H and Herd.  Invalid CPH or Herd"
+              },
+              {
+                "errorCode": "404",
+                "Description": "Not Found",
+                "comments": ""
+              }
+            ],
+            "comments": ""
+          },
+          {
+            "apiName": "Manufacturer's approved tags ",
+            "type": "LUIS ENDPOINT",
+            "DescriptionPurpose": "Returns details of all of the ETM’s approved tags. The purpose of this API is to ensure that an ETM can only order tags that are currently approved. The Approved_Tag_Id for a tag is needed to place every order.  ",
+            "InterfaceTypeExpectedResponseRate": ["Restful", "Near real-time"],
+            "HTTPmethod": "GET",
+            "URL": "The API is accessed from the URL: https://luispublic-web.azurewebsites.net/Api​/Approved_Tags",
+            "Direction": "2-Way",
+            "FrequencyOfInteraction": "Ad hoc",
+            "RequestBody": "",
+            "Request Definition": "No example",
+            "ResponseExample": "[  \n\n  {  \n\n    \"Approved_Tag_Id\": 800,  \n\n    \"Manufacturer_Id\": 42,  \n\n    \"Tag_Name\": \"Bubblegum\",  \n\n    \"Tag_EID\": false,  \n\n    \"Tag_Primary\": false,  \n\n    \"Tag_Slaughter\": false,  \n\n    \"Tag_Approval_Date\": \"2020-12-07T00:00:00\",  \n\n    \"Tag_Approval_End_Date\": null,  \n\n    \"Legacy_Code\": null,  \n\n    \"Manufacturers_Code\": null,  \n\n    \"Notes\": null,  \n\n    \"Parent_Approved_Tag_Id\": 140,  \n\n    \"Tag_Class\": {  \n\n      \"Class_Id\": 4,  \n\n      \"Name\": \"Loop\",  \n\n      \"Internal\": false,  \n\n      \"No_Colour\": false,  \n\n      \"Tag_Type\": \"Ear\"  \n\n    },  \n\n    \"Rear_Class\": null,  \n\n    \"Colours\": [  \n\n      {  \n\n        \"Colour\": \"Red\",  \n\n        \"Dye\": \"1\",  \n\n        \"Colour_Group\": null,  \n\n        \"Colour_Tag_End_Date\": \"2021-02-25T08:55:12.5448745\"  \n\n      },  \n\n      {  \n\n        \"Colour\": \"Yellow\",  \n\n        \"Dye\": \"1\",  \n\n        \"Colour_Group\": null,  \n\n        \"Colour_Tag_End_Date\": null  \n\n      },  \n\n      {  \n\n        \"Colour\": \"Orange\",  \n\n        \"Dye\": \"1\",  \n\n        \"Colour_Group\": null,  \n\n        \"Colour_Tag_End_Date\": null  \n\n      },  \n\n      {  \n\n        \"Colour\": \"Blue\",  \n\n        \"Dye\": \"1\",  \n\n        \"Colour_Group\": null,  \n\n        \"Colour_Tag_End_Date\": null  \n\n      },  \n\n      {  \n\n        \"Colour\": \"Green\",  \n\n        \"Dye\": \"1\",  \n\n        \"Colour_Group\": null,  \n\n        \"Colour_Tag_End_Date\": null  \n\n      }  \n\n    ],  \n\n    \"Species\": [  \n\n      {  \n\n        \"Species_Id\": \"C\",  \n\n        \"Species_Tag_End_Date\": null  \n\n      }  \n\n    ]  \n\n  }  ",
+            "className": "Luis.Api.Models.Approved_Tag",
+            "ResponseDefinition": [
+              {
+                "Field": "Approved_Tag_Id",
+                "Type": "integer($int32)",
+                "Description": "The unique number (Primary Key) LUIS assigns to the Tag. This number has to be used when placing an order for tags",
+                "Example": "1222"
+              },
+              {
+                "Field": "Manufacturer_Id",
+                "Type": "integer($int32)",
+                "Description": "The unique number in LUIS for the ETM",
+                "Example": "47"
+              },
+              {
+                "Field": "Tag_Name*",
+                "Type": "string",
+                "Description": "Name of the  approved tag",
+                "Example": "FlexoPlus D/D"
+              },
+              {
+                "Field": "Tag_EID",
+                "Type": "boolean",
+                "Description": "Is it an EID tag?",
+                "Example": "false"
+              },
+              {
+                "Field": "Tag_Primary",
+                "Type": "boolean",
+                "Description": "Is it a primary tag?",
+                "Example": "true"
+              },
+              {
+                "Field": "Tag_Slaughter",
+                "Type": "boolean",
+                "Description": "Is it a slaughter tag?",
+                "Example": "false"
+              },
+              {
+                "Field": "Tag_Approval_Date",
+                "Type": "string($date-time) nullable: true ",
+                "Description": "The date Defra approved the tag for use",
+                "Example": "2020-03-18T00:00:00"
+              },
+              {
+                "Field": "Tag_Approval_End_Date",
+                "Type": "string($date-time) nullable: true",
+                "Description": "The date Defra end approval for the tag",
+                "Example": "2020-03-18T00:00:00"
+              },
+              {
+                "Field": "Legacy_Code",
+                "Type": "string maxLength: 50 nullable: true ",
+                "Description": "The code the tag was known as in either CETAS or S&GETAS ",
+                "Example": "046_1"
+              },
+              {
+                "Field": "Manufacturers_Code",
+                "Type": "string nullable: true",
+                "Description": "The manufacturers reference number for the tag ",
+                "Example": "null"
+              },
+              {
+                "Field": "Notes",
+                "Type": "string nullable: true",
+                "Description": "",
+                "Example": "null"
+              },
+              {
+                "Field": "Parent_Approved_Tag_Id ",
+                "Type": "integer($int32)",
+                "Description": "For LUIS Internal use",
+                "Example": "140"
+              },
+              {
+                "Field": "Tag_Class",
+                "Type": "Luis.Api.Models.Tag_Class",
+                "Description": "For LUIS Internal use",
+                "Example": ""
+              },
+              {
+                "Field": "Rear_Class",
+                "Type": "Luis.Api.Models.Tag_Class",
+                "Description": "For LUIS Internal use",
+                "Example": ""
+              },
+              {
+                "Field": "Colours",
+                "Type": "Luis.Api.Models.Tag_Colour",
+                "Description": "List of colours for the approved tag (includes ended colours) ",
+                "Example": ""
+              },
+              {
+                "Field": "Species",
+                "Type": "Luis.Api.Models.Tag_Species",
+                "Description": "List of species for te approved tag (includes ended species)",
+                "Example": ""
+              }
+            ],
+            "errorCodes": [
+              {
+                "errorCode": "200",
+                "Description": "Success",
+                "comments": ""
+              }
+            ],
+            "comments": ""
+          },
+          {
+            "apiName": "Manufacturer's approved tag",
+            "type": "LUIS ENDPOINT",
+            "DescriptionPurpose": "Returns details of one of the requested manufacturer’s approved tags. Approved_Tag_Id is optional.",
+            "InterfaceTypeExpectedResponseRate": ["Restful", "Near real-time"],
+            "HTTPmethod": "GET",
+            "URL": "The API is accessed from the URL: https://luispublic-web.azurewebsites.net/ Api/Approved_Tags/{Approved_Tag_Id} ",
+            "Direction": "2-Way",
+            "FrequencyOfInteraction": "Ad hoc",
+            "Request Definition": [
+              {
+                "Field": "Approved_Tag_Id *",
+                "Mandatory": "",
+                "Type": "integer($int32)",
+                "Description": "It’s the manufacturers approved Tag_Id",
+                "Example": "783"
+              }
+            ],
+            "ResponseExample": "{  \n\n  \"Approved_Tag_Id\": 783,  \n\n  \"Manufacturer_Id\": 42,  \n\n  \"Tag_Name\": \"Button 1\",  \n\n  \"Tag_EID\": false,  \n\n  \"Tag_Primary\": true,  \n\n  \"Tag_Slaughter\": false,  \n\n  \"Tag_Approval_Date\": \"2019-10-17T00:00:00\",  \n\n  \"Tag_Approval_End_Date\": null,  \n\n  \"Legacy_Code\": \"99_20\",  \n\n  \"Manufacturers_Code\": null,  \n\n  \"Notes\": null,  \n\n  \"Parent_Approved_Tag_Id\": 0,  \n\n  \"Tag_Class\": {  \n\n    \"Class_Id\": 8,  \n\n    \"Name\": \"Button\",  \n\n    \"Internal\": false,  \n\n    \"No_Colour\": false,  \n\n    \"Tag_Type\": \"Ear\"  \n\n  },  \n\n  \"Rear_Class\": null,  \n\n  \"Colours\": [  \n\n    {  \n\n      \"Colour\": \"Yellow\",  \n\n      \"Dye\": null,  \n\n      \"Colour_Group\": null,  \n\n      \"Colour_Tag_End_Date\": null  \n\n    },  \n\n    {  \n\n      \"Colour\": \"Red\",  \n\n      \"Dye\": \"Dye1 \",  \n\n      \"Colour_Group\": null,  \n\n      \"Colour_Tag_End_Date\": null  \n\n    },  \n\n    {  \n\n      \"Colour\": \"Orange\",  \n\n      \"Dye\": \"Dye1 \",  \n\n      \"Colour_Group\": null,  \n\n      \"Colour_Tag_End_Date\": null  \n\n    },  \n\n    {  \n\n      \"Colour\": \"White\",  \n\n      \"Dye\": \"Dye1 \",  \n\n      \"Colour_Group\": null,  \n\n      \"Colour_Tag_End_Date\": null  \n\n    },  \n\n    {  \n\n      \"Colour\": \"Green\",  \n\n      \"Dye\": null,  \n\n      \"Colour_Group\": null,  \n\n      \"Colour_Tag_End_Date\": null  \n\n    },  \n\n    {  \n\n      \"Colour\": \"Blue\",  \n\n      \"Dye\": null,  \n\n      \"Colour_Group\": null,  \n\n      \"Colour_Tag_End_Date\": null  \n\n    },  \n\n    {  \n\n      \"Colour\": \"Black\",  \n\n      \"Dye\": null,  \n\n      \"Colour_Group\": null,  \n\n      \"Colour_Tag_End_Date\": null  \n\n    }  \n\n  ],  \n\n  \"Species\": [  \n\n    {  \n\n      \"Species_Id\": \"S\",  \n\n      \"Species_Tag_End_Date\": null  \n\n    },  \n\n    {  \n\n      \"Species_Id\": \"G\",  \n\n      \"Species_Tag_End_Date\": null  \n\n    }  \n\n  ]  \n\n}  ",
+            "ResponseDefinition": [
+              {
+                "Field": "Approved_Tag_Id",
+                "Type": "integer($int32)",
+                "Description": "The unique number (Primary Key) LUIS assigns to the Tag. This number has to be used when placing an order for tags ",
+                "Example": "1222"
+              },
+              {
+                "Field": "Manufacturer_Id",
+                "Type": "integer($int32)",
+                "Description": "The unique number in LUIS for the ETM ",
+                "Example": "47"
+              },
+              {
+                "Field": "Tag_Name*",
+                "Type": "string",
+                "Description": "",
+                "Example": "FlexoPlus D/D"
+              },
+              {
+                "Field": "Tag_EID",
+                "Type": "boolean",
+                "Description": "Is it an EID tag? ",
+                "Example": "false"
+              },
+              {
+                "Field": "Tag_Primary",
+                "Type": "boolean",
+                "Description": "Is it a primary tag?",
+                "Example": "true"
+              },
+              {
+                "Field": "Tag_Slaughter",
+                "Type": "Boolean",
+                "Description": "Is it a slaughter tag? ",
+                "Example": "false"
+              },
+              {
+                "Field": "Tag_Approval_Date",
+                "Type": "string($date-time) nullable: true",
+                "Description": "The date Defra approved the tag for use ",
+                "Example": "2020-03-18T00:00:00 "
+              },
+              {
+                "Field": "Tag_Approval_End_Date",
+                "Type": "string($date-time) nullable: true",
+                "Description": "The date Defra end approval for the tag. ",
+                "Example": "2020-03-18T00:00:00 "
+              },
+              {
+                "Field": "Legacy_Code",
+                "Type": "string maxLength: 50 nullable: true",
+                "Description": "The code the tag was known as in either CETAS or S&GETAS",
+                "Example": "046_1"
+              },
+              {
+                "Field": "Manufacturers_Code ",
+                "Type": "string nullable: true ",
+                "Description": "The manufacturers reference number for the tag ",
+                "Example": "null"
+              },
+              {
+                "Field": "Notes ",
+                "Type": "string nullable: true",
+                "Description": "",
+                "Example": "null"
+              },
+              {
+                "Field": "Parent_Approved_Tag_Id",
+                "Type": "integer($int32)",
+                "Description": "For LUIS Internal use",
+                "Example": "0"
+              },
+              {
+                "Field": "Tag_Class",
+                "Type": "Luis.Api.Models.Tag_Class ",
+                "Description": "For LUIS Internal use",
+                "Example": ""
+              },
+              {
+                "Field": "Rear_Class",
+                "Type": "Luis.Api.Models.Tag_Class",
+                "Description": "For LUIS Internal use",
+                "Example": ""
+              },
+              {
+                "Field": "Colours",
+                "Type": "Luis.Api.Models.Tag_Colour",
+                "Description": "List of colours for the approved tag (includes ended colours)",
+                "Example": ""
+              },
+              {
+                "Field": "Species",
+                "Type": "Luis.Api.Models.Tag_Species",
+                "Description": "List of species for te approved tag (includes ended species)",
+                "Example": ""
+              }
+            ],
+            "errorCodes": [
+              {
+                "errorCode": "200",
+                "Description": "Success",
+                "comments": ""
+              },
+              {
+                "errorCode": "404",
+                "Description": "Error:Not Found",
+                "comments": ""
+              }
+            ],
+            "comments": ""
+          },
+          {
+            "apiName": "Herd Species",
+            "type": "LUIS ENDPOINT",
+            "DescriptionPurpose": "Returns details of all active herds for the C/P/H and for each herd, the species within the herd. The purpose is to return a list of all the herds and species for which a keeper can order tags because LUIS is a multi-species system.",
+            "InterfaceTypeExpectedResponseRate": ["Restful", "Near real-time"],
+            "HTTPmethod": "GET",
+            "URL": "The API is accessed from the URL: https://luispublic-web.azurewebsites.net/Api​/HerdSpecies​/{C}​/{P}​/{H} Herd Species",
+            "Direction": "2-Way",
+            "FrequencyOfInteraction": "Ad hoc",
+            "RequestDefinition": [
+              {
+                "Field": "C",
+                "Mandatory": "M",
+                "Type": "String",
+                "Description": "Country",
+                "Example": "06"
+              },
+              {
+                "Field": "P",
+                "Mandatory": "M",
+                "Type": "String",
+                "Description": "Parish",
+                "Example": "245"
+              },
+              {
+                "Field": "H",
+                "Mandatory": "M",
+                "Type": "String",
+                "Description": "Holding",
+                "Example": "0011"
+              }
+            ],
+            "ResponseExample": "{  \n\n  \"CPH\": \"08/205/8000\",  \n\n  \"Species\": [  \n\n    \"C\",  \n\n    \"S\",  \n\n    \"G\"  \n\n  ],  \n\n  \"Herds\": [  \n\n    {  \n\n      \"Herd_Ref\": \"666666\",  \n\n      \"Species_Id\": \"C\"  \n\n    },  \n\n    {  \n\n      \"Herd_Ref\": \"666666\",  \n\n      \"Species_Id\": \"G\"  \n\n    },  \n\n    {  \n\n      \"Herd_Ref\": \"666666\",  \n\n      \"Species_Id\": \"S\"  \n\n    }  \n\n  ]  \n\n}  ",
+            "ResponseDefinition": [
+              {
+                "Field": "CPH",
+                "Type": "string nullable: true ",
+                "Description": "",
+                "Example": "22/177/0063"
+              },
+              {
+                "Field": "Species",
+                "Type": "string",
+                "Description": "",
+                "Example": "C, S, G"
+              },
+              {
+                "Field": "Herds",
+                "Type": "",
+                "Description": "Luis.Api.Models.HerdSpecies",
+                "Example": ""
+              },
+              {
+                "Field": "Herd_Ref",
+                "Type": "string nullable: true ",
+                "Description": "",
+                "Example": "707136"
+              },
+              {
+                "Field": "Species_Id",
+                "Type": "string nullable: true ",
+                "Description": "",
+                "Example": "C, S, G"
+              }
+            ],
+            "errorCodes": [
+              {
+                "errorCode": "200",
+                "Description": "Success",
+                "comments": ""
+              }
+            ],
+            "comments": ""
+          },
+          {
+            "apiName": "Species",
+            "type": "LUIS ENDPOINT",
+            "DescriptionPurpose": "A list of the species code in LUIS, by code, with name... The species code must be used when placing an order. ",
+            "InterfaceTypeExpectedResponseRate": ["Restful", "Near real-time"],
+            "HTTPmethod": "GET",
+            "URL": "The API is accessed from the URL: https://luispublic-web.azurewebsites.net/​Api​/Species",
+            "Direction": "2-Way",
+            "FrequencyOfInteraction": "Ad hoc",
+            "RequestBody": "{ \n\n  \"UserId\": \"BCMS_Test\", \n\n  \"Password\": \"Vc2VySWQiOiJiY21zIiwiU3VwZXJVc2VyIjoiZmFsc2UiLCJS\", \n\n  \"CallerId\": \"JG1\" \n\n} ",
+            "Request Definition": "No parameters",
+            "ResponseExample": "{ \n\n  \"C\": \"Cattle\", \n\n  \"S\": \"Sheep\", \n\n  \"G\": \"Goats\" \n\n} ",
+            "ResponseDefinition": [
+              {
+                "Field": "additionalProp1",
+                "Type": "string ",
+                "Description": "",
+                "Example": "Cattle"
+              },
+              {
+                "Field": "additionalProp2",
+                "Type": "string",
+                "Description": "",
+                "Example": "Sheep"
+              },
+              {
+                "Field": "additionalProp3",
+                "Type": "string",
+                "Description": "",
+                "Example": "Goats"
+              }
+            ],
+            "errorCodes": [
+              {
+                "errorCode": "200",
+                "Description": "Success",
+                "comments": ""
+              }
+            ],
+            "comments": ""
+          },
+          {
+            "apiName": "Approved Tags for a Species",
+            "type": "LUIS ENDPOINT",
+            "DescriptionPurpose": "Details of all of the ETM’s approved tags for a particular species (by code, C,S,G). To ensure that only the correct approved tags are ordered.",
+            "InterfaceTypeExpectedResponseRate": ["Restful", "Near real-time"],
+            "HTTPmethod": "GET",
+            "URL": "The API is accessed from the URL: https://luispublic-web.azurewebsites.net/​ Api​/SpeciesApprovedTags​/{Species}",
+            "Direction": "2-Way",
+            "FrequencyOfInteraction": "Ad hoc",
+            "RequestDefinition": [
+              {
+                "Field": "Luis.Api.Models.Approved_Tag",
+                "Type": "",
+                "Description": "",
+                "Example": ""
+              },
+              {
+                "Field": "Approved_Tag_Id",
+                "Type": "integer($int32)",
+                "Description": "The unique number (Primary Key) LUIS assigns to the Tag. This number has to be used when placing an order for tags",
+                "Example": "1222"
+              },
+              {
+                "Field": "Manufacturer_Id",
+                "Type": "integer($int32)",
+                "Description": "The unique number in LUIS for the ETM ",
+                "Example": "47"
+              },
+              {
+                "Field": "Tag_Name",
+                "Type": "string",
+                "Description": "",
+                "Example": "FlexoPlus D/D"
+              },
+              {
+                "Field": "Tag_EID",
+                "Type": "boolean",
+                "Description": "Is it an EID tag?",
+                "Example": "false"
+              },
+              {
+                "Field": "Tag_Primary",
+                "Type": "boolean",
+                "Description": "Is it a primary tag?",
+                "Example": "true"
+              },
+              {
+                "Field": "Tag_Slaughter",
+                "Type": "Boolean",
+                "Description": "Is it a slaughter tag?",
+                "Example": "false"
+              },
+              {
+                "Field": "Tag_Approval_Date",
+                "Type": "string($date-time) nullable: true ",
+                "Description": "The date Defra approved the tag for use",
+                "Example": "2020-03-18T00:00:00"
+              },
+              {
+                "Field": "Tag_Approval_End_Date",
+                "Type": "string maxLength: 50 nullable: true ",
+                "Description": "The code the tag was known as in either CETAS or S&GETAS",
+                "Example": "046_1"
+              },
+              {
+                "Field": "Manufacturers_Code",
+                "Type": "string nullable: true",
+                "Description": "The manufacturers reference number for the tag ",
+                "Example": "null"
+              },
+              {
+                "Field": "Notes",
+                "Type": "string nullable: true ",
+                "Description": "",
+                "Example": "null"
+              },
+              {
+                "Field": "Parent_Approved_Tag_Id",
+                "Type": "integer($int32)",
+                "Description": "For LUIS Internal use",
+                "Example": "0"
+              },
+              {
+                "Field": "Tag_Class",
+                "Type": "Luis.Api.Models.Tag_Class",
+                "Description": "For LUIS Internal use",
+                "Example": ""
+              },
+              {
+                "Field": "Rear_Class",
+                "Type": "Luis.Api.Models.Tag_Class",
+                "Description": "For LUIS Internal use",
+                "Example": ""
+              },
+              {
+                "Field": "Colours",
+                "Type": "Luis.Api.Models.Tag_Colour",
+                "Description": "List of colours for the approved tag (includes ended colours)",
+                "Example": ""
+              },
+              {
+                "Field": "Species",
+                "Type": "Luis.Api.Models.Tag_Species",
+                "Description": "List of species for te approved tag (includes ended species)",
+                "Example": ""
+              }
+            ],
+            "ResponseExample": "[  \n\n  {  \n\n    \"Approved_Tag_Id\": 800,  \n\n    \"Manufacturer_Id\": 42,  \n\n    \"Tag_Name\": \"Bubblegum\",  \n\n    \"Tag_EID\": false,  \n\n    \"Tag_Primary\": false,  \n\n    \"Tag_Slaughter\": false,  \n\n    \"Tag_Approval_Date\": \"2020-12-07T00:00:00\",  \n\n    \"Tag_Approval_End_Date\": null,  \n\n    \"Legacy_Code\": null,  \n\n    \"Manufacturers_Code\": null,  \n\n    \"Notes\": null,  \n\n    \"Parent_Approved_Tag_Id\": 140,  \n\n    \"Tag_Class\": {  \n\n      \"Class_Id\": 4,  \n\n      \"Name\": \"Loop\",  \n\n      \"Internal\": false,  \n\n      \"No_Colour\": false,  \n\n      \"Tag_Type\": \"Ear\"  \n\n    },  \n\n    \"Rear_Class\": null,  \n\n    \"Colours\": [  \n\n      {  \n\n        \"Colour\": \"Red\",  \n\n        \"Dye\": \"1\",  \n\n        \"Colour_Group\": null,  \n\n        \"Colour_Tag_End_Date\": \"2021-02-25T08:55:12.5448745\"  \n\n      },  \n\n      {  \n\n        \"Colour\": \"Yellow\",  \n\n        \"Dye\": \"1\",  \n\n        \"Colour_Group\": null,  \n\n        \"Colour_Tag_End_Date\": null  \n\n      },  \n\n      {  \n\n        \"Colour\": \"Orange\",  \n\n        \"Dye\": \"1\",  \n\n        \"Colour_Group\": null,  \n\n        \"Colour_Tag_End_Date\": null  \n\n      },  \n\n      {  \n\n        \"Colour\": \"Blue\",  \n\n        \"Dye\": \"1\",  \n\n        \"Colour_Group\": null,  \n\n        \"Colour_Tag_End_Date\": null  \n\n      },  \n\n      {  \n\n        \"Colour\": \"Green\",  \n\n        \"Dye\": \"1\",  \n\n        \"Colour_Group\": null,  \n\n        \"Colour_Tag_End_Date\": null  \n\n      }  \n\n    ],  \n\n    \"Species\": [  \n\n      {  \n\n        \"Species_Id\": \"C\",  \n\n        \"Species_Tag_End_Date\": null  \n\n      }  \n\n    ]  \n\n  }  \n\n]  ",
+            "errorCodes": [
+              {
+                "errorCode": "200",
+                "Description": "Success",
+                "comments": ""
+              }
+            ],
+            "comments": ""
+          },
+      
+          {
+            "apiName": "Tag Code",
+            "type": "LUIS ENDPOINT",
+            "DescriptionPurpose": "Tag Details by Code",
+            "InterfaceTypeExpectedResponseRate": ["Restful", "Near real-time"],
+            "HTTPmethod": "GET",
+            "URL": "The API is accessed from the URL: https://luispublic-web.azurewebsites.net/​Api/Tags/{Tag_Code}",
+            "Direction": "2-Way",
+            "FrequencyOfInteraction": "Ad hoc",
+            "RequestDefinition": [
+              {
+                "Field": "Tag_Code",
+                "Mandatory": "M",
+                "Type": "string",
+                "Description": "",
+                "Example": "UK666666300303 "
+              }
+            ],
+            "ResponseExample": "{  \n\n  \"Printed_Tag\": \"UK666666300303\",  \n\n  \"Link_Tag\": \"UK666666300303\",  \n\n  \"CPH\": \"08/205/8000\",  \n\n  \"Herd_Ref\": \"666666\",  \n\n  \"Species_Id\": \"C\",  \n\n  \"HasEID\": false,  \n\n  \"HasGBTag\": false,  \n\n  \"HasGBSuffix\": false,  \n\n  \"Tags\": [  \n\n    {  \n\n      \"Replica_Count\": 0,  \n\n      \"Tag_Name\": \"Distance Read + Tissue Sampler\",  \n\n      \"Tag_EID\": false,  \n\n      \"Tag_Primary\": false,  \n\n      \"Manufacturers_Code\": null,  \n\n      \"Tag_Slaughter\": false,  \n\n      \"Tag_Class\": \"Flag\"  \n\n    },  \n\n    {  \n\n      \"Replica_Count\": 0,  \n\n      \"Tag_Name\": \"EID Button 1\",  \n\n      \"Tag_EID\": false,  \n\n      \"Tag_Primary\": false,  \n\n      \"Manufacturers_Code\": null,  \n\n      \"Tag_Slaughter\": false,  \n\n      \"Tag_Class\": \"Button\"  \n\n    }  \n\n  ]  \n\n}  ",
+            "ResponseDefinition": [
+              {
+                "Field": "Luis.Api.Models.Tag",
+                "Type": "",
+                "Description": "",
+                "Example": ""
+              },
+              {
+                "Field": "Printed_Tag",
+                "Type": "string nullable: true ",
+                "Description": "",
+                "Example": "UK161195600001"
+              },
+              {
+                "Field": "Link_Tag ",
+                "Type": "string nullable: true ",
+                "Description": "",
+                "Example": "UK161195600001"
+              },
+              {
+                "Field": "CPH",
+                "Type": "string nullable: true ",
+                "Description": "",
+                "Example": "06/245/0011"
+              },
+              {
+                "Field": "Herd_Ref",
+                "Type": "string nullable: true",
+                "Description": "",
+                "Example": "161195"
+              },
+              {
+                "Field": "Species_Id",
+                "Type": "string nullable: true ",
+                "Description": "",
+                "Example": "C"
+              },
+              {
+                "Field": "Species_Id",
+                "Type": "string nullable: true ",
+                "Description": "",
+                "Example": "C"
+              }
+            ],
+            "errorCodes": [
+              {
+                "errorCode": "200",
+                "Description": "Success",
+                "comments": ""
+              }
+            ],
+            "comments": ""
+          },
+          {
+              "apiName": "Unmatched Tags for a Keeper",
+              "type": "LUIS ENDPOINT",
+              "DescriptionPurpose": "Returns any unmatched tags for a keeper.  A keeper can order birth tags from 2 different suppliers (primary from one and secondary from another. Likewise with EID and non EID tags). If only one side has been ordered the other side must be ordered before any further tag orders can be place.  The same situation can also occur when an order or part of an order is cancelled.  ",
+              "InterfaceTypeExpectedResponseRate": ["Restful", "Near real-time"],
+              "HTTPmethod": "GET",
+              "URL": "The API is accessed from the URL: https://luispublic-web.azurewebsites.net/​ Api​/KeeperUnmatchedTags​/{C}​/{P}​/{H}",
+              "Direction": "2-Way",
+              "FrequencyOfInteraction": "Ad hoc",
+              "RequestDefinition": [
+                {
+                  "Field": "County",
+                  "Mandatory": "M",
+                  "Type": "string",
+                  "Description": "",
+                  "Example": "06"
+                },
+                {
+                  "Field": "Parish",
+                  "Mandatory": "M",
+                  "Type": "string",
+                  "Description": "",
+                  "Example": "245"
+                },
+                {
+                  "Field": "Holding",
+                  "Mandatory": "M",
+                  "Type": "string",
+                  "Description": "",
+                  "Example": "0011"
+                }
+              ],
+              "ResponseExample": "[  \n\n  {  \n\n    \"OrderType\": \"ConventionalOrder\",  \n\n    \"Replacement\": false,  \n\n    \"Herd_Ref\": \"160131\",  \n\n    \"Species_Id\": \"C\",  \n\n    \"For_Tag\": 1,  \n\n    \"Primary\": true,  \n\n    \"Internal\": false,  \n\n    \"Count\": 1,  \n\n    \"Open\": true  \n\n  }  \n\n]  ",
+              "ResponseDefinition": [
+                {
+                  "Field": "List<Luis.Api.Models.UnmatchedTagSet>",
+                  "Type": "",
+                  "Description": "",
+                  "Example": ""
+                },
+                {
+                  "Field": "OrderType",
+                  "Type": "string nullable: true ",
+                  "Description": "",
+                  "Example": "ConventionalOrder"
+                },
+                {
+                  "Field": "Replacement",
+                  "Type": "boolean",
+                  "Description": "",
+                  "Example": "false"
+                },
+                {
+                  "Field": "Herd_Ref",
+                  "Type": "string nullable: true",
+                  "Description": "",
+                  "Example": "707186"
+                },
+                {
+                  "Field": "Species_Id",
+                  "Type": "string nullable: true",
+                  "Description": "",
+                  "Example": "C"
+                },
+                {
+                  "Field": "For_Tag",
+                  "Type": "integer($int32)",
+                  "Description": "This field indicates if the tag is being used as tag 1 or tag 2. Tag 1 is used for the primary tag and EID ",
+                  "Example": "1"
+                },
+                {
+                  "Field": "Primary",
+                  "Type": "boolean",
+                  "Description": "Indicates a primary tag",
+                  "Example": "true"
+                },
+                {
+                  "Field": "Internal",
+                  "Type": "boolean",
+                  "Description": "Indicates a primary tag",
+                  "Example": "false"
+                },
+                {
+                  "Field": "Count",
+                  "Type": "integer($int32)",
+                  "Description": "",
+                  "Example": "2"
+                },
+                {
+                  "Field": "Open",
+                  "Type": "boolean",
+                  "Description": "",
+                  "Example": "false"
+                }
+              ],
+              "errorCodes": [
+                {
+                  "errorCode": "200",
+                  "Description": "Success",
+                  "comments": ""
+                }
+              ],
+              "comments": ""
+            },
+            {
+              "apiName": "Valid Tag Type Combinations",
+              "type": "LUIS ENDPOINT",
+              "DescriptionPurpose": "A list of the valid combination of tags by species. LUIS has build in rules to ensure that only the correct conbinations of tags can be used together. e.g a Bolus and Pastern is not allowed. The purpose is to ensure that ETMs do not send invalid combinations of tags when placing orders  ",
+              "InterfaceTypeExpectedResponseRate": ["Restful", "Near real-time"],
+              "HTTPmethod": "GET",
+              "URL": "The API is accessed from the URL: https://luispublic-web.azurewebsites.net/​Api​/ValidTagCombinations​/{Species}",
+              "Direction": "2-Way",
+              "FrequencyOfInteraction": "Ad hoc",
+              "RequestDefinition": [
+                {
+                  "Field": "Species",
+                  "Mandatory": "M",
+                  "Type": "string",
+                  "Description": "",
+                  "Example": "S"
+                }
+              ],
+              "ResponseExample": "[ \n\n  [ \n\n    \"Ear\", \n\n    \"Ear\" \n\n  ], \n\n   \n\n  [ \n\n    \"Bolus\", \n\n    \"Pastern\" \n\n  ] \n\n] ",
+              "ResponseDefinition": [
+                {
+                  "Field": "TBC",
+                  "Type": "string",
+                  "Description": "",
+                  "Example": "Bolus"
+                }
+              ],
+              "errorCodes": [
+                {
+                  "errorCode": "200",
+                  "Description": "Success",
+                  "comments": ""
+                }
+              ],
+              "comments": ""
+            },
+            {
+              "apiName": "Unmatched Tags for a Keeper",
+              "type": "LUIS ENDPOINT",
+              "DescriptionPurpose": "Returns any unmatched tags for a keeper.  A keeper can order birth tags from 2 different suppliers (primary from one and secondary from another. Likewise with EID and non EID tags). If only one side has been ordered the other side must be ordered before any further tag orders can be place.  The same situation can also occur when an order or part of an order is cancelled.  ",
+              "InterfaceTypeExpectedResponseRate": ["Restful", "Near real-time"],
+              "HTTPmethod": "GET",
+              "URL": "The API is accessed from the URL: https://luispublic-web.azurewebsites.net/​ Api​/KeeperUnmatchedTags​/{C}​/{P}​/{H}",
+              "Direction": "2-Way",
+              "FrequencyOfInteraction": "Ad hoc",
+              "RequestDefinition": [
+                {
+                  "Field": "County",
+                  "Mandatory": "M",
+                  "Type": "string",
+                  "Description": "",
+                  "Example": "06"
+                },
+                {
+                  "Field": "Parish",
+                  "Mandatory": "M",
+                  "Type": "string",
+                  "Description": "",
+                  "Example": "245"
+                },
+                {
+                  "Field": "Holding",
+                  "Mandatory": "M",
+                  "Type": "string",
+                  "Description": "",
+                  "Example": "0011"
+                }
+              ],
+              "ResponseExample": "[  \n\n  {  \n\n    \"OrderType\": \"ConventionalOrder\",  \n\n    \"Replacement\": false,  \n\n    \"Herd_Ref\": \"160131\",  \n\n    \"Species_Id\": \"C\",  \n\n    \"For_Tag\": 1,  \n\n    \"Primary\": true,  \n\n    \"Internal\": false,  \n\n    \"Count\": 1,  \n\n    \"Open\": true  \n\n  }  \n\n]  ",
+              "ResponseDefinition": [
+                {
+                  "Field": "List<Luis.Api.Models.UnmatchedTagSet>",
+                  "Type": "",
+                  "Description": "",
+                  "Example": ""
+                },
+                {
+                  "Field": "OrderType",
+                  "Type": "string nullable: true ",
+                  "Description": "",
+                  "Example": "ConventionalOrder"
+                },
+                {
+                  "Field": "Replacement",
+                  "Type": "boolean",
+                  "Description": "",
+                  "Example": "false"
+                },
+                {
+                  "Field": "Herd_Ref",
+                  "Type": "string nullable: true",
+                  "Description": "",
+                  "Example": "707186"
+                },
+                {
+                  "Field": "Species_Id",
+                  "Type": "string nullable: true",
+                  "Description": "",
+                  "Example": "C"
+                },
+                {
+                  "Field": "For_Tag",
+                  "Type": "integer($int32)",
+                  "Description": "This field indicates if the tag is being used as tag 1 or tag 2. Tag 1 is used for the primary tag and EID ",
+                  "Example": "1"
+                },
+                {
+                  "Field": "Primary",
+                  "Type": "boolean",
+                  "Description": "Indicates a primary tag",
+                  "Example": "true"
+                },
+                {
+                  "Field": "Internal",
+                  "Type": "boolean",
+                  "Description": "Indicates a primary tag",
+                  "Example": "false"
+                },
+                {
+                  "Field": "Count",
+                  "Type": "integer($int32)",
+                  "Description": "",
+                  "Example": "2"
+                },
+                {
+                  "Field": "Open",
+                  "Type": "boolean",
+                  "Description": "",
+                  "Example": "false"
+                }
+              ],
+              "errorCodes": [
+                {
+                  "errorCode": "200",
+                  "Description": "Success",
+                  "comments": ""
+                }
+              ],
+              "comments": ""
+            },
+            {
+              "apiName": "Ordered Tags",
+              "type": "LUIS ENDPOINT",
+              "DescriptionPurpose": "By entering a Defra order reference number, the details of that order can be retrieved. The manufacturer who originally placed the order can only do this.  ",
+              "InterfaceTypeExpectedResponseRate": ["Restful", "Near real-time"],
+              "HTTPmethod": "GET",
+              "URL": "The API is accessed from the URL: https://luispublic-web.azurewebsites.net/Api/Orders/{Defra_Ref}/Tags",
+              "Direction": "2-Way",
+              "FrequencyOfInteraction": "Ad hoc",
+              "RequestDefinition": [
+                {
+                  "Field": "Defra_Ref",
+                  "Mandatory": "M",
+                  "Type": "string",
+                  "Description": "",
+                  "Example": "001264"
+                }
+              ],
+              "ResponseExample": "[ \n\n  { \n\n    \"Ordered_Tag_Id\": 213203, \n\n    \"Order_Id\": 1264, \n\n    \"CPH\": \"08/205/8000\", \n\n    \"Herd_Ref\": \"666666\", \n\n    \"For_Tag\": 1, \n\n    \"Tag_Id\": 168545, \n\n    \"Approved_Tag_Id\": 1340, \n\n    \"Colour\": \"Yellow\", \n\n    \"Approved_Tag_Colour_Id\": 777, \n\n    \"Attributes_Id\": 0, \n\n    \"Manufacturer_Id\": 79, \n\n    \"Tag_Start_Date\": \"2021-09-20T10:50:58.7407821\", \n\n    \"Tag_End_Date\": null, \n\n    \"Tag_End_Reason\": null, \n\n    \"Tag_Status\": 0, \n\n    \"Tag_Replica_Count\": 0, \n\n    \"Disregard_Count\": false, \n\n    \"Last_Replica\": 0, \n\n    \"Frozen_Until\": null, \n\n    \"Cancellation_Id\": 0, \n\n    \"Recovery_Id\": 0, \n\n    \"Tag\": { \n\n      \"Printed_Tag\": \"UK066666600804\", \n\n      \"Link_Tag\": null, \n\n      \"Visual_Tag\": \"UK 0 666666 00804\", \n\n      \"CPH\": \"08/205/8000\", \n\n      \"Animal_No\": 804, \n\n      \"Country\": \"UK\", \n\n      \"Herd_Ref\": \"666666\", \n\n      \"Species_Id\": \"S\", \n\n      \"HasEID\": true, \n\n      \"HasGBTag\": false, \n\n      \"HasGBSuffix\": false, \n\n      \"Tags\": [] \n\n    }, \n\n    \"Approved_Tag\": { \n\n      \"Approved_Tag_Id\": 1340, \n\n      \"Manufacturer_Id\": 79, \n\n      \"Tag_Name\": \"Flexotronic L/R 27\", \n\n      \"Tag_EID\": true, \n\n      \"Tag_Primary\": true, \n\n      \"Tag_Slaughter\": false, \n\n      \"Tag_Approval_Date\": \"2014-07-18T00:00:00\", \n\n      \"Tag_Approval_End_Date\": null, \n\n      \"Legacy_Code\": \"046_315\", \n\n      \"Manufacturers_Code\": null, \n\n      \"Notes\": null, \n\n      \"Parent_Approved_Tag_Id\": 0, \n\n      \"Tag_Class\": null, \n\n      \"Rear_Class\": null, \n\n      \"Colours\": [], \n\n      \"Species\": [] \n\n    }, \n\n  ]",
+              "ResponseDefinition": [
+                {
+                  "Field": "Ordered_Tag_Id",
+                  "Type": "integer($int32)",
+                  "Description": "",
+                  "Example": "213203"
+                },
+                {
+                  "Field": "Order_Id",
+                  "Type": "string nullable: true",
+                  "Description": "The unique order ref number",
+                  "Example": "1264"
+                },
+                {
+                  "Field": "CPH",
+                  "Type": "string nullable: true",
+                  "Description": "",
+                  "Example": "08/205/8000"
+                },
+                {
+                  "Field": "Herd_Ref",
+                  "Type": "string nullable: true" ,
+                  "Description": "",
+                  "Example": "666666"
+                },
+                {
+                  "Field": "For_Tag",
+                  "Type": "integer($int32)" ,
+                  "Description": "",
+                  "Example": "1"
+                },
+                {
+                  "Field": "Tag_Id",
+                  "Type": "integer($int32)" ,
+                  "Description": "",
+                  "Example": "168545"
+                },
+                {
+                  "Field": "Approved_Tag_Id ",
+                  "Type": "integer($int32)" ,
+                  "Description": "The LUIS Id of the tag ",
+                  "Example": "1340"
+                },
+                {
+                  "Field": "Colour",
+                  "Type": "String nullable: true " ,
+                  "Description": "The colour of the tag ",
+                  "Example": "Yellow"
+                },
+                {
+                  "Field": "Approved_Tag_Colour_Id ",
+                  "Type": "integer($int32) nullable: true " ,
+                  "Description": "The colour of the tag Id  ",
+                  "Example": "777"
+                }
+              ],
+              "errorCodes": [
+                {
+                  "errorCode": "200",
+                  "Description": "Success",
+                  "comments": ""
+                }
+              ],
+              "comments": ""
+            }
+          ]
+        }
+    ]
+  }
