@@ -204,7 +204,7 @@
 				{
 					"type": "DETAIL",
 					"body": {
-						"title": "/v2/HoldingMovementForReviews/GetReviewBatches(isPreMovement={isPreMovement},movementPendingId={movementPendingId},movementId={movementId})",
+						"title": "/v2/<strong>HoldingMovementForReviews/GetReviewBatches(isPreMovement={isPreMovement},movementPendingId={movementPendingId},movementId={movementId})</strong>",
 						"tag": "GET",
 						"body": [
 							{
@@ -214,10 +214,6 @@
 							{
 								"type": "P",
 								"body": "GET TransferRequests returns the list of batches for the specified ReviewHoldingMovementRequest."
-							},
-							{
-								"type": "P",
-								"body": "the optional $select, and $filter parameters can be used to restrict the scope of the results set returned."
 							},
 							{
 								"type": "H4",
@@ -248,41 +244,6 @@
 										},
 										{
 											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
-										}
-									]
-								}
-							},
-							{
-								"type": "H4",
-								"body": "Parameters"
-							},
-							{
-								"type": "TABLE",
-								"body": {
-									"headers": [
-										"Name",
-										"Type",
-										"Required",
-										"Description"
-									],
-									"rows": [
-										{
-											"data": ["$select", "string", "false", "query string to limit the entities to be included in the response"]
-										},
-										{
-											"data": ["$expand", "string", "false", "indicates the related entities to be represented inline. The maximum depth is 2."]
-										},
-										{
-											"data": ["$filter", "string", "false", "query string used to limit the number of items returned in the results set. When specifying dates, only those with a time part will be accepted."]
-										},
-										{
-											"data": ["$orderby", "string", "false", "specifies the order in which items in the results set are returned"]
-										},
-										{
-											"data": ["$top", "int32", "false", "limits the number of results returned"]
-										},
-										{
-											"data": ["$skip", "int32", "false", "excluded the specified number of items from the resuts set"]
 										}
 									]
 								}
