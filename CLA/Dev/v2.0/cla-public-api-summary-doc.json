@@ -1150,7 +1150,7 @@
 				{
 					"type": "DETAIL",
 					"body": {
-						"title": "/v2/<strong>HoldingMovementForReviews(species='{species}',holding='{holding}')</strong>",
+						"title": "/v2/<strong>HoldingMovementForReviews/ReviewBySpecies (species='{species}',holding='{holding}')</strong>",
 						"tag": "GET",
 						"body": [
 							{
