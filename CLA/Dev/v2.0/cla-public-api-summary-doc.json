@@ -286,6 +286,88 @@
 				{
 					"type": "DETAIL",
 					"body": {
+						"title": "/v2/<strong>/v2/HoldingMovementForReviews/GetReviewDevices(isPreMovement={isPreMovement},movementPendingId={movementPendingId},movementId={movementId})</strong>",
+						"tag": "GET",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "GET TransferRequests returns the list of devices for the specified ReviewHoldingMovementRequest."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to provide a Subscription Key in the requests header. Read the <a href='/documentation/api-authentication'>API Authentication</a> page for details"
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>200 (Success)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that system has processed the requests and the results are presented in the response body"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 (Bad Request)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that the submission has been rejected by the system as some, or all of the data supplied was found to be in error."
+							},
+							{
+								"type": "P",
+								"body": "The CLAErrorResponse structure in the returned message provides a list of error codes, together with a textual description of each error. Additional information is provided in the errors body and identifies the field or fields in the original submission that generated each error."
+							},
+							{
+								"type": "P",
+								"body": "Following an error response, the system discards the submitted data. The caller must correct the errors identified and resubmit the movement again."
+							},
+							{
+								"type": "P",
+								"body": "If the caller supplied a value in the trackingId field of the submitted movement, this can be reused in a future submission as the system maintains no record of it."
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
 						"title": "/v2/<strong>TransferRequests</strong>",
 						"tag": "POST",
 						"body": [
