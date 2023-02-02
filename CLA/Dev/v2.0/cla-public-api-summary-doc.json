@@ -122,7 +122,7 @@
 				{
 					"type": "CODE",
 					"body": [
-						"{\r\n   \"@odata.context\": \"https://<host>/v1/$metadata#ReviewHoldingMovementRequests\",\r\n   \"value\": [… 50 movement entities],\r\n   \"@odata.nextLink\": \"https://<host>/v1/ReviewHoldingMovementRequest?$skip=50\"\r\n}"
+						"{\r\n   \"@odata.context\": \"https://<host>/v2/$metadata#ReviewHoldingMovementRequests\",\r\n   \"value\": [… 50 movement entities],\r\n   \"@odata.nextLink\": \"https://<host>/v2/ReviewHoldingMovementRequest?$skip=50\"\r\n}"
 					]
 				},
 				{
@@ -139,7 +139,7 @@
 				},
 				{
 					"type": "P",
-					"body": "For example, manually requesting the third page of animal movements that require review with a client-defined page size of 2 would be done using the GET /v1/ReviewHoldingMovementRequests?$top=2&$skip=4 endpoint."
+					"body": "For example, manually requesting the third page of animal movements that require review with a client-defined page size of 2 would be done using the GET /v2/ReviewHoldingMovementRequests?$top=2&$skip=4 endpoint."
 				},
 				{
 					"type": "P",
@@ -160,7 +160,7 @@
 			"content": [
 				{
 					"type": "P",
-					"body": "Special handling is required for parameter strings containing punctuation characters, such as CPH numbers or date/times in functions such /v1/HoldingMovementForReviews"
+					"body": "Special handling is required for parameter strings containing punctuation characters, such as CPH numbers or date/times in functions such /v2/HoldingMovementForReviews"
 				},
 				{
 					"type": "P",
@@ -204,7 +204,7 @@
 				{
 					"type": "DETAIL",
 					"body": {
-						"title": "/v1/<strong>TransferRequests</strong>",
+						"title": "/v2/<strong>TransferRequests</strong>",
 						"tag": "GET",
 						"body": [
 							{
@@ -325,7 +325,7 @@
 				{
 					"type": "DETAIL",
 					"body": {
-						"title": "/v1/<strong>TransferRequests</strong>",
+						"title": "/v2/<strong>TransferRequests</strong>",
 						"tag": "POST",
 						"body": [
 							{
@@ -443,7 +443,7 @@
 									"<strong>Processing</strong> - the system is currently processing the request and the caller should query again after a short delay",
 									"<strong>Success</strong> - the system has accepted the request and the system view of the animals on the users holding has been adjusted to account for the details in the movement.",
 									"<strong>Fail</strong> - the request has failed. The failure reasons are detailed in the errors section of the response.",
-									"<strong>QueueFail</strong> - the system could not proceed with validation. The caller should resubmit the request again using POST /v1/TransferRequests",
+									"<strong>QueueFail</strong> - the system could not proceed with validation. The caller should resubmit the request again using POST /v2/TransferRequests",
 									"<strong>CompletedError</strong> - the request contained invalid or inconsistent data. The errors are detailed in the errors section of the response. Any animals referenced by the errors will not have had any action recorded for them but any other animals in the same request, but without an error, will have been recorded.",
 									"<strong>Rejected</strong> - the request contained invalid or inconsistent data. The errors are detailed in the errors section of the response.",
 									"<strong>Cancelled</strong> - a user action such as 'undoing' the request caused the processing to be cancelled during validation.",
@@ -457,15 +457,15 @@
 							},
 							{
 								"type": "P",
-								"body": "If the requestStatus returns a value of <strong>'Pending'</strong> or <strong>'Processing'</strong>, this indicates that the movement request has been queued by the system for further validation and processing. The caller must then call GET /v1/TransferRequests({requestId}) repeatedly to track the progress of the request through the validation process. The requestId parameter is the unique identifier returned in response to a successful POST /v1/TransferRequests."
+								"body": "If the requestStatus returns a value of <strong>'Pending'</strong> or <strong>'Processing'</strong>, this indicates that the movement request has been queued by the system for further validation and processing. The caller must then call GET /v2/TransferRequests({requestId}) repeatedly to track the progress of the request through the validation process. The requestId parameter is the unique identifier returned in response to a successful POST /v2/TransferRequests."
 							},
 							{
 								"type": "P",
-								"body": "Processing is complete once a call to GET /v1/TransferRequests({requestId}) returns a requestStatus of <strong>'Success', 'Fail', 'QueueFail', 'CompletedError', 'Rejected', 'Cancelled' or 'CompletedWarning'</strong>." 
+								"body": "Processing is complete once a call to GET /v2/TransferRequests({requestId}) returns a requestStatus of <strong>'Success', 'Fail', 'QueueFail', 'CompletedError', 'Rejected', 'Cancelled' or 'CompletedWarning'</strong>." 
 							},
 							{
 								"type": "P",
-								"body": "To prevent overloading the system, the caller should call GET /v1/TransferRequests at a frequency no higher that once per second."
+								"body": "To prevent overloading the system, the caller should call GET /v2/TransferRequests at a frequency no higher that once per second."
 							},
 							{
 								"type": "P",
@@ -493,7 +493,7 @@
 				{
 					"type": "DETAIL",
 					"body": {
-					"title": "/v1/<strong>TransferRequests({requestId})</strong>",
+					"title": "/v2/<strong>TransferRequests({requestId})</strong>",
 						"tag": "GET",
 						"body": [
 							{
@@ -605,7 +605,7 @@
 				{
 					"type": "DETAIL",
 					"body": {
-						"title": "/v1/<strong>CorrectTransferRequests</strong>",
+						"title": "/v2/<strong>CorrectTransferRequests</strong>",
 						"tag": "GET",
 						"body": [
 							{
@@ -726,7 +726,7 @@
 				{
 					"type": "DETAIL",
 					"body": {
-						"title": "/v1/<strong>CorrectTransferRequests</strong>",
+						"title": "/v2/<strong>CorrectTransferRequests</strong>",
 						"tag": "POST",
 						"body": [
 							{
@@ -752,11 +752,11 @@
 							},
 							{
 								"type": "P",
-								"body": "To make a correction, the caller uses the POST /v1/CorrectTransferRequests endpoint, specifying the requestId returned in the success response of the original TransferRequests submission. The remainder of the message body is populated with the details of the amended movement in a similar structure to that of the original call to TransferRequests."
+								"body": "To make a correction, the caller uses the POST /v2/CorrectTransferRequests endpoint, specifying the requestId returned in the success response of the original TransferRequests submission. The remainder of the message body is populated with the details of the amended movement in a similar structure to that of the original call to TransferRequests."
 							},
 							{
 								"type": "P",
-								"body": "Just as for the original TransferRequests, following submission of the movement using POST /v1/CorrectTransferRequests, the system will validate the data content and return an immediate response. indicating whether the content has been accepted for validation. Two response codes are possible:"
+								"body": "Just as for the original TransferRequests, following submission of the movement using POST /v2/CorrectTransferRequests, the system will validate the data content and return an immediate response. indicating whether the content has been accepted for validation. Two response codes are possible:"
 							},
 							{
 								"type": "P",
@@ -781,7 +781,7 @@
 									"<strong>Processing</strong> - the system is currently processing the request and the caller should query again after a short delay",
 									"<strong>Success</strong> - the system has accepted the request and the system view of the animals on the users holding has been adjusted to account for the details in the corrected movement.",
 									"<strong>Fail</strong> - the request has failed. The failure reasons are detailed in the errors section of the response.",
-									"<strong>QueueFail</strong> - the system could not proceed with validation. The caller should resubmit the request using POST /v1/CorrectTransferRequests",
+									"<strong>QueueFail</strong> - the system could not proceed with validation. The caller should resubmit the request using POST /v2/CorrectTransferRequests",
 									"<strong>CompletedError</strong> - the request contained invalid or inconsistent data. The errors are detailed in the errors section of the response.",
 									"<strong>Rejected</strong> - the request contained invalid or inconsistent data. The errors are detailed in the errors section of the response.",
 									"<strong>Cancelled</strong> - a user action such as 'undoing' the request caused the processing to be cancelled during validation.",
@@ -795,7 +795,7 @@
 							},
 							{
 								"type": "P",
-								"body": "If the requestStatus returns a value of <strong>'Pending'</strong> or <strong>'Processing'</strong>, this indicates that the movement request has been queued by the system for further validation and processing. The caller must then call GET /v1/CorrectTransferRequests({requestId}) repeatedly to track the progress of the request through the validation process. The requestId parameter is the unique identifier returned in response to a successful POST /v1/CorrectTransferRequests."
+								"body": "If the requestStatus returns a value of <strong>'Pending'</strong> or <strong>'Processing'</strong>, this indicates that the movement request has been queued by the system for further validation and processing. The caller must then call GET /v2/CorrectTransferRequests({requestId}) repeatedly to track the progress of the request through the validation process. The requestId parameter is the unique identifier returned in response to a successful POST /v2/CorrectTransferRequests."
 							},
 							{
 								"type": "P",
@@ -823,7 +823,7 @@
 				{
 					"type": "DETAIL",
 					"body": {
-						"title": "/v1/<strong>CorrectTransferRequests({requestId})</strong>",
+						"title": "/v2/<strong>CorrectTransferRequests({requestId})</strong>",
 						"tag": "GET",
 						"body": [
 							{
@@ -939,7 +939,7 @@
 				{
 					"type": "DETAIL",
 					"body": {
-						"title": "/v1/<strong>HoldingMovementForReviews(species='{species}',holding='{holding}')</strong>",
+						"title": "/v2/<strong>HoldingMovementForReviews(species='{species}',holding='{holding}')</strong>",
 						"tag": "GET",
 						"body": [
 							{
@@ -1026,7 +1026,7 @@
 							},
 							{
 								"type": "P",
-								"body": "Once a list of unconfirmed movements has been obtained, the calling application calls POST /v1/ReviewHoldingMovementRequests supplying the requestId of the movement being confirmed and the tag or batch numbers of the animals that are being accepted or rejected. It is permitted to accept some tags or batches and reject others in the same transaction."
+								"body": "Once a list of unconfirmed movements has been obtained, the calling application calls POST /v2/ReviewHoldingMovementRequests supplying the requestId of the movement being confirmed and the tag or batch numbers of the animals that are being accepted or rejected. It is permitted to accept some tags or batches and reject others in the same transaction."
 							},
 							{
 								"type": "P",
@@ -1058,7 +1058,7 @@
 							},
 							{
 								"type": "P",
-								"body": "The destination keeper accepts or rejects the movement using POST /v1/ReviewHoldingMovementRequests, using the departureRequestId from the departure keepers movement as the key to identify the target."
+								"body": "The destination keeper accepts or rejects the movement using POST /v2/ReviewHoldingMovementRequests, using the departureRequestId from the departure keepers movement as the key to identify the target."
 							}
 						]
 					}
@@ -1066,7 +1066,7 @@
 				{
 					"type": "DETAIL",
 					"body": {
-						"title": "/v1/<strong>ReviewHoldingMovementRequests</strong>",
+						"title": "/v2/<strong>ReviewHoldingMovementRequests</strong>",
 						"tag": "GET",
 						"body": [
 							{
@@ -1187,7 +1187,7 @@
 				{
 					"type": "DETAIL",
 					"body": {
-						"title": "/v1/<strong>ReviewHoldingMovementRequests</strong>",
+						"title": "/v2/<strong>ReviewHoldingMovementRequests</strong>",
 						"tag": "POST",
 						"body": [
 							{
@@ -1274,7 +1274,7 @@
 									"<strong>Processing</strong> - the system is currently processing the request and the caller should query again after a short delay",
 									"<strong>Success</strong> - the system has accepted the request and the system view of the animals on the users holding has been adjusted to account for the details in the movement.",
 									"<strong>Fail</strong> - the request has failed. The failure reasons are detailed in the errors section of the response.",
-									"<strong>QueueFail</strong> - the system could not proceed with validation. The caller should resubmit the request using POST /v1/ReviewHoldingMovementRequests",
+									"<strong>QueueFail</strong> - the system could not proceed with validation. The caller should resubmit the request using POST /v2/ReviewHoldingMovementRequests",
 									"<strong>CompletedError</strong> - the request contained invalid or inconsistent data. The errors are detailed in the errors section of the response.",
 									"<strong>Rejected</strong> - the request contained invalid or inconsistent data. The errors are detailed in the errors section of the response.",
 									"<strong>Cancelled</strong> - a user action such as 'undoing' the request caused the processing to be cancelled during validation.",
@@ -1288,15 +1288,15 @@
 							},
 							{
 								"type": "P",
-								"body": "If the requestStatus returns a value of <strong>'Pending'</strong> or <strong>'Processing'</strong>, this indicates that the confirmation or rejection request has been queued by the system for further validation and processing. The caller must then call GET /v1/ReviewHoldingMovementRequests({requestId}) repeatedly to track the progress of the request through the validation process. The requestId parameter is the unique identifier returned in response to a successful POST /v1/ReviewHoldingMovementRequests."
+								"body": "If the requestStatus returns a value of <strong>'Pending'</strong> or <strong>'Processing'</strong>, this indicates that the confirmation or rejection request has been queued by the system for further validation and processing. The caller must then call GET /v2/ReviewHoldingMovementRequests({requestId}) repeatedly to track the progress of the request through the validation process. The requestId parameter is the unique identifier returned in response to a successful POST /v2/ReviewHoldingMovementRequests."
 							},
 							{
 								"type": "P",
-								"body": "Processing is complete once a call to GET /v1/ReviewHoldingMovementRequests({requestId}) returns a requestStatus of <strong>'Success', 'Fail', 'QueueFail', 'CompletedError', 'Rejected', 'Cancelled' or 'CompletedWarning'</strong>." 
+								"body": "Processing is complete once a call to GET /v2/ReviewHoldingMovementRequests({requestId}) returns a requestStatus of <strong>'Success', 'Fail', 'QueueFail', 'CompletedError', 'Rejected', 'Cancelled' or 'CompletedWarning'</strong>." 
 							},
 							{
 								"type": "P",
-								"body": "To prevent overloading the system, the caller should call GET /v1/ReviewHoldingMovementRequests at a frequency no higher that once per second."
+								"body": "To prevent overloading the system, the caller should call GET /v2/ReviewHoldingMovementRequests at a frequency no higher that once per second."
 							},
 							{
 								"type": "P",
@@ -1320,7 +1320,7 @@
 				{
 					"type": "DETAIL",
 					"body": {
-						"title": "/v1/<strong>ReviewHoldingMovementRequests({requestId})</strong>",
+						"title": "/v2/<strong>ReviewHoldingMovementRequests({requestId})</strong>",
 						"tag": "GET",
 						"body": [
 							{
@@ -1436,7 +1436,7 @@
 				{
 					"type": "DETAIL",
 					"body": {
-						"title": "/v1/<strong>UndoRequests</strong>",
+						"title": "/v2/<strong>UndoRequests</strong>",
 						"tag": "GET",
 						"body": [
 							{
@@ -1557,7 +1557,7 @@
 				{
 					"type": "DETAIL",
 					"body": {
-						"title": "/v1/<strong>UndoRequests</strong>",
+						"title": "/v2/<strong>UndoRequests</strong>",
 						"tag": "POST",
 						"body": [
 							{
@@ -1654,7 +1654,7 @@
 									"<strong>Processing</strong> - the system is currently processing the request and the caller should query again after a short delay",
 									"<strong>Success</strong> - the system has accepted the request and the system view of the animals on the users holding has been adjusted to account for the details in the movement.",
 									"<strong>Fail</strong> - the request has failed. The failure reasons are detailed in the errors section of the response.",
-									"<strong>QueueFail</strong> - the system could not proceed with validation. The caller should resubmit the request using POST /v1/UndoRequests",
+									"<strong>QueueFail</strong> - the system could not proceed with validation. The caller should resubmit the request using POST /v2/UndoRequests",
 									"<strong>CompletedError</strong> - the request contained invalid or inconsistent data. The errors are detailed in the errors section of the response.",
 									"<strong>Rejected</strong> - the request contained invalid or inconsistent data. The errors are detailed in the errors section of the response.",
 									"<strong>Cancelled</strong> - a user action such as 'undoing' the request caused the processing to be cancelled during validation.",
@@ -1668,15 +1668,15 @@
 							},
 							{
 								"type": "P",
-								"body": "If the requestStatus returns a value of <strong>'Pending'</strong> or <strong>'Processing'</strong>, this indicates that the undo request has been queued by the system for further validation and processing. The caller must then call GET /v1/UndoRequests({requestId}) repeatedly to track the progress of the request through the validation process. The requestId parameter is the unique identifier returned in response to a successful POST /v1/UndoRequests."
+								"body": "If the requestStatus returns a value of <strong>'Pending'</strong> or <strong>'Processing'</strong>, this indicates that the undo request has been queued by the system for further validation and processing. The caller must then call GET /v2/UndoRequests({requestId}) repeatedly to track the progress of the request through the validation process. The requestId parameter is the unique identifier returned in response to a successful POST /v2/UndoRequests."
 							},
 							{
 								"type": "P",
-								"body": "Processing is complete once a call to GET /v1/UndoRequests({requestId}) returns a requestStatus of <strong>'Success', 'Fail', 'QueueFail', 'CompletedError', 'Rejected', 'Cancelled' or 'CompletedWarning'</strong>." 
+								"body": "Processing is complete once a call to GET /v2/UndoRequests({requestId}) returns a requestStatus of <strong>'Success', 'Fail', 'QueueFail', 'CompletedError', 'Rejected', 'Cancelled' or 'CompletedWarning'</strong>." 
 							},
 							{
 								"type": "P",
-								"body": "To prevent overloading the system, the caller should call GET /v1/UndoRequests at a frequency no higher that once per second."
+								"body": "To prevent overloading the system, the caller should call GET /v2/UndoRequests at a frequency no higher that once per second."
 							},
 							{
 								"type": "P",
@@ -1692,7 +1692,7 @@
 				{
 					"type": "DETAIL",
 					"body": {
-						"title": "/v1/<strong>UndoRequests({requestId})</strong>",
+						"title": "/v2/<strong>UndoRequests({requestId})</strong>",
 						"tag": "GET",
 						"body": [
 							{
