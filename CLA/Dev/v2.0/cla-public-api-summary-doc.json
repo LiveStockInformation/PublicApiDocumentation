@@ -368,7 +368,128 @@
 				{
 					"type": "DETAIL",
 					"body": {
-						"title": "/v2/<strong>TransferRequests </strong>",
+						"title": "/v1/<strong>TransferRequests</strong>",
+						"tag": "GET",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "GET TransferRequests returns all requests made by the registered user to register the movement of animals."
+							},
+							{
+								"type": "P",
+								"body": "the optional $select, and $filter parameters can be used to restrict the scope of the results set returned."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to provide a Subscription Key in the requests header. Read the <a href='/documentation/api-authentication'>API Authentication</a> page for details"
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Type",
+										"Required",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["$select", "string", "false", "query string to limit the entities to be included in the response"]
+										},
+										{
+											"data": ["$expand", "string", "false", "indicates the related entities to be represented inline. The maximum depth is 2."]
+										},
+										{
+											"data": ["$filter", "string", "false", "query string used to limit the number of items returned in the results set. When specifying dates, only those with a time part will be accepted."]
+										},
+										{
+											"data": ["$orderby", "string", "false", "specifies the order in which items in the results set are returned"]
+										},
+										{
+											"data": ["$top", "int32", "false", "limits the number of results returned"]
+										},
+										{
+											"data": ["$skip", "int32", "false", "excluded the specified number of items from the resuts set"]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>200 (Success)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that system has processed the requests and the results are presented in the response body"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 (Bad Request)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that the submission has been rejected by the system as some, or all of the data supplied was found to be in error."
+							},
+							{
+								"type": "P",
+								"body": "The CLAErrorResponse structure in the returned message provides a list of error codes, together with a textual description of each error. Additional information is provided in the errors body and identifies the field or fields in the original submission that generated each error."
+							},
+							{
+								"type": "P",
+								"body": "Following an error response, the system discards the submitted data. The caller must correct the errors identified and resubmit the movement again."
+							},
+							{
+								"type": "P",
+								"body": "If the caller supplied a value in the trackingId field of the submitted movement, this can be reused in a future submission as the system maintains no record of it."
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v1/<strong>TransferRequests</strong>",
 						"tag": "POST",
 						"body": [
 							{
@@ -486,7 +607,7 @@
 									"<strong>Processing</strong> - the system is currently processing the request and the caller should query again after a short delay",
 									"<strong>Success</strong> - the system has accepted the request and the system view of the animals on the users holding has been adjusted to account for the details in the movement.",
 									"<strong>Fail</strong> - the request has failed. The failure reasons are detailed in the errors section of the response.",
-									"<strong>QueueFail</strong> - the system could not proceed with validation. The caller should resubmit the request again using POST /v2/TransferRequests",
+									"<strong>QueueFail</strong> - the system could not proceed with validation. The caller should resubmit the request again using POST /v1/TransferRequests",
 									"<strong>CompletedError</strong> - the request contained invalid or inconsistent data. The errors are detailed in the errors section of the response. Any animals referenced by the errors will not have had any action recorded for them but any other animals in the same request, but without an error, will have been recorded.",
 									"<strong>Rejected</strong> - the request contained invalid or inconsistent data. The errors are detailed in the errors section of the response.",
 									"<strong>Cancelled</strong> - a user action such as 'undoing' the request caused the processing to be cancelled during validation.",
@@ -500,15 +621,15 @@
 							},
 							{
 								"type": "P",
-								"body": "If the requestStatus returns a value of <strong>'Pending'</strong> or <strong>'Processing'</strong>, this indicates that the movement request has been queued by the system for further validation and processing. The caller must then call GET /v2/TransferRequests({requestId}) repeatedly to track the progress of the request through the validation process. The requestId parameter is the unique identifier returned in response to a successful POST /v2/TransferRequests."
+								"body": "If the requestStatus returns a value of <strong>'Pending'</strong> or <strong>'Processing'</strong>, this indicates that the movement request has been queued by the system for further validation and processing. The caller must then call GET /v1/TransferRequests({requestId}) repeatedly to track the progress of the request through the validation process. The requestId parameter is the unique identifier returned in response to a successful POST /v1/TransferRequests."
 							},
 							{
 								"type": "P",
-								"body": "Processing is complete once a call to GET /v2/TransferRequests({requestId}) returns a requestStatus of <strong>'Success', 'Fail', 'QueueFail', 'CompletedError', 'Rejected', 'Cancelled' or 'CompletedWarning'</strong>." 
+								"body": "Processing is complete once a call to GET /v1/TransferRequests({requestId}) returns a requestStatus of <strong>'Success', 'Fail', 'QueueFail', 'CompletedError', 'Rejected', 'Cancelled' or 'CompletedWarning'</strong>." 
 							},
 							{
 								"type": "P",
-								"body": "To prevent overloading the system, the caller should call GET /v2/TransferRequests at a frequency no higher that once per second."
+								"body": "To prevent overloading the system, the caller should call GET /v1/TransferRequests at a frequency no higher that once per second."
 							},
 							{
 								"type": "P",
