@@ -368,7 +368,7 @@
 				{
 					"type": "DETAIL",
 					"body": {
-						"title": "/v1/<strong>TransferRequests</strong>",
+						"title": "/v1/<strong>TransferRequestss</strong>",
 						"tag": "GET",
 						"body": [
 							{
