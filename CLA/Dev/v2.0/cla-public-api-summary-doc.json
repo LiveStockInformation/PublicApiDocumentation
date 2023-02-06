@@ -1209,6 +1209,21 @@
 									],
 									"rows": [
 										{
+											"data": ["$filter", "string", "false", "query string that restricts the set of items returned. The maximum number of expressions is 100. The allowed functions are: allfunctions. Only dates with a time part will be accepted."]
+										},
+										{
+											"data": ["$orderby", "string", "false", "query string that specifies the order in which items are returned. The maximum number of expressions is 5."]
+										},
+										{
+											"data": ["$stop", "string", "false", "query string that limits the number of items returned from a collection."]
+										},
+										{
+											"data": ["$skip", "string", "false", "query string that excludes the specified number of items of the queried collection from the result."]
+										},
+										{
+											"data": ["$count", "string", "false", "query string that indicates whether the total count of items within a collection are returned in the result.."]
+										},
+										{
 											"data": ["species", "string", "true", "the species for which movement records are required."]
 										},
 										{
