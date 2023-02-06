@@ -368,7 +368,7 @@
 				{
 					"type": "DETAIL",
 					"body": {
-						"title": "/v1/<strong>TransferRequests</strong>",
+						"title": "/v2/<strong>TransferRequests</strong>",
 						"tag": "GET",
 						"body": [
 							{
@@ -489,7 +489,7 @@
 				{
 					"type": "DETAIL",
 					"body": {
-						"title": "/v1/<strong>TransferRequests</strong>",
+						"title": "/v2/<strong>TransferRequests</strong>",
 						"tag": "POST",
 						"body": [
 							{
