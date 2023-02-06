@@ -32,7 +32,7 @@
 			"content": [
 				{
 					"type": "P",
-					"body": "When an API changes, we will make backwards compatible changes where we can. When this is not possible, we will add a note about deprecated endpoints and make a new endpoint available."
+					"body": "When an API changes, we will make backwards compatible changes where we can. When this is not possible, we will add a note about deprecated endpoints and make a new endpoint available. Please visit the <a href='/apis/change-logs'> API Change Log</a>, to view what's new and what's changed."
 				},
 				{
 					"type": "P",
