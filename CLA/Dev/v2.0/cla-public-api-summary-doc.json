@@ -45,7 +45,7 @@
 			"content": [
 				{
 					"type": "P",
-					"body": "For more details about the Common Livestock Application API, open an API browser like <a href='https://editor.swagger.io' data-swagger-editor class='govuk-link' target='_blank'>Swagger Editor</a> and copy the Open API file content into it."
+					"body": "For more details about the Common Livestock Application API, open an API browser like <a href='https://editor.swagger.io' data-swagger-editor class='govuk-link' target='_blank'>Swagger Editor v2</a> and copy the Open API file content into it."
 				},
 				{
 					"type": "P",
