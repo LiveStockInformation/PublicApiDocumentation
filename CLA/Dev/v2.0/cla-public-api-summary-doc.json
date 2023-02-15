@@ -213,7 +213,7 @@
 							},
 							{
 								"type": "P",
-								"body": "<span class='inline-code'>/v2/HoldingMovementForReviews/GetReviewBatches(isPreMovement={isPreMovement},movementPendingId={movementPendingId},movementId={movementId})</code>"
+								"body": "<code class='inline-code'>/v2/HoldingMovementForReviews/GetReviewBatches(isPreMovement={isPreMovement},movementPendingId={movementPendingId},movementId={movementId})</code>"
 							},
 							{
 								"type": "H4",
@@ -303,7 +303,7 @@
 							},
 							{
 								"type": "P",
-								"body": "<span class='inline-code'>/v2/HoldingMovementForReviews/GetReviewDevices(isPreMovement={isPreMovement},movementPendingId={movementPendingId},movementId={movementId})</code>"
+								"body": "<code class='inline-code'>/v2/HoldingMovementForReviews/GetReviewDevices(isPreMovement={isPreMovement},movementPendingId={movementPendingId},movementId={movementId})</code>"
 							},
 							{
 								"type": "H4",
