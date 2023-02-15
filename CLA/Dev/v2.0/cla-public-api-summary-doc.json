@@ -1119,9 +1119,17 @@
 				{
 					"type": "DETAIL",
 					"body": {
-						"title": "/v2/<strong>HoldingMovementForReviews/ReviewBySpecies (species='{species}',holding='{holding}')</strong>",
+						"title": "/v2/<strong>HoldingMovementForReviews/ReviewBySpecies</strong>",
 						"tag": "GET",
 						"body": [
+							{
+								"type": "H4",
+								"body": "Usage"
+							},
+							{
+								"type": "P",
+								"body": "<code class='inline-code'>/v2/HoldingMovementForReviews/ReviewBySpecies (species='{species}',holding='{holding}')</code>"
+							},
 							{
 								"type": "H4",
 								"body": "Description"
