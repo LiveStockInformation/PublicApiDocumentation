@@ -204,7 +204,7 @@
 				{
 					"type": "DETAIL",
 					"body": {
-						"title": "/v2/<strong>HoldingMovementForReviews/GetReviewBatches",
+						"title": "/v2/<strong>HoldingMovementForReviews/GetReviewBatches</strong>",
 						"tag": "GET",
 						"body": [
 							{
