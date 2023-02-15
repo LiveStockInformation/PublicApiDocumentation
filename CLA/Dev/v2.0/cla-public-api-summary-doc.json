@@ -204,7 +204,7 @@
 				{
 					"type": "DETAIL",
 					"body": {
-						"title": "/v2/<strong>HoldingMovementForReviews/GetReviewBatches(isPreMovement={isPreMovement},movementPendingId={movementPendingId},movementId={movementId})</strong>",
+						"title": "/v2/<strong>HoldingMovementForReviews/GetReviewBatches",
 						"tag": "GET",
 						"body": [
 							{
@@ -213,7 +213,7 @@
 							},
 							{
 								"type": "P",
-								"body": "/v2/<strong>HoldingMovementForReviews/GetReviewBatches(isPreMovement={isPreMovement},movementPendingId={movementPendingId},movementId={movementId})</strong>"
+								"body": "<span class='code-inline'>/v2/HoldingMovementForReviews/GetReviewBatches(isPreMovement={isPreMovement},movementPendingId={movementPendingId},movementId={movementId})</code>"
 							},
 							{
 								"type": "H4",
