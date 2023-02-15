@@ -209,6 +209,14 @@
 						"body": [
 							{
 								"type": "H4",
+								"body": "Usage"
+							},
+							{
+								"type": "P",
+								"body": "/v2/<strong>HoldingMovementForReviews/GetReviewBatches(isPreMovement={isPreMovement},movementPendingId={movementPendingId},movementId={movementId})</strong>"
+							},
+							{
+								"type": "H4",
 								"body": "Description"
 							},
 							{
