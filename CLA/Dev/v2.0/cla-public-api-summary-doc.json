@@ -294,9 +294,17 @@
 				{
 					"type": "DETAIL",
 					"body": {
-						"title": "/v2/<strong>HoldingMovementForReviews/GetReviewDevices(isPreMovement={isPreMovement},movementPendingId={movementPendingId},movementId={movementId})</strong>",
+						"title": "/v2/<strong>HoldingMovementForReviews/GetReviewDevices</strong>",
 						"tag": "GET",
 						"body": [
+							{
+								"type": "H4",
+								"body": "Usage"
+							},
+							{
+								"type": "P",
+								"body": "<span class='code-inline'>/v2/HoldingMovementForReviews/GetReviewDevices(isPreMovement={isPreMovement},movementPendingId={movementPendingId},movementId={movementId})</code>"
+							},
 							{
 								"type": "H4",
 								"body": "Description"
