@@ -2007,7 +2007,7 @@
 				{
 					"type": "DETAIL",
 					"body": {
-						"title": "/v2/<strong>/v2/UndoPartialRequests</strong>",
+						"title": "/v2/<strong>UndoPartialRequests</strong>",
 						"tag": "POST",
 						"body": [
 							{
@@ -2092,7 +2092,7 @@
 				{
 					"type": "DETAIL",
 					"body": {
-						"title": "/v2/<strong>/v2/UndoPartialRequests</strong>",
+						"title": "/v2/<strong>UndoPartialRequests</strong>",
 						"tag": "GET",
 						"body": [
 							{
@@ -2182,6 +2182,176 @@
 							{
 								"type": "P",
 								"body": "HTTP status: <code class='code--slim'>400 (Bad request)</code>\n"
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v2/<strong>UndoPartialRequests({key})</strong>",
+						"tag": "GET",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "Get a specific request to partially undo / rollback a request previously recorded."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to provide a Subscription key in a header. This key can be retrieved by Subscribing to the API."
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Type",
+										"Required",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["key", "string", "true", "Request id"]
+										},
+										{
+											"data": ["$select", "string", "false", "Limits the properties returned in the result."]
+										},
+										{
+											"data": ["$expand", "string", "false", "Indicates the related entities to be represented inline. The maximum depth is 2."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>200 Success</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 (Bad request)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>404 (Not Found)</code>\n"
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v2/<strong>UndoPartialRequests/$count</strong>",
+						"tag": "GET",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "Gets the count of requests."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to provide a Subscription key in a header. This key can be retrieved by Subscribing to the API."
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Type",
+										"Required",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["$filter", "string", "false", "Restricts the set of items returned. The maximum number of expressions is 100. The allowed functions are: allfunctions."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>200 Success</code>\n"
 							}
 						]
 					}
