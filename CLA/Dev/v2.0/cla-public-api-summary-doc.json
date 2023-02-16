@@ -2482,10 +2482,17 @@
 				{
 					"type": "DETAIL",
 					"body": {
-						"title": "/v2/<strong>ApprovedMovements({keyId},'{keyRecordedBy}')</strong>",
+						"title": "/v2/<strong>ApprovedMovements</strong>",
 						"tag": "GET",
 						"body": [
-							
+							{
+								"type": "H4",
+								"body": "Usage"
+							},
+							{
+								"type": "P",
+								"body": "<code class='inline-code'>/v2/ApprovedMovements({keyId},'{keyRecordedBy}')</code>"
+							},
 							{
 								"type": "H4",
 								"body": "Description"
