@@ -1920,9 +1920,17 @@
 				{
 					"type": "DETAIL",
 					"body": {
-						"title": "/v2/<strong>UndoRequests({requestId})</strong>",
+						"title": "/v2/<strong>UndoRequests</strong>",
 						"tag": "GET",
 						"body": [
+							{
+								"type": "H4",
+								"body": "Usage"
+							},
+							{
+								"type": "P",
+								"body": "<code class='inline-code'>UndoRequests({requestId})</code>"
+							},
 							{
 								"type": "H4",
 								"body": "Description"
