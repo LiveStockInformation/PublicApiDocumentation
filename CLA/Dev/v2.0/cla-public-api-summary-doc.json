@@ -2222,7 +2222,7 @@
 				{
 					"type": "DETAIL",
 					"body": {
-						"title": "/v2/<strong>UndoPartialRequests</strong>",
+						"title": "/v2/<strong>UndoPartialRequests({key})</strong>",
 						"tag": "GET",
 						"body": [
 							{
