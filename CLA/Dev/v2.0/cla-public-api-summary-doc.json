@@ -3000,7 +3000,7 @@
 				{
 					"type": "DETAIL",
 					"body": {
-						"title": "/v2/<strong>/v2/DocumentTypes</strong>",
+						"title": "/v2/<strong>DocumentTypes</strong>",
 						"tag": "GET",
 						"body": [
 							{
@@ -3085,7 +3085,7 @@
 				{
 					"type": "DETAIL",
 					"body": {
-						"title": "/v2/<strong>/v2/DocumentTypes({key})</strong>",
+						"title": "/v2/<strong>DocumentTypes({key})</strong>",
 						"tag": "GET",
 						"body": [
 							{
@@ -3177,7 +3177,7 @@
 				{
 					"type": "DETAIL",
 					"body": {
-						"title": "/v2/<strong>/v2/Genders</strong>",
+						"title": "/v2/<strong>Genders</strong>",
 						"tag": "GET",
 						"body": [
 							{
@@ -3277,7 +3277,7 @@
 				{
 					"type": "DETAIL",
 					"body": {
-						"title": "/v2/<strong>/v2/Genders({key})</strong>",
+						"title": "/v2/<strong>Genders({key})</strong>",
 						"tag": "GET",
 						"body": [
 							{
@@ -3287,6 +3287,271 @@
 							{
 								"type": "P",
 								"body": "View an animal gender by id."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to provide a Subscription key in a header. This key can be retrieved by Subscribing to the API."
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Type",
+										"Required",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["key", "integer($int32)", "true", "record id"]
+										},
+										{
+											"data": ["$select", "string", "false", "Limits the properties returned in the result"]
+										},
+										{
+											"data": ["$expand", "string", "false", "Indicates the related entities to be represented inline. The maximum depth is 2."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>200 Success</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 Bad Request</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>404 Not Found</code>\n"
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v2/<strong>HoldingTypes</strong>",
+						"tag": "GET",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "Get data about valid types of holding."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to provide a Subscription key in a header. This key can be retrieved by Subscribing to the API."
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Type",
+										"Required",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["$select", "string", "false", "Limits the properties returned in the result"]
+										},
+										{
+											"data": ["$expand", "string", "false", "Indicates the related entities to be represented inline. The maximum depth is 2."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>200 Success</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 Bad Request</code>\n"
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v2/<strong>HoldingType({key})s</strong>",
+						"tag": "GET",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "Get data about valid types of holding."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to provide a Subscription key in a header. This key can be retrieved by Subscribing to the API."
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Type",
+										"Required",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["key", "integer($int32)", "true", "record id"]
+										},
+										{
+											"data": ["$select", "string", "false", "Limits the properties returned in the result"]
+										},
+										{
+											"data": ["$expand", "string", "false", "Indicates the related entities to be represented inline. The maximum depth is 2."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>200 Success</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 Bad Request</code>\n"
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v2/<strong>HoldingType({key})s</strong>",
+						"tag": "GET",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "Get data about valid types of holding."
 							},
 							{
 								"type": "H4",
