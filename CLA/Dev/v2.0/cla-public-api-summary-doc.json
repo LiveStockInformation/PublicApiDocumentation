@@ -2655,10 +2655,22 @@
 											"data": ["British Toggenburg X"]
 										},
 										{
+											"data": ["Boreray"]
+										},
+										{
+											"data": ["Boreray X"]
+										},
+										{
 											"data": ["Cashmere"]
 										},
 										{
 											"data": ["Cashmere X"]
+										},
+										{
+											"data": ["Dorset Horn"]
+										},
+										{
+											"data": ["Dorset Horn X"]
 										},
 										{
 											"data": ["English"]
@@ -2700,6 +2712,12 @@
 											"data": ["Harness X"]
 										},
 										{
+											"data": ["Poll Dorset"]
+										},
+										{
+											"data": ["Poll Dorset X"]
+										},
+										{
 											"data": ["Pygmy"]
 										},
 										{
@@ -2710,6 +2728,12 @@
 										},
 										{
 											"data": ["Saanen X"]
+										},
+										{
+											"data": ["Soay"]
+										},
+										{
+											"data": ["Soay X"]
 										},
 										{
 											"data": ["Toggenburg"]
