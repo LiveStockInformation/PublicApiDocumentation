@@ -673,9 +673,18 @@
 				{
 					"type": "DETAIL",
 					"body": {
-					"title": "/v2/<strong>TransferRequests({requestId})</strong>",
+					"title": "/v2/<strong>TransferRequests</strong>",
 						"tag": "GET",
 						"body": [
+							
+							{
+								"type": "H4",
+								"body": "Usage"
+							},
+							{
+								"type": "P",
+								"body": "<code class='inline-code'>/v2/TransferRequests({requestId})</code>"
+							},
 							{
 								"type": "H4",
 								"body": "Description"
@@ -1003,9 +1012,17 @@
 				{
 					"type": "DETAIL",
 					"body": {
-						"title": "/v2/<strong>CorrectTransferRequests({requestId})</strong>",
+						"title": "/v2/<strong>CorrectTransferRequests</strong>",
 						"tag": "GET",
 						"body": [
+							{
+								"type": "H4",
+								"body": "Usage"
+							},
+							{
+								"type": "P",
+								"body": "<code class='inline-code'>/v2/CorrectTransferRequests({requestId})</code>"
+							},
 							{
 								"type": "H4",
 								"body": "Description"
@@ -1523,9 +1540,17 @@
 				{
 					"type": "DETAIL",
 					"body": {
-						"title": "/v2/<strong>ReviewHoldingMovementRequests({requestId})</strong>",
+						"title": "/v2/<strong>ReviewHoldingMovementRequests</strong>",
 						"tag": "GET",
 						"body": [
+							{
+								"type": "H4",
+								"body": "Usage"
+							},
+							{
+								"type": "P",
+								"body": "<code class='inline-code'>/v2/ReviewHoldingMovementRequests({requestId})</code>"
+							},
 							{
 								"type": "H4",
 								"body": "Description"
@@ -2189,9 +2214,17 @@
 				{
 					"type": "DETAIL",
 					"body": {
-						"title": "/v2/<strong>UndoPartialRequests({key})</strong>",
+						"title": "/v2/<strong>UndoPartialRequests</strong>",
 						"tag": "GET",
 						"body": [
+							{
+								"type": "H4",
+								"body": "Usage"
+							},
+							{
+								"type": "P",
+								"body": "<code class='inline-code'>/v2/UndoPartialRequests({key})</code>"
+							},
 							{
 								"type": "H4",
 								"body": "Description"
