@@ -673,7 +673,7 @@
 				{
 					"type": "DETAIL",
 					"body": {
-					"title": "/v2/<strong>TransferRequests</strong>",
+					"title": "/v2/<strong>TransferRequests({requestId})</strong>",
 						"tag": "GET",
 						"body": [
 							
@@ -1012,7 +1012,7 @@
 				{
 					"type": "DETAIL",
 					"body": {
-						"title": "/v2/<strong>CorrectTransferRequests</strong>",
+						"title": "/v2/<strong>CorrectTransferRequests({requestId})</strong>",
 						"tag": "GET",
 						"body": [
 							{
@@ -1540,7 +1540,7 @@
 				{
 					"type": "DETAIL",
 					"body": {
-						"title": "/v2/<strong>ReviewHoldingMovementRequests</strong>",
+						"title": "/v2/<strong>ReviewHoldingMovementRequests({requestId})</strong>",
 						"tag": "GET",
 						"body": [
 							{
@@ -1920,7 +1920,7 @@
 				{
 					"type": "DETAIL",
 					"body": {
-						"title": "/v2/<strong>UndoRequests</strong>",
+						"title": "/v2/<strong>UndoRequests({requestId})</strong>",
 						"tag": "GET",
 						"body": [
 							{
