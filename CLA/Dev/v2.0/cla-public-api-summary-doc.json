@@ -3454,7 +3454,7 @@
 				{
 					"type": "DETAIL",
 					"body": {
-						"title": "/v2/<strong>HoldingType({key})s</strong>",
+						"title": "/v2/<strong>HoldingTypes</strong>",
 						"tag": "GET",
 						"body": [
 							{
@@ -3542,7 +3542,7 @@
 				{
 					"type": "DETAIL",
 					"body": {
-						"title": "/v2/<strong>HoldingType({key})s</strong>",
+						"title": "/v2/<strong>HoldingTypes({key})</strong>",
 						"tag": "GET",
 						"body": [
 							{
