@@ -2626,7 +2626,7 @@
 			]
 		},
 		{
-			"title": "Standing data - Endpoints",
+			"title": "Endpoints - Standing data",
 			"content": [
 				{
 					"type": "DETAIL",
@@ -4727,7 +4727,7 @@
 			]
 		},
 		{
-			"title": "Standing data - Static data",
+			"title": "Static data - Standing data",
 			"content": [
 				{
 					"type": "DETAIL",
