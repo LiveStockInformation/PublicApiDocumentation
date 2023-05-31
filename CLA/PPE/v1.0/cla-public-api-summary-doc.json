@@ -3,7 +3,7 @@
 	"meta": [],
 	"sections": [
 		{
-			"title": "Overview",
+			"title": "Overview v2.0",
 			"content": [
 				{
 					"type": "P",
@@ -32,11 +32,11 @@
 			"content": [
 				{
 					"type": "P",
-					"body": "When an API changes, we will make backwards compatible changes where we can. When this is not possible, we will add a note about deprecated endpoints and make a new endpoint available."
+					"body": "When an API changes, we will make backwards compatible changes where we can. When this is not possible, we will add a note about deprecated endpoints and make a new endpoint available. Please visit the <a href='/apis/change-logs'> API Change Log</a>, to view what's new and what's changed."
 				},
 				{
 					"type": "P",
-					"body": "The current live version of the Common Livestock Application API is 1.0"
+					"body": "The current live version of the Common Livestock Application API is 2.0 (this document is for v2.0)."
 				}
 			]
 		},
@@ -45,7 +45,7 @@
 			"content": [
 				{
 					"type": "P",
-					"body": "For more details about the Common Livestock Application API, open an API browser like <a href='https://editor.swagger.io' data-swagger-editor class='govuk-link' target='_blank'>Swagger Editor</a> and copy the Open API file content into it."
+					"body": "For more details about the Common Livestock Application API, open an API browser like <a href='https://editor.swagger.io' data-swagger-editor class='govuk-link' target='_blank'>Swagger Editor v2</a> and copy the Open API file content into it."
 				},
 				{
 					"type": "P",
@@ -122,7 +122,7 @@
 				{
 					"type": "CODE",
 					"body": [
-						"{\r\n   \"@odata.context\": \"https://<host>/v1/$metadata#ReviewHoldingMovementRequests\",\r\n   \"value\": [… 50 movement entities],\r\n   \"@odata.nextLink\": \"https://<host>/v1/ReviewHoldingMovementRequest?$skip=50\"\r\n}"
+						"{\r\n   \"@odata.context\": \"https://<host>/v2/$metadata#ReviewHoldingMovementRequests\",\r\n   \"value\": [… 50 movement entities],\r\n   \"@odata.nextLink\": \"https://<host>/v2/ReviewHoldingMovementRequest?$skip=50\"\r\n}"
 					]
 				},
 				{
@@ -139,7 +139,7 @@
 				},
 				{
 					"type": "P",
-					"body": "For example, manually requesting the third page of animal movements that require review with a client-defined page size of 2 would be done using the GET /v1/ReviewHoldingMovementRequests?$top=2&$skip=4 endpoint."
+					"body": "For example, manually requesting the third page of animal movements that require review with a client-defined page size of 2 would be done using the GET /v2/ReviewHoldingMovementRequests?$top=2&$skip=4 endpoint."
 				},
 				{
 					"type": "P",
@@ -160,7 +160,7 @@
 			"content": [
 				{
 					"type": "P",
-					"body": "Special handling is required for parameter strings containing punctuation characters, such as CPH numbers or date/times in functions such /v1/HoldingMovementForReviews"
+					"body": "Special handling is required for parameter strings containing punctuation characters, such as CPH numbers or date/times in functions such /v2/HoldingMovementForReviews"
 				},
 				{
 					"type": "P",
@@ -194,7 +194,7 @@
 			"content": [
 				{
 					"type": "P",
-					"body": "For information, please read about <a href='/movements/#10'>tracking ids</a> within our movemements section."
+					"body": "For information, please read about <a href='/services/cla/movements/#10'>tracking ids</a> within our movemements section."
 				}
 			]
 		},
@@ -204,7 +204,187 @@
 				{
 					"type": "DETAIL",
 					"body": {
-						"title": "/v1/<strong>TransferRequests</strong>",
+						"title": "/v2/<strong>HoldingMovementForReviews/GetReviewBatches</strong>",
+						"tag": "GET",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Usage"
+							},
+							{
+								"type": "P",
+								"body": "<code class='inline-code'>/v2/HoldingMovementForReviews/GetReviewBatches(isPreMovement={isPreMovement},movementPendingId={movementPendingId},movementId={movementId})</code>"
+							},
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "GET TransferRequests returns the list of batches for the specified ReviewHoldingMovementRequest."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to provide a Subscription Key in the requests header. Read the <a href='/documentation/api-authentication'>API Authentication</a> page for details"
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>200 (Success)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that system has processed the requests and the results are presented in the response body"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 (Bad Request)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that the submission has been rejected by the system as some, or all of the data supplied was found to be in error."
+							},
+							{
+								"type": "P",
+								"body": "The CLAErrorResponse structure in the returned message provides a list of error codes, together with a textual description of each error. Additional information is provided in the errors body and identifies the field or fields in the original submission that generated each error."
+							},
+							{
+								"type": "P",
+								"body": "Following an error response, the system discards the submitted data. The caller must correct the errors identified and resubmit the movement again."
+							},
+							{
+								"type": "P",
+								"body": "If the caller supplied a value in the trackingId field of the submitted movement, this can be reused in a future submission as the system maintains no record of it."
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v2/<strong>HoldingMovementForReviews/GetReviewDevices</strong>",
+						"tag": "GET",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Usage"
+							},
+							{
+								"type": "P",
+								"body": "<code class='inline-code'>/v2/HoldingMovementForReviews/GetReviewDevices(isPreMovement={isPreMovement},movementPendingId={movementPendingId},movementId={movementId})</code>"
+							},
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "GET TransferRequests returns the list of devices for the specified ReviewHoldingMovementRequest."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to provide a Subscription Key in the requests header. Read the <a href='/documentation/api-authentication'>API Authentication</a> page for details"
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>200 (Success)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that system has processed the requests and the results are presented in the response body"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 (Bad Request)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that the submission has been rejected by the system as some, or all of the data supplied was found to be in error."
+							},
+							{
+								"type": "P",
+								"body": "The CLAErrorResponse structure in the returned message provides a list of error codes, together with a textual description of each error. Additional information is provided in the errors body and identifies the field or fields in the original submission that generated each error."
+							},
+							{
+								"type": "P",
+								"body": "Following an error response, the system discards the submitted data. The caller must correct the errors identified and resubmit the movement again."
+							},
+							{
+								"type": "P",
+								"body": "If the caller supplied a value in the trackingId field of the submitted movement, this can be reused in a future submission as the system maintains no record of it."
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v2/<strong>TransferRequests</strong>",
 						"tag": "GET",
 						"body": [
 							{
@@ -325,7 +505,7 @@
 				{
 					"type": "DETAIL",
 					"body": {
-						"title": "/v1/<strong>TransferRequests</strong>",
+						"title": "/v2/<strong>TransferRequests</strong>",
 						"tag": "POST",
 						"body": [
 							{
@@ -357,7 +537,7 @@
 							},
 							{
 								"type": "P",
-								"body": "When reporting an 'ON' movement, both departureDateTime and arrivalDateTime must be specified. Both departureDateTime and arrivalDateTime must be in the past and arrivalDateTime must be later than departureDateTime."
+								"body": "When reporting an 'ON' movement, both departureDateTime and arrivalDateTime must be specified."
 							},
 							{
 								"type": "P",
@@ -493,9 +673,18 @@
 				{
 					"type": "DETAIL",
 					"body": {
-					"title": "/v1/<strong>TransferRequests({requestId})</strong>",
+					"title": "/v2/<strong>TransferRequests({requestId})</strong>",
 						"tag": "GET",
 						"body": [
+							
+							{
+								"type": "H4",
+								"body": "Usage"
+							},
+							{
+								"type": "P",
+								"body": "<code class='inline-code'>/v2/TransferRequests({requestId})</code>"
+							},
 							{
 								"type": "H4",
 								"body": "Description"
@@ -605,7 +794,7 @@
 				{
 					"type": "DETAIL",
 					"body": {
-						"title": "/v1/<strong>CorrectTransferRequests</strong>",
+						"title": "/v2/<strong>CorrectTransferRequests</strong>",
 						"tag": "GET",
 						"body": [
 							{
@@ -726,7 +915,7 @@
 				{
 					"type": "DETAIL",
 					"body": {
-						"title": "/v1/<strong>CorrectTransferRequests</strong>",
+						"title": "/v2/<strong>CorrectTransferRequests</strong>",
 						"tag": "POST",
 						"body": [
 							{
@@ -752,11 +941,11 @@
 							},
 							{
 								"type": "P",
-								"body": "To make a correction, the caller uses the POST /v1/CorrectTransferRequests endpoint, specifying the requestId returned in the success response of the original TransferRequests submission. The remainder of the message body is populated with the details of the amended movement in a similar structure to that of the original call to TransferRequests."
+								"body": "To make a correction, the caller uses the POST /v2/CorrectTransferRequests endpoint, specifying the requestId returned in the success response of the original TransferRequests submission. The remainder of the message body is populated with the details of the amended movement in a similar structure to that of the original call to TransferRequests."
 							},
 							{
 								"type": "P",
-								"body": "Just as for the original TransferRequests, following submission of the movement using POST /v1/CorrectTransferRequests, the system will validate the data content and return an immediate response. indicating whether the content has been accepted for validation. Two response codes are possible:"
+								"body": "Just as for the original TransferRequests, following submission of the movement using POST /v2/CorrectTransferRequests, the system will validate the data content and return an immediate response. indicating whether the content has been accepted for validation. Two response codes are possible:"
 							},
 							{
 								"type": "P",
@@ -781,7 +970,7 @@
 									"<strong>Processing</strong> - the system is currently processing the request and the caller should query again after a short delay",
 									"<strong>Success</strong> - the system has accepted the request and the system view of the animals on the users holding has been adjusted to account for the details in the corrected movement.",
 									"<strong>Fail</strong> - the request has failed. The failure reasons are detailed in the errors section of the response.",
-									"<strong>QueueFail</strong> - the system could not proceed with validation. The caller should resubmit the request using POST /v1/CorrectTransferRequests",
+									"<strong>QueueFail</strong> - the system could not proceed with validation. The caller should resubmit the request using POST /v2/CorrectTransferRequests",
 									"<strong>CompletedError</strong> - the request contained invalid or inconsistent data. The errors are detailed in the errors section of the response.",
 									"<strong>Rejected</strong> - the request contained invalid or inconsistent data. The errors are detailed in the errors section of the response.",
 									"<strong>Cancelled</strong> - a user action such as 'undoing' the request caused the processing to be cancelled during validation.",
@@ -795,7 +984,7 @@
 							},
 							{
 								"type": "P",
-								"body": "If the requestStatus returns a value of <strong>'Pending'</strong> or <strong>'Processing'</strong>, this indicates that the movement request has been queued by the system for further validation and processing. The caller must then call GET /v1/CorrectTransferRequests({requestId}) repeatedly to track the progress of the request through the validation process. The requestId parameter is the unique identifier returned in response to a successful POST /v1/CorrectTransferRequests."
+								"body": "If the requestStatus returns a value of <strong>'Pending'</strong> or <strong>'Processing'</strong>, this indicates that the movement request has been queued by the system for further validation and processing. The caller must then call GET /v2/CorrectTransferRequests({requestId}) repeatedly to track the progress of the request through the validation process. The requestId parameter is the unique identifier returned in response to a successful POST /v2/CorrectTransferRequests."
 							},
 							{
 								"type": "P",
@@ -823,9 +1012,17 @@
 				{
 					"type": "DETAIL",
 					"body": {
-						"title": "/v1/<strong>CorrectTransferRequests({requestId})</strong>",
+						"title": "/v2/<strong>CorrectTransferRequests({requestId})</strong>",
 						"tag": "GET",
 						"body": [
+							{
+								"type": "H4",
+								"body": "Usage"
+							},
+							{
+								"type": "P",
+								"body": "<code class='inline-code'>/v2/CorrectTransferRequests({requestId})</code>"
+							},
 							{
 								"type": "H4",
 								"body": "Description"
@@ -939,9 +1136,17 @@
 				{
 					"type": "DETAIL",
 					"body": {
-						"title": "/v1/<strong>HoldingMovementForReviews(species='{species}',holding='{holding}')</strong>",
+						"title": "/v2/<strong>HoldingMovementForReviews/ReviewBySpecies</strong>",
 						"tag": "GET",
 						"body": [
+							{
+								"type": "H4",
+								"body": "Usage"
+							},
+							{
+								"type": "P",
+								"body": "<code class='inline-code'>/v2/HoldingMovementForReviews/ReviewBySpecies(species='{species}',holding='{holding}')</code>"
+							},
 							{
 								"type": "H4",
 								"body": "Description"
@@ -998,6 +1203,21 @@
 									],
 									"rows": [
 										{
+											"data": ["$filter", "string", "false", "query string that restricts the set of items returned. The maximum number of expressions is 100. The allowed functions are: allfunctions. Only dates with a time part will be accepted."]
+										},
+										{
+											"data": ["$orderby", "string", "false", "query string that specifies the order in which items are returned. The maximum number of expressions is 5."]
+										},
+										{
+											"data": ["$stop", "string", "false", "query string that limits the number of items returned from a collection."]
+										},
+										{
+											"data": ["$skip", "string", "false", "query string that excludes the specified number of items of the queried collection from the result."]
+										},
+										{
+											"data": ["$count", "string", "false", "query string that indicates whether the total count of items within a collection are returned in the result.."]
+										},
+										{
 											"data": ["species", "string", "true", "the species for which movement records are required."]
 										},
 										{
@@ -1026,7 +1246,7 @@
 							},
 							{
 								"type": "P",
-								"body": "Once a list of unconfirmed movements has been obtained, the calling application calls POST /v1/ReviewHoldingMovementRequests supplying the requestId of the movement being confirmed and the tag or batch numbers of the animals that are being accepted or rejected. It is permitted to accept some tags or batches and reject others in the same transaction."
+								"body": "Once a list of unconfirmed movements has been obtained, the calling application calls POST /v2/ReviewHoldingMovementRequests supplying the requestId of the movement being confirmed and the tag or batch numbers of the animals that are being accepted or rejected. It is permitted to accept some tags or batches and reject others in the same transaction."
 							},
 							{
 								"type": "P",
@@ -1058,7 +1278,7 @@
 							},
 							{
 								"type": "P",
-								"body": "The destination keeper accepts or rejects the movement using POST /v1/ReviewHoldingMovementRequests, using the departureRequestId from the departure keepers movement as the key to identify the target."
+								"body": "The destination keeper accepts or rejects the movement using POST /v2/ReviewHoldingMovementRequests, using the departureRequestId from the departure keepers movement as the key to identify the target."
 							}
 						]
 					}
@@ -1066,7 +1286,7 @@
 				{
 					"type": "DETAIL",
 					"body": {
-						"title": "/v1/<strong>ReviewHoldingMovementRequests</strong>",
+						"title": "/v2/<strong>ReviewHoldingMovementRequests</strong>",
 						"tag": "GET",
 						"body": [
 							{
@@ -1187,7 +1407,7 @@
 				{
 					"type": "DETAIL",
 					"body": {
-						"title": "/v1/<strong>ReviewHoldingMovementRequests</strong>",
+						"title": "/v2/<strong>ReviewHoldingMovementRequests</strong>",
 						"tag": "POST",
 						"body": [
 							{
@@ -1274,7 +1494,7 @@
 									"<strong>Processing</strong> - the system is currently processing the request and the caller should query again after a short delay",
 									"<strong>Success</strong> - the system has accepted the request and the system view of the animals on the users holding has been adjusted to account for the details in the movement.",
 									"<strong>Fail</strong> - the request has failed. The failure reasons are detailed in the errors section of the response.",
-									"<strong>QueueFail</strong> - the system could not proceed with validation. The caller should resubmit the request using POST /v1/ReviewHoldingMovementRequests",
+									"<strong>QueueFail</strong> - the system could not proceed with validation. The caller should resubmit the request using POST /v2/ReviewHoldingMovementRequests",
 									"<strong>CompletedError</strong> - the request contained invalid or inconsistent data. The errors are detailed in the errors section of the response.",
 									"<strong>Rejected</strong> - the request contained invalid or inconsistent data. The errors are detailed in the errors section of the response.",
 									"<strong>Cancelled</strong> - a user action such as 'undoing' the request caused the processing to be cancelled during validation.",
@@ -1288,15 +1508,15 @@
 							},
 							{
 								"type": "P",
-								"body": "If the requestStatus returns a value of <strong>'Pending'</strong> or <strong>'Processing'</strong>, this indicates that the confirmation or rejection request has been queued by the system for further validation and processing. The caller must then call GET /v1/ReviewHoldingMovementRequests({requestId}) repeatedly to track the progress of the request through the validation process. The requestId parameter is the unique identifier returned in response to a successful POST /v1/ReviewHoldingMovementRequests."
+								"body": "If the requestStatus returns a value of <strong>'Pending'</strong> or <strong>'Processing'</strong>, this indicates that the confirmation or rejection request has been queued by the system for further validation and processing. The caller must then call GET /v2/ReviewHoldingMovementRequests({requestId}) repeatedly to track the progress of the request through the validation process. The requestId parameter is the unique identifier returned in response to a successful POST /v2/ReviewHoldingMovementRequests."
 							},
 							{
 								"type": "P",
-								"body": "Processing is complete once a call to GET /v1/ReviewHoldingMovementRequests({requestId}) returns a requestStatus of <strong>'Success', 'Fail', 'QueueFail', 'CompletedError', 'Rejected', 'Cancelled' or 'CompletedWarning'</strong>." 
+								"body": "Processing is complete once a call to GET /v2/ReviewHoldingMovementRequests({requestId}) returns a requestStatus of <strong>'Success', 'Fail', 'QueueFail', 'CompletedError', 'Rejected', 'Cancelled' or 'CompletedWarning'</strong>." 
 							},
 							{
 								"type": "P",
-								"body": "To prevent overloading the system, the caller should call GET /v1/ReviewHoldingMovementRequests at a frequency no higher that once per second."
+								"body": "To prevent overloading the system, the caller should call GET /v2/ReviewHoldingMovementRequests at a frequency no higher that once per second."
 							},
 							{
 								"type": "P",
@@ -1320,9 +1540,17 @@
 				{
 					"type": "DETAIL",
 					"body": {
-						"title": "/v1/<strong>ReviewHoldingMovementRequests({requestId})</strong>",
+						"title": "/v2/<strong>ReviewHoldingMovementRequests({requestId})</strong>",
 						"tag": "GET",
 						"body": [
+							{
+								"type": "H4",
+								"body": "Usage"
+							},
+							{
+								"type": "P",
+								"body": "<code class='inline-code'>/v2/ReviewHoldingMovementRequests({requestId})</code>"
+							},
 							{
 								"type": "H4",
 								"body": "Description"
@@ -1436,7 +1664,7 @@
 				{
 					"type": "DETAIL",
 					"body": {
-						"title": "/v1/<strong>UndoRequests</strong>",
+						"title": "/v2/<strong>UndoRequests</strong>",
 						"tag": "GET",
 						"body": [
 							{
@@ -1557,7 +1785,7 @@
 				{
 					"type": "DETAIL",
 					"body": {
-						"title": "/v1/<strong>UndoRequests</strong>",
+						"title": "/v2/<strong>UndoRequests</strong>",
 						"tag": "POST",
 						"body": [
 							{
@@ -1654,7 +1882,7 @@
 									"<strong>Processing</strong> - the system is currently processing the request and the caller should query again after a short delay",
 									"<strong>Success</strong> - the system has accepted the request and the system view of the animals on the users holding has been adjusted to account for the details in the movement.",
 									"<strong>Fail</strong> - the request has failed. The failure reasons are detailed in the errors section of the response.",
-									"<strong>QueueFail</strong> - the system could not proceed with validation. The caller should resubmit the request using POST /v1/UndoRequests",
+									"<strong>QueueFail</strong> - the system could not proceed with validation. The caller should resubmit the request using POST /v2/UndoRequests",
 									"<strong>CompletedError</strong> - the request contained invalid or inconsistent data. The errors are detailed in the errors section of the response.",
 									"<strong>Rejected</strong> - the request contained invalid or inconsistent data. The errors are detailed in the errors section of the response.",
 									"<strong>Cancelled</strong> - a user action such as 'undoing' the request caused the processing to be cancelled during validation.",
@@ -1668,15 +1896,15 @@
 							},
 							{
 								"type": "P",
-								"body": "If the requestStatus returns a value of <strong>'Pending'</strong> or <strong>'Processing'</strong>, this indicates that the undo request has been queued by the system for further validation and processing. The caller must then call GET /v1/UndoRequests({requestId}) repeatedly to track the progress of the request through the validation process. The requestId parameter is the unique identifier returned in response to a successful POST /v1/UndoRequests."
+								"body": "If the requestStatus returns a value of <strong>'Pending'</strong> or <strong>'Processing'</strong>, this indicates that the undo request has been queued by the system for further validation and processing. The caller must then call GET /v2/UndoRequests({requestId}) repeatedly to track the progress of the request through the validation process. The requestId parameter is the unique identifier returned in response to a successful POST /v2/UndoRequests."
 							},
 							{
 								"type": "P",
-								"body": "Processing is complete once a call to GET /v1/UndoRequests({requestId}) returns a requestStatus of <strong>'Success', 'Fail', 'QueueFail', 'CompletedError', 'Rejected', 'Cancelled' or 'CompletedWarning'</strong>." 
+								"body": "Processing is complete once a call to GET /v2/UndoRequests({requestId}) returns a requestStatus of <strong>'Success', 'Fail', 'QueueFail', 'CompletedError', 'Rejected', 'Cancelled' or 'CompletedWarning'</strong>." 
 							},
 							{
 								"type": "P",
-								"body": "To prevent overloading the system, the caller should call GET /v1/UndoRequests at a frequency no higher that once per second."
+								"body": "To prevent overloading the system, the caller should call GET /v2/UndoRequests at a frequency no higher that once per second."
 							},
 							{
 								"type": "P",
@@ -1692,9 +1920,17 @@
 				{
 					"type": "DETAIL",
 					"body": {
-						"title": "/v1/<strong>UndoRequests({requestId})</strong>",
+						"title": "/v2/<strong>UndoRequests({requestId})</strong>",
 						"tag": "GET",
 						"body": [
+							{
+								"type": "H4",
+								"body": "Usage"
+							},
+							{
+								"type": "P",
+								"body": "<code class='inline-code'>UndoRequests({requestId})</code>"
+							},
 							{
 								"type": "H4",
 								"body": "Description"
@@ -1800,11 +2036,2698 @@
 							}
 						]
 					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v2/<strong>UndoPartialRequests</strong>",
+						"tag": "POST",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "Partial undo / rollback the actions performed by an existing request for a few animals."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to provide a Subscription key in a header. This key can be retrieved by Subscribing to the API."
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Type",
+										"Required",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["$select", "string", "false", "Limits the properties returned in the result"]
+										},
+										{
+											"data": ["$expand", "string", "false", "Indicates the related entities to be represented inline. The maximum depth is 2"]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>201 (The request was successfully queued.)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 (Bad request)</code>\n"
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v2/<strong>UndoPartialRequests</strong>",
+						"tag": "GET",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "Gets all requests to partially undo / rollback a request previously recorded."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to provide a Subscription key in a header. This key can be retrieved by Subscribing to the API."
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Type",
+										"Required",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["$select", "string", "false", "Limits the properties returned in the result"]
+										},
+										{
+											"data": ["$expand", "string", "false", "Indicates the related entities to be represented inline. The maximum depth is 2."]
+										},
+										{
+											"data": ["$filter", "string", "false", "Restricts the set of items returned. The maximum number of expressions is 100. The allowed functions are: allfunctions. Only dates with a time part will be accepted."]
+										},
+										{
+											"data": ["$orderby", "string", "false", "Specifies the order in which items are returned. The maximum number of expressions is 5."]
+										},
+										{
+											"data": ["$top", "integer($int32)", "false", "Limits the number of items returned from a collection."]
+										},
+										{
+											"data": ["$skip", "integer($int32)", "false", "Excludes the specified number of items of the queried collection from the result."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>200 Success</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 (Bad request)</code>\n"
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v2/<strong>UndoPartialRequests({key})</strong>",
+						"tag": "GET",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Usage"
+							},
+							{
+								"type": "P",
+								"body": "<code class='inline-code'>/v2/UndoPartialRequests({key})</code>"
+							},
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "Get a specific request to partially undo / rollback a request previously recorded."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to provide a Subscription key in a header. This key can be retrieved by Subscribing to the API."
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Type",
+										"Required",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["key", "string", "true", "Request id"]
+										},
+										{
+											"data": ["$select", "string", "false", "Limits the properties returned in the result."]
+										},
+										{
+											"data": ["$expand", "string", "false", "Indicates the related entities to be represented inline. The maximum depth is 2."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>200 Success</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 (Bad request)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>404 (Not Found)</code>\n"
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v2/<strong>UndoPartialRequests/$count</strong>",
+						"tag": "GET",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "Gets the count of requests."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to provide a Subscription key in a header. This key can be retrieved by Subscribing to the API."
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Type",
+										"Required",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["$filter", "string", "false", "Restricts the set of items returned. The maximum number of expressions is 100. The allowed functions are: allfunctions."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>200 Success</code>\n"
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v2/<strong>ApprovedMovements/ByTransferDateRange</strong>",
+						"tag": "GET",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Usage"
+							},
+							{
+								"type": "P",
+								"body": "<code class='inline-code'>/v2/ApprovedMovements/ByTransferDateRange(speciesId={speciesId},startTransferDate={startTransferDate},endTransferDate={endTransferDate},departureHolding='{departureHolding}',destinationHolding='{destinationHolding}')</code>"
+							},
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "Gets Approved Movements by TransferDate."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to provide a Subscription key in a header. This key can be retrieved by Subscribing to the API."
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Type",
+										"Required",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["speciesId", "integer($int32)", "true", "Id of species."]
+										},
+										{
+											"data": ["startTransferDate", "string($date-time)", "true", "Start date of the transferDate range."]
+										},
+										{
+											"data": ["endTransferDate", "string($date-time)", "true", "End date of the transferDate range."]
+										},
+										{
+											"data": ["departureHolding", "string", "true", "CPH of departureHolding."]
+										},
+										{
+											"data": ["destinationHolding", "string", "true", "CPH of destinationHolding."]
+										},
+										{
+											"data": ["$select", "string", "false", "Limits the properties returned in the result"]
+										},
+										{
+											"data": ["$expand", "string", "false", "Indicates the related entities to be represented inline. The maximum depth is 2."]
+										},
+										{
+											"data": ["$filter", "string", "false", "Restricts the set of items returned. The maximum number of expressions is 100. The allowed functions are: allfunctions. Only dates with a time part will be accepted."]
+										},
+										{
+											"data": ["$orderby", "string", "false", "Specifies the order in which items are returned. The maximum number of expressions is 5."]
+										},
+										{
+											"data": ["$top", "integer($int32)", "false", "Limits the number of items returned from a collection."]
+										},
+										{
+											"data": ["$skip", "integer($int32)", "false", "Excludes the specified number of items of the queried collection from the result."]
+										},
+										{
+											"data": ["$count", "boolean", "false", "Indicates whether the total count of items within a collection are returned in the result."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>200 Success</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 Bad Request</code>\n"
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v2/<strong>ApprovedMovements</strong>",
+						"tag": "GET",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Usage"
+							},
+							{
+								"type": "P",
+								"body": "<code class='inline-code'>/v2/ApprovedMovements({keyId},'{keyRecordedBy}')</code>"
+							},
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "Gets the details of the specified movement."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to provide a Subscription key in a header. This key can be retrieved by Subscribing to the API."
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Type",
+										"Required",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["keyId", "integer($int32)", "true", "approvedMovementId."]
+										},
+										{
+											"data": ["keyRecordedBy", "integer($int32)", "true", "The role of the holding that recorded the movement."]
+										},
+										{
+											"data": ["$select", "string", "false", "Limits the properties returned in the result"]
+										},
+										{
+											"data": ["$expand", "string", "false", "Indicates the related entities to be represented inline. The maximum depth is 2."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>200 Success</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 Bad Request</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>404 Not Found</code>\n"
+							}
+						]
+					}
 				}
 			]
 		},
 		{
-			"title": "Standing data",
+			"title": "Endpoints - Standing data",
+			"content": [
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v2/<strong>Breeds</strong>",
+						"tag": "GET",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "Get all animal breeds."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to provide a Subscription key in a header. This key can be retrieved by Subscribing to the API."
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Type",
+										"Required",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["$select", "string", "false", "Limits the properties returned in the result"]
+										},
+										{
+											"data": ["$expand", "string", "false", "Indicates the related entities to be represented inline. The maximum depth is 2."]
+										},
+										{
+											"data": ["$filter", "string", "false", "Restricts the set of items returned. The maximum number of expressions is 100. The allowed functions are: allfunctions. Only dates with a time part will be accepted."]
+										},
+										{
+											"data": ["$orderby", "string", "false", "Specifies the order in which items are returned. The maximum number of expressions is 5."]
+										},
+										{
+											"data": ["$top", "integer($int32)", "false", "Limits the number of items returned from a collection."]
+										},
+										{
+											"data": ["$skip", "integer($int32)", "false", "Excludes the specified number of items of the queried collection from the result."]
+										},
+										{
+											"data": ["$count", "boolean", "false", "Indicates whether the total count of items within a collection are returned in the result."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>200 Success</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 Bad Request</code>\n"
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v2/<strong>Breeds({key})</strong>",
+						"tag": "GET",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "View an animal breed by id."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to provide a Subscription key in a header. This key can be retrieved by Subscribing to the API."
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Type",
+										"Required",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["key", "integer($int32)", "true", "record id"]
+										},
+										{
+											"data": ["$select", "string", "false", "Limits the properties returned in the result"]
+										},
+										{
+											"data": ["$expand", "string", "false", "Indicates the related entities to be represented inline. The maximum depth is 2."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>200 Success</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 Bad Request</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>404 Not Found</code>\n"
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v2/<strong>Counties</strong>",
+						"tag": "GET",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "Get all counties."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to provide a Subscription key in a header. This key can be retrieved by Subscribing to the API."
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Type",
+										"Required",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["$select", "string", "false", "Limits the properties returned in the result"]
+										},
+										{
+											"data": ["$expand", "string", "false", "Indicates the related entities to be represented inline. The maximum depth is 2."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>200 Success</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 Bad Request</code>\n"
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v2/<strong>Counties({key})</strong>",
+						"tag": "GET",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "View a county by id."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to provide a Subscription key in a header. This key can be retrieved by Subscribing to the API."
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Type",
+										"Required",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["key", "integer($int32)", "true", "record id"]
+										},
+										{
+											"data": ["$select", "string", "false", "Limits the properties returned in the result"]
+										},
+										{
+											"data": ["$expand", "string", "false", "Indicates the related entities to be represented inline. The maximum depth is 2."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>200 Success</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 Bad Request</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>404 Not Found</code>\n"
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v2/<strong>DocumentTypes</strong>",
+						"tag": "GET",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "View the different types of document."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to provide a Subscription key in a header. This key can be retrieved by Subscribing to the API."
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Type",
+										"Required",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["$select", "string", "false", "Limits the properties returned in the result"]
+										},
+										{
+											"data": ["$expand", "string", "false", "Indicates the related entities to be represented inline. The maximum depth is 2."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>200 Success</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 Bad Request</code>\n"
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v2/<strong>DocumentTypes({key})</strong>",
+						"tag": "GET",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "View a specific type of document by its Id."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to provide a Subscription key in a header. This key can be retrieved by Subscribing to the API."
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Type",
+										"Required",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["key", "integer($int32)", "true", "record id"]
+										},
+										{
+											"data": ["$select", "string", "false", "Limits the properties returned in the result"]
+										},
+										{
+											"data": ["$expand", "string", "false", "Indicates the related entities to be represented inline. The maximum depth is 2."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>200 Success</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 Bad Request</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>404 Not Foundt</code>\n"
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v2/<strong>Genders</strong>",
+						"tag": "GET",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "Get all animal genders."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to provide a Subscription key in a header. This key can be retrieved by Subscribing to the API."
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Type",
+										"Required",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["$select", "string", "false", "Limits the properties returned in the result"]
+										},
+										{
+											"data": ["$expand", "string", "false", "Indicates the related entities to be represented inline. The maximum depth is 2."]
+										},
+										{
+											"data": ["$filter", "string", "false", "Restricts the set of items returned. The maximum number of expressions is 100. The allowed functions are: allfunctions. Only dates with a time part will be accepted."]
+										},
+										{
+											"data": ["$orderby", "string", "false", "Specifies the order in which items are returned. The maximum number of expressions is 5."]
+										},
+										{
+											"data": ["$top", "integer($int32)", "false", "Limits the number of items returned from a collection."]
+										},
+										{
+											"data": ["$skip", "integer($int32)", "false", "Excludes the specified number of items of the queried collection from the result."]
+										},
+										{
+											"data": ["$count", "boolean", "false", "Indicates whether the total count of items within a collection are returned in the result."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>200 Success</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 Bad Request</code>\n"
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v2/<strong>Genders({key})</strong>",
+						"tag": "GET",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "View an animal gender by id."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to provide a Subscription key in a header. This key can be retrieved by Subscribing to the API."
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Type",
+										"Required",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["key", "integer($int32)", "true", "record id"]
+										},
+										{
+											"data": ["$select", "string", "false", "Limits the properties returned in the result"]
+										},
+										{
+											"data": ["$expand", "string", "false", "Indicates the related entities to be represented inline. The maximum depth is 2."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>200 Success</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 Bad Request</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>404 Not Found</code>\n"
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v2/<strong>HoldingTypes</strong>",
+						"tag": "GET",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "Get data about valid types of holding."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to provide a Subscription key in a header. This key can be retrieved by Subscribing to the API."
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Type",
+										"Required",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["$select", "string", "false", "Limits the properties returned in the result"]
+										},
+										{
+											"data": ["$expand", "string", "false", "Indicates the related entities to be represented inline. The maximum depth is 2."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>200 Success</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 Bad Request</code>\n"
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v2/<strong>HoldingTypes</strong>",
+						"tag": "GET",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "Get data about valid types of holding."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to provide a Subscription key in a header. This key can be retrieved by Subscribing to the API."
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Type",
+										"Required",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["key", "integer($int32)", "true", "record id"]
+										},
+										{
+											"data": ["$select", "string", "false", "Limits the properties returned in the result"]
+										},
+										{
+											"data": ["$expand", "string", "false", "Indicates the related entities to be represented inline. The maximum depth is 2."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>200 Success</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 Bad Request</code>\n"
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v2/<strong>HoldingTypes({key})</strong>",
+						"tag": "GET",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "Get data about valid types of holding."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to provide a Subscription key in a header. This key can be retrieved by Subscribing to the API."
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Type",
+										"Required",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["key", "integer($int32)", "true", "record id"]
+										},
+										{
+											"data": ["$select", "string", "false", "Limits the properties returned in the result"]
+										},
+										{
+											"data": ["$expand", "string", "false", "Indicates the related entities to be represented inline. The maximum depth is 2."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>200 Success</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 Bad Request</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>404 Not Found</code>\n"
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v2/<strong>MetFCIWithdrawalPeriods</strong>",
+						"tag": "GET",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "Get details about statuses related to FCI withdrawal periods."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to provide a Subscription key in a header. This key can be retrieved by Subscribing to the API."
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Type",
+										"Required",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["$select", "string", "false", "Limits the properties returned in the result"]
+										},
+										{
+											"data": ["$expand", "string", "false", "Indicates the related entities to be represented inline. The maximum depth is 2."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>200 Success</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 Bad Request</code>\n"
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v2/<strong>MetFCIWithdrawalPeriods({key})</strong>",
+						"tag": "GET",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "Get details about a status related to FCI withdrawal periods."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to provide a Subscription key in a header. This key can be retrieved by Subscribing to the API."
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Type",
+										"Required",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["key", "integer($int32)", "true", "record id"]
+										},
+										{
+											"data": ["$select", "string", "false", "Limits the properties returned in the result"]
+										},
+										{
+											"data": ["$expand", "string", "false", "Indicates the related entities to be represented inline. The maximum depth is 2."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>200 Success</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 Bad Request</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>404 Not Found</code>\n"
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v2/<strong>ProcessingFlags</strong>",
+						"tag": "GET",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "Gets all processing flags."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to provide a Subscription key in a header. This key can be retrieved by Subscribing to the API."
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Type",
+										"Required",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["$select", "string", "false", "Limits the properties returned in the result"]
+										},
+										{
+											"data": ["$expand", "string", "false", "Indicates the related entities to be represented inline. The maximum depth is 2."]
+										},
+										{
+											"data": ["$filter", "string", "false", "Restricts the set of items returned. The maximum number of expressions is 100. The allowed functions are: allfunctions. Only dates with a time part will be accepted."]
+										},
+										{
+											"data": ["$orderby", "string", "false", "Specifies the order in which items are returned. The maximum number of expressions is 5."]
+										},
+										{
+											"data": ["$top", "integer($int32)", "false", "Limits the number of items returned from a collection."]
+										},
+										{
+											"data": ["$skip", "integer($int32)", "false", "Excludes the specified number of items of the queried collection from the result."]
+										},
+										{
+											"data": ["$count", "boolean", "false", "Indicates whether the total count of items within a collection are returned in the result."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>200 Success</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 Bad Request</code>\n"
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v2/<strong>ProcessingFlags({key})</strong>",
+						"tag": "GET",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "Gets a specific processing flag by id."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to provide a Subscription key in a header. This key can be retrieved by Subscribing to the API."
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Type",
+										"Required",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["key", "integer($int32)", "true", "record id"]
+										},
+										{
+											"data": ["$select", "string", "false", "Limits the properties returned in the result"]
+										},
+										{
+											"data": ["$expand", "string", "false", "Indicates the related entities to be represented inline. The maximum depth is 2."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>200 Success</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 Bad Request</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>404 Not Found</code>\n"
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v2/<strong>Species</strong>",
+						"tag": "GET",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "Get information about all supported species."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to provide a Subscription key in a header. This key can be retrieved by Subscribing to the API."
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Type",
+										"Required",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["$select", "string", "false", "Limits the properties returned in the result"]
+										},
+										{
+											"data": ["$expand", "string", "false", "Indicates the related entities to be represented inline. The maximum depth is 2."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>200 Success</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 Bad Request</code>\n"
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v2/<strong>Species({key})</strong>",
+						"tag": "GET",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "Get information about a supported species."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to provide a Subscription key in a header. This key can be retrieved by Subscribing to the API."
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Type",
+										"Required",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["key", "integer($int32)", "true", "record id"]
+										},
+										{
+											"data": ["$select", "string", "false", "Limits the properties returned in the result"]
+										},
+										{
+											"data": ["$expand", "string", "false", "Indicates the related entities to be represented inline. The maximum depth is 2."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>200 Success</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 Bad Request</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>404 Not Found</code>\n"
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v2/<strong>StockTypes</strong>",
+						"tag": "GET",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "Get details of all available types of animal stock."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to provide a Subscription key in a header. This key can be retrieved by Subscribing to the API."
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Type",
+										"Required",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["$select", "string", "false", "Limits the properties returned in the result"]
+										},
+										{
+											"data": ["$expand", "string", "false", "Indicates the related entities to be represented inline. The maximum depth is 2."]
+										},
+										{
+											"data": ["$filter", "string", "false", "Restricts the set of items returned. The maximum number of expressions is 100. The allowed functions are: allfunctions. Only dates with a time part will be accepted."]
+										},
+										{
+											"data": ["$orderby", "string", "false", "Specifies the order in which items are returned. The maximum number of expressions is 5."]
+										},
+										{
+											"data": ["$top", "integer($int32)", "false", "Limits the number of items returned from a collection."]
+										},
+										{
+											"data": ["$skip", "integer($int32)", "false", "Excludes the specified number of items of the queried collection from the result."]
+										},
+										{
+											"data": ["$count", "boolean", "false", "Indicates whether the total count of items within a collection are returned in the result."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>200 Success</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 Bad Request</code>\n"
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v2/<strong>StockTypes({key})</strong>",
+						"tag": "GET",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "Get details of a single type of animal stock."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to provide a Subscription key in a header. This key can be retrieved by Subscribing to the API."
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Type",
+										"Required",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["key", "integer($int32)", "true", "record id"]
+										},
+										{
+											"data": ["$select", "string", "false", "Limits the properties returned in the result"]
+										},
+										{
+											"data": ["$expand", "string", "false", "Indicates the related entities to be represented inline. The maximum depth is 2."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>200 Success</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 Bad Request</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>404 Not Found</code>\n"
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v2/<strong>Titles</strong>",
+						"tag": "GET",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "Gets all valid titles."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to provide a Subscription key in a header. This key can be retrieved by Subscribing to the API."
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Type",
+										"Required",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["$select", "string", "false", "Limits the properties returned in the result"]
+										},
+										{
+											"data": ["$expand", "string", "false", "Indicates the related entities to be represented inline. The maximum depth is 2."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>200 Success</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 Bad Request</code>\n"
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v2/<strong>Titles({key})</strong>",
+						"tag": "GET",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "Gets a single title."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to provide a Subscription key in a header. This key can be retrieved by Subscribing to the API."
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Type",
+										"Required",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["key", "integer($int32)", "true", "record id"]
+										},
+										{
+											"data": ["$select", "string", "false", "Limits the properties returned in the result"]
+										},
+										{
+											"data": ["$expand", "string", "false", "Indicates the related entities to be represented inline. The maximum depth is 2."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>200 Success</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 Bad Request</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>404 Not Found</code>\n"
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v2/<strong>TransporterTypes</strong>",
+						"tag": "GET",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "Get all valid types of transport."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to provide a Subscription key in a header. This key can be retrieved by Subscribing to the API."
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Type",
+										"Required",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["$select", "string", "false", "Limits the properties returned in the result"]
+										},
+										{
+											"data": ["$expand", "string", "false", "Indicates the related entities to be represented inline. The maximum depth is 2."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>200 Success</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 Bad Request</code>\n"
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v2/<strong>TransporterTypes({key})</strong>",
+						"tag": "GET",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "Get a single type of transport."
+							},
+							{
+								"type": "H4",
+								"body": "Authorisation"
+							},
+							{
+								"type": "P",
+								"body": "This endpoint is secured by LIS user authorization security."
+							},
+							{
+								"type": "P",
+								"body": "You will also need to provide a Subscription key in a header. This key can be retrieved by Subscribing to the API."
+							},
+							{
+								"type": "H4",
+								"body": "Request headers"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["Ocp-Apim-Subscription-Key", "LIS API subscription key"]
+										},
+										{
+											"data": ["x-correlation-id", "a unique identifer for this request (we recommend generating a GUID for this)."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Type",
+										"Required",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["key", "integer($int32)", "true", "record id"]
+										},
+										{
+											"data": ["$select", "string", "false", "Limits the properties returned in the result"]
+										},
+										{
+											"data": ["$expand", "string", "false", "Indicates the related entities to be represented inline. The maximum depth is 2."]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>200 Success</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 Bad Request</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>404 Not Found</code>\n"
+							}
+						]
+					}
+				}
+				
+			]
+		},
+		{
+			"title": "Static data - Standing data",
 			"content": [
 				{
 					"type": "DETAIL",
@@ -1874,10 +4797,22 @@
 											"data": ["British Toggenburg X"]
 										},
 										{
+											"data": ["Boreray"]
+										},
+										{
+											"data": ["Boreray X"]
+										},
+										{
 											"data": ["Cashmere"]
 										},
 										{
 											"data": ["Cashmere X"]
+										},
+										{
+											"data": ["Dorset Horn"]
+										},
+										{
+											"data": ["Dorset Horn X"]
 										},
 										{
 											"data": ["English"]
@@ -1919,6 +4854,12 @@
 											"data": ["Harness X"]
 										},
 										{
+											"data": ["Poll Dorset"]
+										},
+										{
+											"data": ["Poll Dorset X"]
+										},
+										{
 											"data": ["Pygmy"]
 										},
 										{
@@ -1929,6 +4870,12 @@
 										},
 										{
 											"data": ["Saanen X"]
+										},
+										{
+											"data": ["Soay"]
+										},
+										{
+											"data": ["Soay X"]
 										},
 										{
 											"data": ["Toggenburg"]

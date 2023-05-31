@@ -537,7 +537,7 @@
 							},
 							{
 								"type": "P",
-								"body": "When reporting an 'ON' movement, both departureDateTime and arrivalDateTime must be specified. Both departureDateTime and arrivalDateTime must be in the past and arrivalDateTime must be later than departureDateTime."
+								"body": "When reporting an 'ON' movement, both departureDateTime and arrivalDateTime must be specified."
 							},
 							{
 								"type": "P",
