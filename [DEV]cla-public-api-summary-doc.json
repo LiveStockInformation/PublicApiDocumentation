@@ -182,7 +182,7 @@
 								"data": ["Holding", "URL encoding of CPH replaces the forward slashes as follows: holding='26/001/8033' becomes holding='26%2f001%2f8033'"]
 							},
 							{
-								"data": ["Dates and times", "URL encoding of CPH replaces '+' and ':' with the character sequences '%2b' and '%3b' respectively"]
+								"data": ["Dates and times", "URL encoding of  Date and Time replaces '+' and ':' with the character sequences '%2b' and '%3a' respectively"]
 							}
 						]
 					}
