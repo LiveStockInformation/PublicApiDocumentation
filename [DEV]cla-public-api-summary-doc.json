@@ -36,7 +36,7 @@
 				},
 				{
 					"type": "P",
-					"body": "The current live version of the Common Livestock Application API is v2.0 (this document is for v2.0)"
+					"body": "The current live version of the Common Livestock Application API is v1.0"
 				}
 			]
 		},
@@ -194,7 +194,7 @@
 			"content": [
 				{
 					"type": "P",
-					"body": "For information, please read about <a href='/services/cla/movements/#10'>tracking ids</a> within our movemements section."
+					"body": "For information, please read about <a href='/sheep/cla/movements/#10'>tracking ids</a> within our movemements section."
 				}
 			]
 		},
