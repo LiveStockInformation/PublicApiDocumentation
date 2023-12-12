@@ -17,7 +17,7 @@
         "tags": [
           "CorrectTransferRequests"
         ],
-        "summary": "Get a specific request to correct an existing movement of animals",
+        "summary": "Get a specific request to correct an existing movement of animals.",
         "description": "Returns a specific CorrectTransferRequest using its request id.\n* For most user roles, user only permitted to query for request id created by authenticated user.",
         "operationId": "get-v1-correcttransferrequests-id",
         "parameters": [
