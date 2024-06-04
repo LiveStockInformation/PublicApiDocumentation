@@ -306,7 +306,7 @@
 											"data": ["$top", "int32", "false", "limits the number of results returned"]
 										},
 										{
-											"data": ["$skip", "int32", "false", "excluded the specified number of items from the resuts set"]
+											"data": ["$skip", "int32", "false", "excluded the specified number of items from the results set"]
 										}
 									]
 								}
@@ -534,7 +534,7 @@
 							},
 							{
 								"type": "P",
-								"body": "Note, that when processing complex movements, or during periods of high system activity, the system may return <strong>'Pending'</strong> or <strong>'Processing'</strong> in reponse to this call."
+								"body": "Note, that when processing complex movements, or during periods of high system activity, the system may return <strong>'Pending'</strong> or <strong>'Processing'</strong> in response to this call."
 							},
 							{
 								"type": "H4",
@@ -707,7 +707,7 @@
 											"data": ["$top", "int32", "false", "limits the number of results returned"]
 										},
 										{
-											"data": ["$skip", "int32", "false", "excluded the specified number of items from the resuts set"]
+											"data": ["$skip", "int32", "false", "excluded the specified number of items from the results set"]
 										}
 									]
 								}
@@ -868,7 +868,7 @@
 							},
 							{
 								"type": "P",
-								"body": "When processing complex movements, or during periods of high system activity, the system may return <strong>'Pending'</strong> or <strong>'Processing'</strong> in reponse to this call."
+								"body": "When processing complex movements, or during periods of high system activity, the system may return <strong>'Pending'</strong> or <strong>'Processing'</strong> in response to this call."
 							},
 							{
 								"type": "H4",
@@ -1168,7 +1168,7 @@
 											"data": ["$top", "int32", "false", "limits the number of results returned"]
 										},
 										{
-											"data": ["$skip", "int32", "false", "excluded the specified number of items from the resuts set"]
+											"data": ["$skip", "int32", "false", "excluded the specified number of items from the results set"]
 										}
 									]
 								}
@@ -1365,7 +1365,7 @@
 							},
 							{
 								"type": "P",
-								"body": "When processing complex movements, or during periods of high system activity, the system may return <strong>'Pending'</strong> or <strong>'Processing'</strong> in reponse to this call."
+								"body": "When processing complex movements, or during periods of high system activity, the system may return <strong>'Pending'</strong> or <strong>'Processing'</strong> in response to this call."
 							},
 							{
 								"type": "H4",
@@ -1538,7 +1538,7 @@
 											"data": ["$top", "int32", "false", "limits the number of results returned"]
 										},
 										{
-											"data": ["$skip", "int32", "false", "excluded the specified number of items from the resuts set"]
+											"data": ["$skip", "int32", "false", "excluded the specified number of items from the results set"]
 										}
 									]
 								}
@@ -1733,7 +1733,7 @@
 							},
 							{
 								"type": "P",
-								"body": "Note, that when processing complex undo transactions, or during periods of high system activity, the system may return <strong>'Pending'</strong> or <strong>'Processing'</strong> in reponse to this call."
+								"body": "Note, that when processing complex undo transactions, or during periods of high system activity, the system may return <strong>'Pending'</strong> or <strong>'Processing'</strong> in response to this call."
 							},
 							{
 								"type": "H4",
@@ -3516,7 +3516,7 @@
 				{
 					"type": "P",
 					"body": [ 
-						"Taking /HoldingMovementsForReviews as an example, a $filter string to limit the results set to be only those Entries occuring between two dates would have the following form:"
+						"Taking /HoldingMovementsForReviews as an example, a $filter string to limit the results set to be only those Entries occurring between two dates would have the following form:"
 					]
 				},
 				{
