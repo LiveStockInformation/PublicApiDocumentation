@@ -1,0 +1,2851 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "3rd Party Multispecies API",
+    "description": "This document formalises the Multispecies API definitions for the Livestock Information Ltd Multispecies Platform for users using 3rd Party farm softwares.\nThe specification is based on the OpenAPI 3.0 format.",
+    "termsOfService": "https://www.livestockinformation.org.uk/",
+    "contact": {
+      "email": "aamir.yaseen@livestockinformation.org.uk"
+    },
+    "license": {
+      "name": "Commercial License",
+      "url": "https://www.livestockinformation.org.uk/"
+    },
+    "version": "1.0.0-alpha.1"
+  },
+  "servers": [
+    {
+      "url": "https:/.livestockinformation.org.uk/v1",
+      "description": "Production (Live)"
+    }
+  ],
+  "externalDocs": {
+    "description": "Livestock Information Ltd website",
+    "url": "https://www.livestockinformation.org.uk/"
+  },
+  "paths": {
+    "/movements": {
+      "post": {
+        "tags": [
+          "movements"
+        ],
+        "summary": "Submit a new animal movement",
+        "description": "The endpoint allows the registration of an animal movement (on or off). The following request modes are allowed  \n\nRequest Mode\n- sync - Request will be actioned in a synchronous mode\n- async - Request will be actioned in an asynchronous mode\n",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/xCorrelationId"
+          },
+          {
+            "$ref": "#/components/parameters/xRequestMode"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "movementData": {
+                    "type": "object",
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/ReportAuthor"
+                      },
+                      {
+                        "$ref": "#/components/schemas/BasicMovement"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Import"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Export"
+                      },
+                      {
+                        "$ref": "#/components/schemas/FciInformation"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Documents"
+                      }
+                    ]
+                  }
+                },
+                "encoding": {
+                  "movementData": {
+                    "contentType": "application/json"
+                  },
+                  "document": {
+                    "contentType": "application/octet-stream"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK - Successful operation with identifier in response body.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/MovementResponse1"
+                    },
+                    {
+                      "$ref": "#/components/schemas/MovementResponse2"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "OK - Successful operation, async request has been accepted. Response headers contain request-id and retry-after to check the request status afterwards",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "X-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              },
+              "X-Retry-After": {
+                "$ref": "#/components/headers/xRetryAfter"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error. An error occurred while processing the request."
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "movements"
+        ],
+        "summary": "Retrieve the list of movements",
+        "description": "The endpoint permits to obtain a list of movements defined in the system.\nQuerystring parametrization allows the list to be filtered, sorted, and paginated.",
+        "operationId": "getMovements",
+        "parameters": [
+          {
+            "name": "movementType",
+            "in": "query",
+            "required": false,
+            "allowEmptyValue": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "sending",
+                  "receiving"
+                ]
+              }
+            },
+            "style": "form"
+          },
+          {
+            "name": "movementStatus",
+            "in": "query",
+            "required": false,
+            "allowEmptyValue": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "blocked",
+                  "cancelled",
+                  "completed",
+                  "confirmed",
+                  "inDispute",
+                  "pending",
+                  "received",
+                  "rejected",
+                  "reported",
+                  "warnings"
+                ]
+              }
+            },
+            "style": "form"
+          },
+          {
+            "name": "species",
+            "in": "query",
+            "required": false,
+            "allowEmptyValue": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "bison",
+                  "buffalo",
+                  "cattle",
+                  "species2",
+                  "species3"
+                ]
+              }
+            },
+            "style": "form"
+          },
+          {
+            "name": "minDepartureDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "maxDepartureDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "allowEmptyValue": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "allowEmptyValue": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "id",
+                "departureDate",
+                "state"
+              ]
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "allowEmptyValue": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK - Successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Movements"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error. An error occurred while processing the request."
+          }
+        }
+      }
+    },
+    "/movements/{movementNumber}": {
+      "get": {
+        "tags": [
+          "movements"
+        ],
+        "summary": "Retrieve a specific movement",
+        "description": "Retrieve information about a specific movement using its number.",
+        "operationId": "getMovementById",
+        "parameters": [
+          {
+            "name": "movementNumber",
+            "in": "path",
+            "description": "movement number of the movement to retrieve",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "example": 55663427
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK - Successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/GetMovement"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Import"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Export"
+                    },
+                    {
+                      "$ref": "#/components/schemas/FciInformation"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Documents"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "movementReports": {
+                          "type": "array",
+                          "nullable": false,
+                          "items": {
+                            "allOf": [
+                              {
+                                "$ref": "#/components/schemas/ReportAuthor"
+                              },
+                              {
+                                "$ref": "#/components/schemas/Movement"
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "createdDateTime": {
+                                    "type": "string",
+                                    "format": "date-time"
+                                  },
+                                  "lastUpdateDateTime": {
+                                    "type": "string",
+                                    "format": "date-time"
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found. The specified movement number was not found."
+          },
+          "500": {
+            "description": "Internal Server Error. An error occurred while processing the request."
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "movements"
+        ],
+        "summary": "Update a movement",
+        "description": "Update information about a specific movement using its number.  \n\n Request Mode\n - async - Request will be actioned in a synchronous mode\n - sync - Request will be actioned in an asynchronous mode\n",
+        "operationId": "updateMovement",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/xCorrelationId"
+          },
+          {
+            "$ref": "#/components/parameters/xRequestMode"
+          },
+          {
+            "name": "movementNumber",
+            "in": "path",
+            "description": "movement number of the movement to update",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "example": 55663427
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "movementData": {
+                    "type": "object",
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/ReportAuthor"
+                      },
+                      {
+                        "$ref": "#/components/schemas/BasicMovement"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Import"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Export"
+                      },
+                      {
+                        "$ref": "#/components/schemas/FciInformation"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Documents"
+                      }
+                    ]
+                  }
+                },
+                "encoding": {
+                  "movementData": {
+                    "contentType": "application/json"
+                  },
+                  "document": {
+                    "contentType": "application/octet-stream"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK - Successful operation - We are processing your request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/MovementResponse1"
+                    },
+                    {
+                      "$ref": "#/components/schemas/MovementResponse2"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "OK - Successful operation, async request has been accepted. Response headers contain request-id and retry-after to check the request status afterwards",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "X-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              },
+              "X-Retry-After": {
+                "$ref": "#/components/headers/xRetryAfter"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found. The specified movement number was not found."
+          },
+          "500": {
+            "description": "Internal Server Error. An error occurred while processing the request."
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "movements"
+        ],
+        "summary": "Delete (Cancel) a movement by number",
+        "description": "Delete will cancel a specific movement by its unique number.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/xCorrelationId"
+          },
+          {
+            "$ref": "#/components/parameters/xRequestMode"
+          },
+          {
+            "name": "movementNumber",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "example": 55663427
+            },
+            "description": "The movement number of the movement to cancel."
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "OK - Successful operation, async request has been accepted. Response headers contain request-id and retry-after to check the request status afterwards",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "X-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              },
+              "X-Retry-After": {
+                "$ref": "#/components/headers/xRetryAfter"
+              }
+            }
+          },
+          "204": {
+            "description": "No Content. The movement was successfully cancelled."
+          },
+          "404": {
+            "description": "Not Found. The specified movement number was not found."
+          },
+          "500": {
+            "description": "Internal Server Error. An error occurred while processing the request."
+          }
+        }
+      }
+    },
+    "/movements/{movementNumber}/documents": {
+      "post": {
+        "tags": [
+          "movements"
+        ],
+        "summary": "Upload a document for a specific movement",
+        "operationId": "uploadMovementDocument",
+        "parameters": [
+          {
+            "name": "movementNumber",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "example": 55663427
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/octet-stream": {
+              "schema": {
+                "type": "string",
+                "format": "binary"
+              }
+            }
+          },
+          "description": "The document to upload (PDF and PNG are allowed)"
+        },
+        "responses": {
+          "200": {
+            "description": "Document successfully uploaded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Document uploaded successfully"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input or file type"
+          },
+          "404": {
+            "description": "Movement not found"
+          }
+        }
+      }
+    },
+    "/movements/{movementNumber}/confirmations": {
+      "post": {
+        "tags": [
+          "movements"
+        ],
+        "summary": "Confirm a movement",
+        "description": "Confirm or reject a movement by posting an action with a reason where applicable.",
+        "operationId": "confirmMovement",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/xCorrelationId"
+          },
+          {
+            "$ref": "#/components/parameters/xRequestMode"
+          },
+          {
+            "name": "movementNumber",
+            "in": "path",
+            "description": "movement number of the movement to confirm",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "example": 55663427
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Confirmation"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK - Successfull",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Confirmation"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "OK - Successful operation, async request has been accepted. Response headers contain request-id and retry-after to check the request status afterwards",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "X-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              },
+              "X-Retry-After": {
+                "$ref": "#/components/headers/xRetryAfter"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConfirmationError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found. The specified movement number was not found."
+          },
+          "500": {
+            "description": "Internal Server Error. An error occurred while processing the request."
+          }
+        }
+      }
+    },
+    "/hauliers": {
+      "get": {
+        "tags": [
+          "hauliers"
+        ],
+        "summary": "Retrieve a list of hauliers.",
+        "description": "The endpoint allows searching and retrieving a list of hauliers.",
+        "operationId": "getHauliers",
+        "parameters": [
+          {
+            "name": "species",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "cattle",
+                  "bison",
+                  "buffalo",
+                  "species2"
+                ]
+              }
+            },
+            "allowEmptyValue": false,
+            "required": false
+          },
+          {
+            "name": "text",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "allowEmptyValue": false
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "allowEmptyValue": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "allowEmptyValue": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "allowEmptyValue": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "id",
+                "name"
+              ]
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "allowEmptyValue": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK - Successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HaulierList"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rejectionreasons": {
+      "get": {
+        "tags": [
+          "movement reference"
+        ],
+        "summary": "Retrieve a list of movement rejection reasons",
+        "description": "This endpoint can be used to retrieve movement rejection reasons",
+        "operationId": "getMovementRejectionReasons",
+        "parameters": [
+          {
+            "name": "species",
+            "in": "query",
+            "required": true,
+            "allowEmptyValue": false,
+            "schema": {
+              "type": "string",
+              "example": "cattle"
+            },
+            "style": "form"
+          },
+          {
+            "name": "text",
+            "in": "query",
+            "required": false,
+            "allowEmptyValue": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK - Successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RejectionReasonList"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/animals": {
+      "post": {
+        "tags": [
+          "animals"
+        ],
+        "summary": "Create a new animal",
+        "description": "The endpoint allows the registration of an animal.",
+        "operationId": "createAnimal",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/xCorrelationId"
+          },
+          {
+            "$ref": "#/components/parameters/xRequestMode"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Animal",
+                "description": "Animal"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK - Successful operation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnimalResponse"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "OK - Successful operation, async request has been accepted. Response headers contain request-id and retry-after to check the request status afterwards",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "X-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              },
+              "X-Retry-After": {
+                "$ref": "#/components/headers/xRetryAfter"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error. An error occurred while processing the request."
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "animals"
+        ],
+        "summary": "Get all animal of a species on holding",
+        "description": "Get details about all animals of a species on the holding.",
+        "operationId": "getAnimals",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "species",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "cattle"
+            },
+            "description": "animal species."
+          },
+          {
+            "name": "state",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "enum": [
+                "dead",
+                "lost",
+                "registered",
+                "restricted"
+              ]
+            },
+            "description": "An array of states to return.",
+            "example": [
+              "registered",
+              "dead"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK - Successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnimalArray"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found. The specified animal identifier was not found."
+          },
+          "500": {
+            "description": "Internal Server Error. An error occurred while processing the request."
+          }
+        }
+      }
+    },
+    "/animals/{animalIdentifier}": {
+      "get": {
+        "tags": [
+          "animals"
+        ],
+        "summary": "Get an animal",
+        "description": "Get information about a specific animal using its identifier.",
+        "operationId": "getAnimal",
+        "parameters": [
+          {
+            "name": "animalIdentifier",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "UK123456654321"
+            },
+            "description": "The identifier of the animal to get."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK - Successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Animal"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "birthDam": {
+                          "$ref": "#/components/schemas/Dam"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found. The specified animal identifier was not found."
+          },
+          "500": {
+            "description": "Internal Server Error. An error occurred while processing the request."
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "animals"
+        ],
+        "summary": "Update an animal",
+        "description": "Update information about a specific animal using its identifier.",
+        "operationId": "updateAnimalPut",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/xCorrelationId"
+          },
+          {
+            "$ref": "#/components/parameters/xRequestMode"
+          },
+          {
+            "name": "animalIdentifier",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "UK654326123455"
+            },
+            "description": "The identifier of the animal to update."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Animal"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK - Successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnimalResponse"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "OK - Successful operation, async request has been accepted. Response headers contain request-id and retry-after to check the request status afterwards",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "X-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              },
+              "X-Retry-After": {
+                "$ref": "#/components/headers/xRetryAfter"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found. The specified animal identifier was not found."
+          },
+          "500": {
+            "description": "Internal Server Error. An error occurred while processing the request."
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "animals"
+        ],
+        "summary": "Update an animal",
+        "description": "Update information about a specific animal using its identifier.",
+        "operationId": "updateAnimalPatch",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/xCorrelationId"
+          },
+          {
+            "$ref": "#/components/parameters/xRequestMode"
+          },
+          {
+            "name": "animalIdentifier",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "UK654326123455"
+            },
+            "description": "The identifier of the animal to update."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Animal"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK - Successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnimalResponse"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "OK - Successful operation, async request has been accepted. Response headers contain request-id and retry-after to check the request status afterwards",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "X-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              },
+              "X-Retry-After": {
+                "$ref": "#/components/headers/xRetryAfter"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found. The specified animal identifier was not found."
+          },
+          "500": {
+            "description": "Internal Server Error. An error occurred while processing the request."
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "animals"
+        ],
+        "summary": "Delete an animal by identifer",
+        "description": "Delete will delete the occurrence of a specific animal by its unique identifier but only if there are no other associated events recorded against the animal.",
+        "operationId": "deleteAnimal",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/xCorrelationId"
+          },
+          {
+            "$ref": "#/components/parameters/xRequestMode"
+          },
+          {
+            "name": "animalIdentifier",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "UK654326123455"
+            },
+            "description": "The identifier of the animal to delete."
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "OK - Successful operation, async request has been accepted. Response headers contain request-id and retry-after to check the request status afterwards",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "X-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              },
+              "X-Retry-After": {
+                "$ref": "#/components/headers/xRetryAfter"
+              }
+            }
+          },
+          "204": {
+            "description": "No Content. The animal was successfully deleted."
+          },
+          "404": {
+            "description": "Not Found. The specified animal id was not found."
+          },
+          "500": {
+            "description": "Internal Server Error. An error occurred while processing the request."
+          }
+        }
+      }
+    },
+    "/lostfounds": {
+      "get": {
+        "tags": [
+          "animal lostfounds"
+        ],
+        "operationId": "getLostFounds",
+        "parameters": [
+          {
+            "name": "siteIdentifier",
+            "in": "query",
+            "allowEmptyValue": false,
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "string"
+            },
+            "description": "If populated the end-point will return animals for this site.",
+            "example": "28/822/2977"
+          },
+          {
+            "name": "animalIdentifier",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "state",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "lost",
+                  "stolen",
+                  "found"
+                ]
+              }
+            }
+          },
+          {
+            "name": "minEventDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "maxEventDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "minReportDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "maxReportDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK - Successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "integer"
+                    },
+                    "values": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/LostFound"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "animal lostfounds"
+        ],
+        "operationId": "createLostFound",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/xCorrelationId"
+          },
+          {
+            "$ref": "#/components/parameters/xRequestMode"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LostFound"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK - Successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LostFound"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/lostfounds/{id}": {
+      "put": {
+        "tags": [
+          "animal lostfounds"
+        ],
+        "operationId": "amendLostFound",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LostFound"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK - Successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LostFound"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/deathreasons": {
+      "get": {
+        "tags": [
+          "animal reference"
+        ],
+        "summary": "Retrieve a list of animal death reasons by species",
+        "description": "This endpoint can be used to retrieve animal death reasons by species.",
+        "operationId": "getAnimalDeathReasons",
+        "parameters": [
+          {
+            "name": "species",
+            "in": "query",
+            "required": true,
+            "allowEmptyValue": false,
+            "schema": {
+              "type": "string",
+              "example": "cattle"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK - Successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeathReasonList"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/breeds": {
+      "get": {
+        "tags": [
+          "animal reference"
+        ],
+        "summary": "Retrieve a list of animal breeds by species",
+        "description": "This endpoint can be used to retrieve animal breeds by species.",
+        "operationId": "getAnimalBreeds",
+        "parameters": [
+          {
+            "name": "species",
+            "in": "query",
+            "required": true,
+            "allowEmptyValue": false,
+            "schema": {
+              "type": "string",
+              "example": "cattle"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK - Successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BreedList"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/genotypes": {
+      "get": {
+        "tags": [
+          "animal reference"
+        ],
+        "summary": "Retrieve a list of animal genotypes by species",
+        "description": "This endpoint can be used to retrieve animal genotypes by species.",
+        "operationId": "getAnimalGenotypes",
+        "parameters": [
+          {
+            "name": "species",
+            "in": "query",
+            "required": true,
+            "allowEmptyValue": false,
+            "schema": {
+              "type": "string",
+              "example": "species3"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK - Successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenotypeList"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/requeststatus/{requestId}": {
+      "get": {
+        "tags": [
+          "requeststatus"
+        ],
+        "summary": "Get async http request status",
+        "parameters": [
+          {
+            "name": "requestId",
+            "in": "path",
+            "allowEmptyValue": false,
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "064a508d-bc88-4457-8392-048da3892838"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK - Successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestStatus"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found. The specified requestId was not found."
+          },
+          "500": {
+            "description": "Internal Server Error. An error occurred while processing the request."
+          },
+          "503": {
+            "description": "Service Unavailable."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Site": {
+        "type": "object",
+        "properties": {
+          "siteIdentifier": {
+            "type": "string",
+            "format": "string",
+            "nullable": false,
+            "example": "27/811/2976"
+          },
+          "siteIdentifierType": {
+            "type": "string",
+            "nullable": false,
+            "enum": [
+              "fsaNumber",
+              "holdingNumber",
+              "portNumber",
+              "lipNumber"
+            ],
+            "example": "holdingNumber"
+          },
+          "siteType": {
+            "type": "string",
+            "readOnly": true,
+            "example": "Agriultural Holding"
+          }
+        }
+      },
+      "Movements": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer"
+          },
+          "values": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "movementNumber": {
+                  "type": "number",
+                  "example": 55663427
+                },
+                "numberOfAnimals": {
+                  "type": "number",
+                  "example": 10
+                },
+                "species": {
+                  "type": "string",
+                  "example": "bison"
+                },
+                "departureSite": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Site"
+                    }
+                  ]
+                },
+                "arrivalSite": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Site"
+                    }
+                  ]
+                },
+                "departureDate": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "state": {
+                  "type": "string",
+                  "example": "received"
+                },
+                "reviewState": {
+                  "type": "string",
+                  "example": "forReview"
+                }
+              }
+            }
+          }
+        }
+      },
+      "ReportAuthor": {
+        "type": "object",
+        "properties": {
+          "reportingSite": {
+            "type": "string",
+            "enum": [
+              "departure",
+              "arrival",
+              "both"
+            ],
+            "example": "departure"
+          }
+        }
+      },
+      "IdentifiedAnimal": {
+        "type": "object",
+        "properties": {
+          "animalIdentifier": {
+            "type": "string",
+            "format": "string",
+            "nullable": false,
+            "example": "UK654326123456"
+          }
+        }
+      },
+      "CollectiveAnimals": {
+        "type": "object",
+        "properties": {
+          "mark": {
+            "format": "string",
+            "nullable": true,
+            "example": 556743
+          },
+          "quantity": {
+            "type": "integer",
+            "nullable": false,
+            "example": 1
+          }
+        }
+      },
+      "MovementBatch": {
+        "type": "object",
+        "properties": {
+          "species": {
+            "type": "string",
+            "enum": [
+              "bison",
+              "cattle",
+              "species2",
+              "species3",
+              "buffalo"
+            ]
+          },
+          "animals": {
+            "type": "array",
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/IdentifiedAnimal"
+                },
+                {
+                  "$ref": "#/components/schemas/CollectiveAnimals"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "Haulier": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "departure",
+              "arrival",
+              "haulier"
+            ]
+          },
+          "partyNumber": {
+            "type": "number",
+            "readOnly": false,
+            "example": 12345
+          },
+          "trailerNumber": {
+            "type": "string",
+            "example": "TRL 0125/3",
+            "nullable": true
+          }
+        }
+      },
+      "BasicMovement": {
+        "type": "object",
+        "properties": {
+          "movementNumber": {
+            "type": "number",
+            "readOnly": true,
+            "example": 55663427
+          },
+          "batches": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MovementBatch"
+            }
+          },
+          "departureSite": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Site"
+              }
+            ]
+          },
+          "departureDate": {
+            "type": "string",
+            "format": "date",
+            "nullable": false
+          },
+          "departureTime": {
+            "type": "string",
+            "format": "time",
+            "example": "06:07Z",
+            "nullable": true
+          },
+          "haulier": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Haulier"
+              }
+            ]
+          },
+          "vehicleRegistrationNumber": {
+            "type": "string",
+            "example": "YM24 DLY",
+            "nullable": true
+          },
+          "arrivalSite": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Site"
+              }
+            ]
+          },
+          "arrivalDate": {
+            "type": "string",
+            "format": "date",
+            "nullable": false
+          },
+          "arrivalTime": {
+            "type": "string",
+            "format": "time",
+            "example": "23:30Z",
+            "nullable": true
+          },
+          "returnDate": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "returnTime": {
+            "type": "string",
+            "format": "time",
+            "example": "23:30Z",
+            "nullable": true
+          }
+        }
+      },
+      "Import": {
+        "type": "object",
+        "properties": {
+          "importInformation": {
+            "type": "object",
+            "properties": {
+              "importDeclarationFlag": {
+                "type": "boolean"
+              },
+              "healthCertificateNumber": {
+                "type": "string",
+                "example": "186GBBP"
+              },
+              "ipaffsReferenceNumber": {
+                "type": "string",
+                "example": "CHEDA.GB.2024.1234567"
+              },
+              "importSingleLineAddress": {
+                "type": "string",
+                "example": "Grawertstrasse 16, 48146 Munster, Germany"
+              },
+              "importRegion": {
+                "type": "string",
+                "example": "North Rhine-Westphalia"
+              },
+              "importCountryCode": {
+                "type": "string",
+                "example": "DE"
+              }
+            },
+            "required": [
+              "importDeclarationFlag",
+              "importRegion",
+              "importCountryCode",
+              "ipaffsReferenceNumber"
+            ]
+          }
+        }
+      },
+      "Export": {
+        "type": "object",
+        "properties": {
+          "exportInformation": {
+            "type": "object",
+            "properties": {
+              "exportSingleLineAddress": {
+                "type": "string",
+                "nullable": true,
+                "example": "Grawertstrasse 16, 48146 Munster, Germany"
+              },
+              "exportRegion": {
+                "type": "string",
+                "nullable": true,
+                "example": "North Rhine-Westphalia"
+              },
+              "exportCountryCode": {
+                "type": "string",
+                "nullable": true,
+                "example": "GB-ENG"
+              }
+            }
+          }
+        }
+      },
+      "FciInformation": {
+        "type": "object",
+        "properties": {
+          "fciInformation": {
+            "type": "object",
+            "properties": {
+              "fciDeclarationFlag": {
+                "type": "boolean"
+              },
+              "fciDiseaseDetails": {
+                "type": "string",
+                "example": "BVD"
+              },
+              "fciTreatmentDetails": {
+                "type": "string",
+                "example": "BVDV Vaccine X"
+              },
+              "fciAnalysisSamples": {
+                "type": "string",
+                "example": "Fecal samples show no sign of parasites"
+              }
+            }
+          }
+        }
+      },
+      "Documents": {
+        "type": "object",
+        "properties": {
+          "documents": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "documentType": {
+                  "type": "string",
+                  "enum": [
+                    "importHealthCertificate",
+                    "circularMovementPermit"
+                  ]
+                },
+                "documentId": {
+                  "type": "string",
+                  "readOnly": true,
+                  "format": "uuid"
+                }
+              },
+              "required": [
+                "documentType"
+              ]
+            }
+          }
+        }
+      },
+      "MovementResponse1": {
+        "type": "object",
+        "properties": {
+          "movementNumber": {
+            "type": "number",
+            "readOnly": true,
+            "example": 55663427
+          },
+          "links": {
+            "type": "object",
+            "properties": {
+              "self": {
+                "type": "string",
+                "format": "uri",
+                "readOnly": true,
+                "example": "/movements/55663427"
+              }
+            }
+          }
+        }
+      },
+      "BasicMessage": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "Warning": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BasicMessage"
+          }
+        ],
+        "example": {
+          "items": [
+            {
+              "code": 1,
+              "message": "Warning 1"
+            },
+            {
+              "code": 2,
+              "message": "Warning 2"
+            },
+            {
+              "code": 3,
+              "message": "Warning 3"
+            },
+            {
+              "code": 4,
+              "message": "Warning 4"
+            }
+          ]
+        }
+      },
+      "MovementResponse2": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "movementNumber": {
+                "type": "number",
+                "readOnly": true,
+                "example": 55663427
+              },
+              "warning": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Warning"
+                  }
+                ]
+              },
+              "links": {
+                "type": "object",
+                "properties": {
+                  "self": {
+                    "type": "string",
+                    "format": "uri",
+                    "readOnly": true,
+                    "example": "/movements/55663427"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "Error": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BasicMessage"
+          }
+        ],
+        "example": {
+          "items": [
+            {
+              "code": 1,
+              "message": "Departure date must be on or before the arrival date"
+            },
+            {
+              "code": 2,
+              "message": "Invalid arrival site"
+            },
+            {
+              "code": 3,
+              "message": "Invalid haulier"
+            },
+            {
+              "code": 4,
+              "message": "One or more animals must be included"
+            }
+          ]
+        }
+      },
+      "Movement": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BasicMovement"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "returnMovementNumber": {
+                "type": "number",
+                "example": 55663427,
+                "readOnly": true
+              },
+              "potentialMatchMovementNumber": {
+                "type": "array",
+                "items": {
+                  "type": "number",
+                  "example": 55663427
+                },
+                "readOnly": true
+              }
+            }
+          }
+        ]
+      },
+      "Confirmation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ReportAuthor"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid",
+                "readOnly": true
+              },
+              "number": {
+                "type": "number",
+                "readOnly": true,
+                "example": 55663427
+              },
+              "action": {
+                "type": "string",
+                "enum": [
+                  "confirmOff",
+                  "accept",
+                  "reject"
+                ],
+                "example": "reject"
+              },
+              "reason": {
+                "type": "string",
+                "nullable": false,
+                "example": "Other"
+              },
+              "otherReason": {
+                "type": "string",
+                "nullable": true,
+                "example": "Possible TB Hazard"
+              },
+              "createdDateTime": {
+                "type": "string",
+                "format": "date-time",
+                "readOnly": true
+              }
+            }
+          }
+        ]
+      },
+      "GetMovement": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Movement"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "confirmations": {
+                "type": "array",
+                "items": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Confirmation"
+                    }
+                  ]
+                }
+              },
+              "state": {
+                "type": "string",
+                "example": "received"
+              },
+              "reviewState": {
+                "type": "string",
+                "example": "forReview"
+              }
+            }
+          }
+        ]
+      },
+      "ConfirmationError": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BasicMessage"
+          }
+        ],
+        "example": {
+          "items": [
+            {
+              "code": 101,
+              "message": "confirm no allowed, check review state"
+            },
+            {
+              "code": 102,
+              "message": "confirmOff required"
+            },
+            {
+              "code": 103,
+              "message": "reject no allowed, check review state"
+            }
+          ]
+        }
+      },
+      "schemas-Haulier": {
+        "type": "object",
+        "properties": {
+          "partyNumber": {
+            "type": "number",
+            "readOnly": true,
+            "example": 12345
+          },
+          "name": {
+            "type": "string",
+            "example": "Hunshelf Animal Transporters Ltd"
+          },
+          "correspondenceAddress": {
+            "type": "object",
+            "properties": {
+              "singleLineAddress": {
+                "type": "string",
+                "example": "The Livery Yard, Hunshelf Bank, Stocksbridge"
+              },
+              "postcode": {
+                "type": "string",
+                "example": "S36 2BS"
+              }
+            }
+          },
+          "species": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": [
+              "cattle",
+              "bison",
+              "buffalo",
+              "species2"
+            ]
+          }
+        }
+      },
+      "HaulierList": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer",
+            "example": 1
+          },
+          "values": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/schemas-Haulier"
+            }
+          }
+        }
+      },
+      "RejectionReasonList": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer"
+          },
+          "values": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "rejectionReasonIdentifier": {
+                  "type": "string",
+                  "format": "string",
+                  "example": "12345"
+                },
+                "rejectionReason": {
+                  "type": "string",
+                  "example": "Movement didn't happen"
+                }
+              }
+            }
+          }
+        }
+      },
+      "Dam": {
+        "type": "object",
+        "properties": {
+          "animalIdentifier": {
+            "type": "string",
+            "example": "UK654326123456"
+          },
+          "breed": {
+            "type": "string",
+            "readOnly": true,
+            "example": "Dexter"
+          }
+        }
+      },
+      "AnimalSire": {
+        "type": "object",
+        "properties": {
+          "animalIdentifier": {
+            "type": "string",
+            "example": "UK123456123456"
+          },
+          "name": {
+            "type": "string",
+            "readOnly": true,
+            "example": "Driller"
+          },
+          "breed": {
+            "type": "string",
+            "readOnly": true,
+            "example": "Dexter"
+          }
+        }
+      },
+      "AnimalBirth": {
+        "type": "object",
+        "properties": {
+          "birthSite": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Site"
+              }
+            ]
+          },
+          "birthDate": {
+            "type": "string",
+            "format": "date",
+            "example": "2023-11-13",
+            "nullable": false
+          },
+          "birthYear": {
+            "type": "string",
+            "nullable": true,
+            "example": 2023
+          },
+          "birthMark": {
+            "type": "string",
+            "nullable": true,
+            "example": 556773
+          },
+          "assistedBirthFlag": {
+            "type": "boolean",
+            "nullable": false,
+            "example": "N"
+          },
+          "multipleBirthsFlag": {
+            "type": "boolean",
+            "nullable": false,
+            "example": "N"
+          },
+          "birthUpdatedDateTime": {
+            "type": "string",
+            "readOnly": true,
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "birthSite"
+        ]
+      },
+      "AnimalDeath": {
+        "type": "object",
+        "properties": {
+          "deathSite": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Site"
+              }
+            ]
+          },
+          "deathDate": {
+            "type": "string",
+            "format": "date",
+            "nullable": false,
+            "example": "2023-11-13"
+          },
+          "deathTime": {
+            "type": "string",
+            "example": "10:30Z"
+          },
+          "deathReason": {
+            "type": "string",
+            "nullable": true,
+            "format": "string",
+            "example": "Abattoir Kill"
+          },
+          "carcassCollectionSite": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Site"
+              }
+            ]
+          },
+          "tseTestRequiredFlag": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "deathReportedDateTime": {
+            "type": "string",
+            "readOnly": true,
+            "format": "date-time"
+          },
+          "deathUpdatedDateTime": {
+            "type": "string",
+            "readOnly": true,
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "deathSite",
+          "deathDate"
+        ]
+      },
+      "AnimalBirthingHistory": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "animalIdentifier": {
+              "type": "string",
+              "readOnly": true,
+              "example": "UK654321123456"
+            },
+            "birthDate": {
+              "type": "string",
+              "format": "date",
+              "example": "2023-11-13"
+            },
+            "sex": {
+              "type": "string",
+              "enum": [
+                "male",
+                "female"
+              ]
+            },
+            "birthSite": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/Site"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "Assurance": {
+        "type": "object",
+        "properties": {
+          "currentAssuredState": {
+            "type": "string",
+            "enum": [
+              "assured",
+              "expired",
+              "revoked",
+              "notAssured"
+            ]
+          },
+          "assuranceHistory": {
+            "type": "array",
+            "readOnly": true,
+            "items": {
+              "type": "object",
+              "properties": {
+                "schemeName": {
+                  "type": "string",
+                  "example": "DEFRA Vet Attestation"
+                },
+                "certificateNumber": {
+                  "type": "string",
+                  "example": "VAN-5544234-10/203/1005-11-24"
+                },
+                "certificationDate": {
+                  "type": "string",
+                  "format": "date",
+                  "example": "2023-11-13"
+                },
+                "expiryDate": {
+                  "type": "string",
+                  "format": "date",
+                  "example": "2024-11-13"
+                },
+                "revocationDate": {
+                  "type": "string",
+                  "format": "date",
+                  "example": null
+                },
+                "veterinarianName": {
+                  "type": "string",
+                  "example": "Dr James Herriot"
+                },
+                "rcvsMembershipNumber": {
+                  "type": "string",
+                  "example": 5544234
+                },
+                "vetPracticeName": {
+                  "type": "string",
+                  "example": "Hunshelf Vets Ltd"
+                },
+                "assuredState": {
+                  "type": "string",
+                  "enum": [
+                    "assured",
+                    "expired",
+                    "revoked"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "Animal": {
+        "type": "object",
+        "properties": {
+          "animalIdentifier": {
+            "type": "string",
+            "example": "UK123456654321",
+            "readOnly": true
+          },
+          "originalIdentifier": {
+            "type": "string",
+            "nullable": true,
+            "example": "USA005516557866"
+          },
+          "species": {
+            "type": "string",
+            "nullable": false,
+            "example": "cattle"
+          },
+          "breed": {
+            "type": "string",
+            "example": "Dexter"
+          },
+          "genotype": {
+            "type": "string",
+            "example": "QQQ/QRR"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true,
+            "example": "Ian"
+          },
+          "sex": {
+            "type": "string",
+            "nullable": false,
+            "enum": [
+              "male",
+              "female"
+            ]
+          },
+          "productionType": {
+            "type": "string",
+            "nullable": true,
+            "example": "beef"
+          },
+          "identificationDate": {
+            "type": "string",
+            "nullable": true,
+            "example": "2023-11-13"
+          },
+          "geneticDam": {
+            "$ref": "#/components/schemas/Dam"
+          },
+          "sire": {
+            "$ref": "#/components/schemas/AnimalSire"
+          },
+          "surrogateDam": {
+            "$ref": "#/components/schemas/Dam"
+          },
+          "importParents": {
+            "type": "object",
+            "properties": {
+              "geneticDam": {
+                "type": "string",
+                "example": "USA12345676543"
+              },
+              "sire": {
+                "type": "string",
+                "example": "USA9999676543"
+              },
+              "surrogateDam": {
+                "type": "string",
+                "example": "USA88885676543"
+              }
+            }
+          },
+          "birth": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AnimalBirth"
+              }
+            ],
+            "nullable": true,
+            "readOnly": false
+          },
+          "death": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AnimalDeath"
+              }
+            ],
+            "nullable": true,
+            "readOnly": false
+          },
+          "registrationSite": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Site"
+              }
+            ]
+          },
+          "homeSite": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Site"
+              }
+            ]
+          },
+          "currentSite": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Site"
+              }
+            ]
+          },
+          "registrationDate": {
+            "type": "string",
+            "nullable": false,
+            "format": "date"
+          },
+          "registrationCategory": {
+            "type": "string",
+            "nullable": false,
+            "enum": [
+              "birthRegistration",
+              "registration"
+            ],
+            "example": "birthRegistration"
+          },
+          "birthingHistory": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AnimalBirthingHistory"
+              }
+            ],
+            "nullable": true,
+            "readOnly": true
+          },
+          "state": {
+            "type": "string",
+            "readOnly": true,
+            "example": "restricted"
+          },
+          "submittedBySite": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Site"
+              }
+            ]
+          },
+          "createdDateTime": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "updatedDateTime": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "assurance": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Assurance"
+              }
+            ],
+            "nullable": true,
+            "readOnly": true
+          }
+        },
+        "required": [
+          "species",
+          "sex",
+          "registrationSite",
+          "registrationDate",
+          "registrationCategory"
+        ]
+      },
+      "AnimalArray": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/Animal"
+        }
+      },
+      "AnimalResponse": {
+        "type": "object",
+        "properties": {
+          "animalIdentifier": {
+            "type": "string",
+            "format": "string",
+            "readOnly": true,
+            "example": "UK543017404195"
+          },
+          "links": {
+            "type": "object",
+            "properties": {
+              "self": {
+                "type": "string",
+                "format": "uri",
+                "readOnly": true,
+                "example": "/animals/UK543017404195"
+              }
+            }
+          }
+        }
+      },
+      "LostFound": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "animalIdntifier": {
+            "type": "string",
+            "format": "string",
+            "nullable": false,
+            "example": "UK654321123456"
+          },
+          "site": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Site"
+              }
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "found",
+              "lost",
+              "stolen"
+            ]
+          },
+          "eventDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "reportedDateTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "crimeReferenceNumber": {
+            "type": "string",
+            "example": "54617/23"
+          },
+          "foundDead": {
+            "type": "boolean",
+            "example": false
+          }
+        },
+        "required": [
+          "animalIdentifier",
+          "site",
+          "status",
+          "eventDate",
+          "reportedDateTime",
+          "foundDead"
+        ]
+      },
+      "DeathReasonList": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer"
+          },
+          "values": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "deathReason": {
+                  "type": "string",
+                  "example": "Killed for human consumption"
+                }
+              }
+            }
+          }
+        }
+      },
+      "BreedList": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer"
+          },
+          "values": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "breed": {
+                  "type": "string",
+                  "example": "Aberdeen Angus"
+                },
+                "code": {
+                  "type": "string",
+                  "example": "AA"
+                }
+              }
+            }
+          }
+        }
+      },
+      "GenotypeList": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer"
+          },
+          "values": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "genotype": {
+                  "type": "string",
+                  "example": "AA/Bb"
+                }
+              }
+            }
+          }
+        }
+      },
+      "RequestStatus": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "Success",
+            "readOnly": true
+          }
+        },
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/MovementResponse2"
+          },
+          {
+            "$ref": "#/components/schemas/MovementResponse1"
+          },
+          {
+            "$ref": "#/components/schemas/AnimalResponse"
+          }
+        ]
+      }
+    },
+    "parameters": {
+      "xCorrelationId": {
+        "in": "header",
+        "name": "X-Correlation-Id",
+        "schema": {
+          "type": "string",
+          "format": "string",
+          "example": "1889185f-adb9-46aa-9035-1a752e9c3833"
+        }
+      },
+      "xRequestMode": {
+        "in": "header",
+        "name": "X-Request-Mode",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "sync",
+            "async"
+          ]
+        },
+        "description": "If no value supplied, it'll default to 'sync'"
+      }
+    },
+    "headers": {
+      "xRequestId": {
+        "schema": {
+          "type": "string",
+          "format": "uuid",
+          "example": "df44b048-aa6a-4b2f-8ae7-daad7d3f6dc4"
+        },
+        "description": "Uniquely identfies an HTTP request, used to track the request thru differnt stages."
+      },
+      "xCorrelationId": {
+        "schema": {
+          "type": "string",
+          "format": "uuid",
+          "example": "3eb0c71f-d237-49c5-b2f9-17d4bc8ec870"
+        },
+        "description": "Request correlation id, the id is generated by the server if not provided by the client."
+      },
+      "xRetryAfter": {
+        "schema": {
+          "type": "integer"
+        },
+        "description": "The number of seconds/minutes before you can call /requeststatus/{requestId} endpoint."
+      }
+    }
+  }
+}
