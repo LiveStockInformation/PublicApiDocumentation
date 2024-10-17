@@ -1,28 +1,16 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "title": "3rd Party Multispecies API",
-    "description": "This document formalises the Multispecies API definitions for the Livestock Information Ltd Multispecies Platform for users using 3rd Party farm softwares.\nThe specification is based on the OpenAPI 3.0 format.",
-    "termsOfService": "https://www.livestockinformation.org.uk/",
-    "contact": {
-      "email": "aamir.yaseen@livestockinformation.org.uk"
-    },
-    "license": {
-      "name": "Commercial License",
-      "url": "https://www.livestockinformation.org.uk/"
-    },
+    "title": "3rd Party LIS API",
+    "description": "These are the APIs which are currently in development, from Livestock Information Ltd.\n\nThis is an **alpha version** of our APIs subject to change based on user feedback and ongoing development. Future iterations may feature updated endpoints or functions, along with new features and enhancements, or they might remove certain endpoints. To help us enhance the service for future releases, we encourage users to explore the API and share their feedback.",
     "version": "1.0.0-alpha.1"
   },
   "servers": [
     {
-      "url": "https:/.livestockinformation.org.uk/v1",
-      "description": "Production (Live)"
+      "url": "https://**baseurl**/v1",
+      "description": "api url details shared upon api access approval"
     }
   ],
-  "externalDocs": {
-    "description": "Livestock Information Ltd website",
-    "url": "https://www.livestockinformation.org.uk/"
-  },
   "paths": {
     "/movements": {
       "post": {
@@ -69,14 +57,14 @@
                       }
                     ]
                   }
+                }
+              },
+              "encoding": {
+                "movementData": {
+                  "contentType": "application/json"
                 },
-                "encoding": {
-                  "movementData": {
-                    "contentType": "application/json"
-                  },
-                  "document": {
-                    "contentType": "application/octet-stream"
-                  }
+                "document": {
+                  "contentType": "application/octet-stream"
                 }
               }
             }
@@ -411,14 +399,14 @@
                       }
                     ]
                   }
+                }
+              },
+              "encoding": {
+                "movementData": {
+                  "contentType": "application/json"
                 },
-                "encoding": {
-                  "movementData": {
-                    "contentType": "application/json"
-                  },
-                  "document": {
-                    "contentType": "application/octet-stream"
-                  }
+                "document": {
+                  "contentType": "application/octet-stream"
                 }
               }
             }
