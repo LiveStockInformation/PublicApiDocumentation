@@ -104,10 +104,6 @@
 				},
 				{
 					"type": "P",
-					"body": "We recommend that you submit no more than one get request per elapsed second."
-				},
-				{
-					"type": "P",
 					"body": "If you exceed this limit, you may receive an HTTP 429 (Too Many Requests) status code for each request you make within the remainder of the time."
 				}
 			]
@@ -960,6 +956,90 @@
 							{
 								"type": "P",
 								"body": "This response indicates the system could not locate a livestock movement record corresponding to the supplied requestId."
+							}
+						]
+					}
+				},
+				{
+					"type": "DETAIL",
+					"body": {
+						"title": "/v1/<strong>Holdings/ValidHoldings</strong>",
+						"tag": "POST",
+						"body": [
+							{
+								"type": "H4",
+								"body": "Description"
+							},
+							{
+								"type": "P",
+								"body": "POST /Holdings/ValidHoldings endpoint returns results indicating whether the CPHs in the request are valid or not."
+							},
+							{
+								"type": "P",
+								"body": "The optional $select, and $expand parameters can be used to restrict the scope of the results set returned."
+							},
+							{
+								"type": "H4",
+								"body": "Parameters"
+							},
+							{
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Name",
+										"Type",
+										"Required",
+										"Description"
+									],
+									"rows": [
+										{
+											"data": ["$select", "string", "false", "query string to limit the entities to be included in the response"]
+										},
+										{
+											"data": ["$expand", "string", "false", "indicates the related entities to be represented inline. The maximum depth is 2."]
+										},
+										{
+											"data": ["$filter", "string", "false", "query string used to limit the number of items returned in the results set. When specifying dates, only those with a time part will be accepted."]
+										},
+										{
+											"data": ["$orderby", "string", "false", "specifies the order in which items in the results set are returned"]
+										},
+										{
+											"data": ["$top", "int32", "false", "limits the number of results returned"]
+										},
+										{
+											"data": ["$skip", "int32", "false", "excluded the specified number of items from the results set"]
+										}
+									]
+								}
+							},
+							{
+								"type": "H4",
+								"body": "Response"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>200 (Success)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that system has processed the request, and the results are presented in the response body"
+							},
+							{
+								"type": "P",
+								"body": "HTTP status: <code class='code--slim'>400 (Bad Request)</code>\n"
+							},
+							{
+								"type": "P",
+								"body": "This response indicates that the submission has been rejected by the system as some, or all of the data supplied was found to be in error."
+							},
+							{
+								"type": "P",
+								"body": "The CLAErrorResponse structure in the returned message provides a list of error codes, together with a textual description of each error. Additional information is provided in the errors body and identifies the field or fields in the original submission that generated each error."
+							},
+							{
+								"type": "P",
+								"body": "Following an error response, the system discards the submitted data. The caller must correct the errors identified and resubmit the validation request again."
 							}
 						]
 					}
@@ -3026,18 +3106,83 @@
 								"type": "TABLE",
 								"body": {
 									"headers": [
-										"Code",
-										"Description"
+										"Sheep code",
+										"Sheep Exemption"
 									],
 									"rows": [
 										{
-											"data": ["101", "Foster lambs"]
+											"data": ["198", "Moving breeding rams to or from a market"]
 										},
 										{
-											"data": ["173", "Return after rounding up from common land"]
+											"data": ["197", "Moving breeding rams to or from a holding for breeding via an approved Isolation Unit"]
 										},
 										{
-											"data": ["185", "Moving for immediate slaughter"]
+											"data": ["199", "Returning Breeding Rams unsold from a Market via an approved Isolation Unit"]
+										},
+                                        {
+											"data": ["173", "Returning to their correct home after being inadvertently rounded up from common land"]
+										},
+										{
+											"data": ["185", "Moving for immediate dedicated slaughter (direct, or via dedicated collection centre or dedicated market)"]
+										},
+										{
+											"data": ["168", "Moving to a show via an approved Isolation Unit"]
+										},
+                                        {
+											"data": ["AOF017", "Moving from a show via an approved Isolation Unit"]
+										},
+										{
+											"data": ["195", "Returning from an AI centre via an approved Isolation Unit"]
+										},
+                                        {
+											"data": ["187", "Moving to an exhibition or performance with permit (non CPH)"]
+										},
+										{
+											"data": ["CPRC", "Moving animals to a Central Point Recording Centre (CPRC)"]
+										},
+										{
+											"data": ["InBus", "Moving animals within your business that remain under your day to day care and control"]
+										}
+									]
+								}
+							},
+                            {
+								"type": "TABLE",
+								"body": {
+									"headers": [
+										"Goats code",
+										"Goats Exemption"
+									],
+									"rows": [
+                                        {
+											"data": ["200", "Moving breeding goats to or from a holding for breeding via an approved Isolation Unit"]
+										},
+										{
+											"data": ["173", "Returning to their correct home after being inadvertently rounded up from common land"]
+										},
+										{
+											"data": ["185", "Moving for immediate dedicated slaughter (direct, or via dedicated collection centre or dedicated market)"]
+										},
+                                        {
+											"data": ["168", "Moving to a show via an approved Isolation Unit"]
+										},
+										{
+											"data": ["185", "Moving  from a show via an approved Isolation Unit)"]
+										},
+										{
+											"data": ["AOF017", "Moving  from a show via an approved Isolation Unit"]
+										},
+                                        {
+											"data": ["195", "Returning from an AI centre via an approved Isolation Unit"]
+										},
+										{
+											"data": ["187", "Moving to an exhibition or performance with permit (non CPH)"]
+										},
+                                        {
+											"data": ["CPRC", "Moving animals to a Central Point Recording Centre (CPRC)"]
+										},
+										{
+											"data": ["InBus", "Moving animals within your business that remain under your day to day care and control"]
 										}
 									]
 								}
