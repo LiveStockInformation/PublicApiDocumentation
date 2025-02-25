@@ -8,7 +8,7 @@
   "servers": [
     {
       "url": "https://**baseurl**/v1.0",
-      "description": "api url details shared upon api access approval"		
+      "description": "api url details shared upon api access approval"
     }
   ],
   "paths": {
@@ -239,7 +239,8 @@
                 "schema": {
                   "$ref": "#/components/schemas/CLAOData.Models.CorrectTransfer.CorrectTransfer"
                 },
-                "example": "<CLAOData.Models.CorrectTransfer.CorrectTransfer> <updatedDate>string</updatedDate> <requestDate>string</requestDate> <requestStatus>NotAvailable</requestStatus> <userName>string</userName> <warnings> <message>string</message> <code>string</code> <target>string</target> </warnings> <content> <movementGroups> <devicesWithDetail> <beginBirthPeriod>string</beginBirthPeriod> <breed>string</breed> <device> <freezebrand>string</freezebrand> <rfid>string</rfid> <tagNumber>string</tagNumber> </device> <gender>string</gender> <endBirthPeriod>string</endBirthPeriod> <mgtTag> <identifier>string</identifier> </mgtTag> </devicesWithDetail> <devices> <freezebrand>string</freezebrand> <rfid>string</rfid> <tagNumber>string</tagNumber> </devices> <batches> <idMark>string</idMark> <stockType>string</stockType> <batchNumber>string</batchNumber> <animalTotal>0</animalTotal> </batches> <fromSubLocation>string</fromSubLocation> <vendorHolding>string</vendorHolding> <toSubLocation>string</toSubLocation> </movementGroups> <id>0</id> <saleDate>string</saleDate> <deviceApplication> <dateOfApplication>string</dateOfApplication> <endBirthPeriod>string</endBirthPeriod> <breed>string</breed> <beginBirthPeriod>string</beginBirthPeriod> </deviceApplication> <requestToBeUndone_ID>0</requestToBeUndone_ID> <transferDate>string</transferDate> <transportHaulierName>string</transportHaulierName> <trackingId>string</trackingId> <transportVehicleRegistrationNo>string</transportVehicleRegistrationNo> <userHolding>string</userHolding> <saleId>string</saleId> <species>string</species> <destinationHolding>string</destinationHolding> <sourceHolding>string</sourceHolding> <processingFlags> <processingFlagId>0</processingFlagId> <name>string</name> </processingFlags> <movementDocument> <departureDetail> <departureHoldingType>string</departureHoldingType> <departureDateTime>string</departureDateTime> <departureKeeper> <county>string</county> <address2>string</address2> <propertyName>string</propertyName> <address1>string</address1> <title>string</title> <telephoneNumber>string</telephoneNumber> <lastName>string</lastName> <postCode>string</postCode> <town>string</town> <firstName>string</firstName> </departureKeeper> <animalTotal>0</animalTotal> <loadingDateTime>string</loadingDateTime> <departureOwner> <county>string</county> <address2>string</address2> <propertyName>string</propertyName> <address1>string</address1> <title>string</title> <telephoneNumber>string</telephoneNumber> <lastName>string</lastName> <postCode>string</postCode> <town>string</town> <firstName>string</firstName> </departureOwner> <expectedDurationOfJourney> <hours>0</hours> <days>0</days> <minutes>0</minutes> </expectedDurationOfJourney> </departureDetail> <fciDetail> <isAllAnimalsFciCompliant>true</isAllAnimalsFciCompliant> <nonCompliantReason>string</nonCompliantReason> <holdingRestrictions>string</holdingRestrictions> <withdrawalPeriodObservedText>string</withdrawalPeriodObservedText> <metFCIWithdrawalPeriodCode>string</metFCIWithdrawalPeriodCode> <nonCompliantDevices> <freezebrand>string</freezebrand> <rfid>string</rfid> <tagNumber>string</tagNumber> </nonCompliantDevices> </fciDetail> <transportDetail> <transporterAuthNumber>string</transporterAuthNumber> <transporterType>string</transporterType> <transportVehicleRegistrationNo>string</transportVehicleRegistrationNo> <transporter> <county>string</county> <address2>string</address2> <propertyName>string</propertyName> <address1>string</address1> <title>string</title> <telephoneNumber>string</telephoneNumber> <lastName>string</lastName> <postCode>string</postCode> <town>string</town> <firstName>string</firstName> </transporter> <transportHaulierName>string</transportHaulierName> </transportDetail> <destinationDetail> <unloadingDateTime>string</unloadingDateTime> <arrivalDateTime>string</arrivalDateTime> <destinationKeeper> <county>string</county> <address2>string</address2> <propertyName>string</propertyName> <address1>string</address1> <title>string</title> <telephoneNumber>string</telephoneNumber> <lastName>string</lastName> <postCode>string</postCode> <town>string</town> <firstName>string</firstName> </destinationKeeper> <destinationHoldingType>string</destinationHoldingType> <hasKeeperChanged>true</hasKeeperChanged> <totalAnimalsReceived>0</totalAnimalsReceived> </destinationDetail> <documentType>string</documentType> <movementDocumentRef>string</movementDocumentRef> </movementDocument> <animalCount>0</animalCount> </content> <requestId>0</requestId> <errors> <message>string</message> <code>string</code> <target>string</target> </errors> <undoSupported>true</undoSupported> <isContentPurged>true</isContentPurged> <isFullUndone>true</isFullUndone> </CLAOData.Models.CorrectTransfer.CorrectTransfer>"
+                "example": "<CLAOData.Models.CorrectTransfer.CorrectTransfer> <updatedDate>string</updatedDate> <requestDate>string</requestDate> <requestStatus>NotAvailable</requestStatus> <userName>string</userName> <warnings> <message>string</message> <code>string</code> <target>string</target> </warnings> <content> <movementGroups> <devicesWithDetail> <beginBirthPeriod>string</beginBirthPeriod> <breed>string</breed> <device> <freezebrand>string</freezebrand> <rfid>string</rfid> <tagNumber>string</tagNumber> </device> <gender>string</gender> <endBirthPeriod>string</endBirthPeriod> <mgtTag> <identifier>string</identifier> </mgtTag> </devicesWithDetail> <devices> <freezebrand>string</freezebrand> <rfid>string</rfid> <tagNumber>string</tagNumber> </devices> <batches> <idMark>string</idMark> <stockType>string</stockType> <batchNumber>string</batchNumber> <animalTotal>0</animalTotal> </batches> <fromSubLocation>string</fromSubLocation> <vendorHolding>string</vendorHolding> <toSubLocation>string</toSubLocation> </movementGroups> <id>0</id> <saleDate>string</saleDate> <deviceApplication> <dateOfApplication>string</dateOfApplication> <endBirthPeriod>string</endBirthPeriod> <breed>string</breed> <beginBirthPeriod>string</beginBirthPeriod> </deviceApplication> <requestToBeUndone_ID>0</requestToBeUndone_ID> <transferDate>string</transferDate> <transportHaulierName>string</transportHaulierName> <trackingId>string</trackingId> <transportVehicleRegistrationNo>string</transportVehicleRegistrationNo> <userHolding>string</userHolding> <saleId>string</saleId> <species>string</species> <destinationHolding>string</destinationHolding> <sourceHolding>string</sourceHolding> <processingFlags> <processingFlagId>0</processingFlagId> <name>string</name> </processingFlags> <movementDocument> <departureDetail> <departureHoldingType>string</departureHoldingType> <departureDateTime>string</departureDateTime> <departureKeeper> <county>string</county> <address2>string</address2> <propertyName>string</propertyName> <address1>string</address1> <title>string</title> <telephoneNumber>string</telephoneNumber> <lastName>string</lastName> <postCode>string</postCode> <town>string</town> <firstName>string</firstName> </departureKeeper> <animalTotal>0</animalTotal> <loadingDateTime>string</loadingDateTime> <departureOwner> <county>string</county> <address2>string</address2> <propertyName>string</propertyName> <address1>string</address1> <title>string</title> <telephoneNumber>string</telephoneNumber> <lastName>string</lastName> <postCode>string</postCode> <town>string</town> <firstName>string</firstName> </departureOwner> <expectedDurationOfJourney> <hours>0</hours> <days>0</days> <minutes>0</minutes> </expectedDurationOfJourney> </departureDetail> <fciDetail> <isAllAnimalsFciCompliant>true</isAllAnimalsFciCompliant> <nonCompliantReason>string</nonCompliantReason> <holdingRestrictions>string</holdingRestrictions> <withdrawalPeriodObservedText>string</withdrawalPeriodObservedText> <metFCIWithdrawalPeriodCode>string</metFCIWithdrawalPeriodCode> <nonCompliantDevices> <freezebrand>string</freezebrand> <rfid>string</rfid> <tagNumber>string</tagNumber> </nonCompliantDevices> </fciDetail> <transportDetail> <transporterAuthNumber>string</transporterAuthNumber> <transporterType>string</transporterType> <transportVehicleRegistrationNo>string</transportVehicleRegistrationNo> <transporter> <county>string</county> <address2>string</address2> <propertyName>string</propertyName> <address1>string</address1> <title>string</title> <telephoneNumber>string</telephoneNumber> <lastName>string</lastName> <postCode>string</postCode> <town>string</town> <firstName>string</firstName> </transporter> <transportHaulierName>string</transportHaulierName> </transportDetail> <destinationDetail> <unloadingDateTime>string</unloadingDateTime> <arrivalDateTime>string</arrivalDateTime> <destinationKeeper> <county>string</county> <address2>string</address2> <propertyName>string</propertyName> <address1>string</address1> <title>string</title> <telephoneNumber>string</telephoneNumber> <lastName>string
+</lastName> <postCode>string</postCode> <town>string</town> <firstName>string</firstName> </destinationKeeper> <destinationHoldingType>string</destinationHoldingType> <hasKeeperChanged>true</hasKeeperChanged> <totalAnimalsReceived>0</totalAnimalsReceived> </destinationDetail> <documentType>string</documentType> <movementDocumentRef>string</movementDocumentRef> </movementDocument> <animalCount>0</animalCount> </content> <requestId>0</requestId> <errors> <message>string</message> <code>string</code> <target>string</target> </errors> <undoSupported>true</undoSupported> <isContentPurged>true</isContentPurged> <isFullUndone>true</isFullUndone> </CLAOData.Models.CorrectTransfer.CorrectTransfer>"
               }
             }
           },
@@ -977,7 +978,8 @@
                 "schema": {
                   "$ref": "#/components/schemas/CLAOData.Models.Transfer.Transfer"
                 },
-                "example": "<CLAOData.Models.Transfer.Transfer> <updatedDate>string</updatedDate> <requestDate>string</requestDate> <requestStatus>NotAvailable</requestStatus> <userName>string</userName> <warnings> <message>string</message> <code>string</code> <target>string</target> </warnings> <content> <id>0</id> <trackingId>string</trackingId> <sourceHolding>string</sourceHolding> <animalCount>0</animalCount> <movementDocument> <departureDetail> <departureHoldingType>string</departureHoldingType> <departureDateTime>string</departureDateTime> <departureKeeper> <county>string</county> <address2>string</address2> <propertyName>string</propertyName> <address1>string</address1> <title>string</title> <telephoneNumber>string</telephoneNumber> <lastName>string</lastName> <postCode>string</postCode> <town>string</town> <firstName>string</firstName> </departureKeeper> <animalTotal>0</animalTotal> <loadingDateTime>string</loadingDateTime> <departureOwner> <county>string</county> <address2>string</address2> <propertyName>string</propertyName> <address1>string</address1> <title>string</title> <telephoneNumber>string</telephoneNumber> <lastName>string</lastName> <postCode>string</postCode> <town>string</town> <firstName>string</firstName> </departureOwner> <expectedDurationOfJourney> <hours>0</hours> <days>0</days> <minutes>0</minutes> </expectedDurationOfJourney> </departureDetail> <fciDetail> <isAllAnimalsFciCompliant>true</isAllAnimalsFciCompliant> <nonCompliantReason>string</nonCompliantReason> <holdingRestrictions>string</holdingRestrictions> <withdrawalPeriodObservedText>string</withdrawalPeriodObservedText> <metFCIWithdrawalPeriodCode>string</metFCIWithdrawalPeriodCode> <nonCompliantDevices> <freezebrand>string</freezebrand> <rfid>string</rfid> <tagNumber>string</tagNumber> </nonCompliantDevices> </fciDetail> <transportDetail> <transporterAuthNumber>string</transporterAuthNumber> <transporterType>string</transporterType> <transportVehicleRegistrationNo>string</transportVehicleRegistrationNo> <transporter> <county>string</county> <address2>string</address2> <propertyName>string</propertyName> <address1>string</address1> <title>string</title> <telephoneNumber>string</telephoneNumber> <lastName>string</lastName> <postCode>string</postCode> <town>string</town> <firstName>string</firstName> </transporter> <transportHaulierName>string</transportHaulierName> </transportDetail> <destinationDetail> <unloadingDateTime>string</unloadingDateTime> <arrivalDateTime>string</arrivalDateTime> <destinationKeeper> <county>string</county> <address2>string</address2> <propertyName>string</propertyName> <address1>string</address1> <title>string</title> <telephoneNumber>string</telephoneNumber> <lastName>string</lastName> <postCode>string</postCode> <town>string</town> <firstName>string</firstName> </destinationKeeper> <destinationHoldingType>string</destinationHoldingType> <hasKeeperChanged>true</hasKeeperChanged> <totalAnimalsReceived>0</totalAnimalsReceived> </destinationDetail> <documentType>string</documentType> <movementDocumentRef>string</movementDocumentRef> </movementDocument> <deviceApplication> <dateOfApplication>string</dateOfApplication> <endBirthPeriod>string</endBirthPeriod> <breed>string</breed> <beginBirthPeriod>string</beginBirthPeriod> </deviceApplication> <transferDate>string</transferDate> <processingFlags> <processingFlagId>0</processingFlagId> <name>string</name> </processingFlags> <saleDate>string</saleDate> <movementGroups> <devicesWithDetail> <beginBirthPeriod>string</beginBirthPeriod> <breed>string</breed> <device> <freezebrand>string</freezebrand> <rfid>string</rfid> <tagNumber>string</tagNumber> </device> <gender>string</gender> <endBirthPeriod>string</endBirthPeriod> <mgtTag> <identifier>string</identifier> </mgtTag> </devicesWithDetail> <devices> <freezebrand>string</freezebrand> <rfid>string</rfid> <tagNumber>string</tagNumber> </devices> <batches> <idMark>string</idMark> <stockType>string</stockType> <batchNumber>string</batchNumber> <animalTotal>0</animalTotal> </batches> <fromSubLocation>string</fromSubLocation> <vendorHolding>string</vendorHolding> <toSubLocation>string</toSubLocation> </movementGroups> <species>string</species> <destinationHolding>string</destinationHolding> <saleId>string</saleId> <transportHaulierName>string</transportHaulierName> <userHolding>string</userHolding> <transportVehicleRegistrationNo>string</transportVehicleRegistrationNo> </content> <requestId>0</requestId> <errors> <message>string</message> <code>string</code> <target>string</target> </errors> <undoSupported>true</undoSupported> <isContentPurged>true</isContentPurged> <isFullUndone>true</isFullUndone> </CLAOData.Models.Transfer.Transfer>"
+                "example": "<CLAOData.Models.Transfer.Transfer> <updatedDate>string</updatedDate> <requestDate>string</requestDate> <requestStatus>NotAvailable</requestStatus> <userName>string</userName> <warnings> <message>string</message> <code>string</code> <target>string</target> </warnings> <content> <id>0</id> <trackingId>string</trackingId> <sourceHolding>string</sourceHolding> <animalCount>0</animalCount> <movementDocument> <departureDetail> <departureHoldingType>string</departureHoldingType> <departureDateTime>string</departureDateTime> <departureKeeper> <county>string</county> <address2>string</address2> <propertyName>string</propertyName> <address1>string</address1> <title>string</title> <telephoneNumber>string</telephoneNumber> <lastName>string</lastName> <postCode>string</postCode> <town>string</town> <firstName>string</firstName> </departureKeeper> <animalTotal>0</animalTotal> <loadingDateTime>string</loadingDateTime> <departureOwner> <county>string</county> <address2>string</address2> <propertyName>string</propertyName> <address1>string</address1> <title>string</title> <telephoneNumber>string</telephoneNumber> <lastName>string</lastName> <postCode>string</postCode> <town>string</town> <firstName>string</firstName> </departureOwner> <expectedDurationOfJourney> <hours>0</hours> <days>0</days> <minutes>0</minutes> </expectedDurationOfJourney> </departureDetail> <fciDetail> <isAllAnimalsFciCompliant>true</isAllAnimalsFciCompliant> <nonCompliantReason>string</nonCompliantReason> <holdingRestrictions>string</holdingRestrictions> <withdrawalPeriodObservedText>string</withdrawalPeriodObservedText> <metFCIWithdrawalPeriodCode>string</metFCIWithdrawalPeriodCode> <nonCompliantDevices> <freezebrand>string</freezebrand> <rfid>string</rfid> <tagNumber>string</tagNumber> </nonCompliantDevices> </fciDetail> <transportDetail> <transporterAuthNumber>string</transporterAuthNumber> <transporterType>string</transporterType> <transportVehicleRegistrationNo>string</transportVehicleRegistrationNo> <transporter> <county>string</county> <address2>string</address2> <propertyName>string</propertyName> <address1>string</address1> <title>string</title> <telephoneNumber>string</telephoneNumber> <lastName>string</lastName> <postCode>string</postCode> <town>string</town> <firstName>string</firstName> </transporter> <transportHaulierName>string</transportHaulierName> </transportDetail> <destinationDetail> <unloadingDateTime>string</unloadingDateTime> <arrivalDateTime>string</arrivalDateTime> <destinationKeeper> <county>string</county> <address2>string</address2> <propertyName>string</propertyName> <address1>string</address1> <title>string</title> <telephoneNumber>string</telephoneNumber> <lastName>string</lastName> <postCode>string</postCode> <town>string</town> <firstName>string</firstName> </destinationKeeper> <destinationHoldingType>string</destinationHoldingType> <hasKeeperChanged>true</hasKeeperChanged> <totalAnimalsReceived>0</totalAnimalsReceived> </destinationDetail> <documentType>string</documentType> <movementDocumentRef>string</movementDocumentRef> </movementDocument> <deviceApplication> <dateOfApplication>string</dateOfApplication> <endBirthPeriod>string</endBirthPeriod> <breed>string</breed> <beginBirthPeriod>string</beginBirthPeriod> </deviceApplication> <transferDate>string</transferDate> <processingFlags> <processingFlagId>0</processingFlagId> <name>string</name> </processingFlags> <saleDate>string</saleDate> <movementGroups> <devicesWithDetail> <beginBirthPeriod>string</beginBirthPeriod> <breed>string</breed> <device> <freezebrand>string</freezebrand> <rfid>string</rfid> <tagNumber>string</tagNumber> </device> <gender>string</gender> <endBirthPeriod>string</endBirthPeriod> <mgtTag> <identifier>string</identifier> </mgtTag> </devicesWithDetail> <devices> <freezebrand>string</freezebrand> <rfid>string</rfid> <tagNumber>string</tagNumber> </devices> <batches> <idMark>string</idMark> <stockType>string</stockType> <batchNumber>string</batchNumber> <animalTotal>0</animalTotal> </batches> <fromSubLocation>string</fromSubLocation>
+ <vendorHolding>string</vendorHolding> <toSubLocation>string</toSubLocation> </movementGroups> <species>string</species> <destinationHolding>string</destinationHolding> <saleId>string</saleId> <transportHaulierName>string</transportHaulierName> <userHolding>string</userHolding> <transportVehicleRegistrationNo>string</transportVehicleRegistrationNo> </content> <requestId>0</requestId> <errors> <message>string</message> <code>string</code> <target>string</target> </errors> <undoSupported>true</undoSupported> <isContentPurged>true</isContentPurged> <isFullUndone>true</isFullUndone> </CLAOData.Models.Transfer.Transfer>"
               }
             }
           },
@@ -4068,6 +4070,103 @@
                   "$ref": "#/components/schemas/CLAOData.Infrastructure.ErrorHandling.CLAErrorResponse"
                 },
                 "example": "<CLAOData.Infrastructure.ErrorHandling.CLAErrorResponse> <error> <code>string</code> <message>string</message> <target>string</target> <details> <code>string</code> <target>string</target> <message>string</message> </details> </error> </CLAOData.Infrastructure.ErrorHandling.CLAErrorResponse>"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Holdings/ValidHoldings": {
+      "post": {
+        "tags": [
+          "Holdings"
+        ],
+        "summary": "Validate holding numbers",
+        "operationId": "post-v1-holdings-validholdings",
+        "description": "Validate the list of holdings and Returns Holdings state like Valid/Invalid based on below conditions :\n            \nPossible validation states of each holding number are:\n- Valid - the holding number is valid\n- Invalid - the holding number is not valid      \n\nValidation Rules:\n* List of holdings is should not be null or empty \n* Holding list length cannot be greater than maximum allowed by system configuration",
+        "parameters": [
+          {
+            "name": "$select",
+            "in": "query",
+            "description": "Limits the properties returned in the result.",
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "$expand",
+            "in": "query",
+            "description": "Indicates the related entities to be represented inline. The maximum depth is 2.",
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CLAOData.Models.Holdings.Default.HoldingsValidHoldingsParameters"
+              },
+              "examples": {
+                "Validate holding numbers - Request": {
+                  "description": "A simple example of validating holding numbers",
+                  "value": {
+                    "content": {
+                      "holdings": [
+                        "01/001/0001",
+                        "01/001/0002",
+                        "0001-01-01T00:00:00.0000000+00:00"
+                      ]
+                    }
+                  }
+                },
+                "Validate holding numbers - Response": {
+                  "description": "A simple example of the Response",
+                  "value": {
+                    "content": {
+                      "validateResults": [
+                        {
+                          "holding": "01/001/0001",
+                          "state": "Invalid"
+                        },
+                        {
+                          "holding": "01/001/0002",
+                          "state": "Valid",
+                          "propertyName": "Test"
+                        },
+                        {
+                          "holding": "0001-01-01T00:00:00.0000000+00:00",
+                          "state": "Invalid"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CLAOData.Models.ValidHoldings.ValidHoldingsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CLAOData.Infrastructure.ErrorHandling.CLAErrorResponse"
+                }
               }
             }
           }
@@ -17046,6 +17145,72 @@
             "type": "string",
             "description": "The date when this program status started to apply to this animal.",
             "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CLAOData.Models.Holdings.Default.HoldingsValidHoldingsParameters": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "$ref": "#/components/schemas/CLAOData.Models.ValidHoldings.ValidHoldingRequest"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CLAOData.Models.ValidHoldings.ValidHoldingRequest": {
+        "type": "object",
+        "properties": {
+          "holdings": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "A list of holdings to be validated",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Valid Holdings Request Model"
+      },
+      "CLAOData.Models.ValidHoldings.ValidatedHoldingResult": {
+        "enum": [
+          1,
+          2
+        ],
+        "type": "integer",
+        "description": "Holding is validated by below 2 states \r\n- 1- Valid\r\n- 2- Invalid",
+        "format": "int32"
+      },
+      "CLAOData.Models.ValidHoldings.ValidHoldingResult": {
+        "type": "object",
+        "properties": {
+          "holding": {
+            "type": "string",
+            "description": "The original holding number supplied in the request.",
+            "nullable": true
+          },
+          "state": {
+            "$ref": "#/components/schemas/CLAOData.Models.ValidHoldings.ValidatedHoldingResult"
+          },
+          "propertyName": {
+            "type": "string",
+            "description": "The Property Name of a valid holding and will be null for invalid holding.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CLAOData.Models.ValidHoldings.ValidHoldingsResponse": {
+        "type": "object",
+        "properties": {
+          "validateResults": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CLAOData.Models.ValidHoldings.ValidHoldingResult"
+            },
+            "description": "The response from a request to validate a list of holdings.",
+            "nullable": true
           }
         },
         "additionalProperties": false
