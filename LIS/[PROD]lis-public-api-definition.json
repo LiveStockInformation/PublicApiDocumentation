@@ -811,7 +811,11 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Animal",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Animal"
+                  }
+                ],
                 "description": "Animal"
               }
             }
