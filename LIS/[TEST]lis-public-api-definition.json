@@ -2,13 +2,19 @@
   "openapi": "3.0.3",
   "info": {
     "title": "3rd Party LIS API",
-    "description": "These are the APIs which are currently in development, from Livestock Information Ltd.\n\nThis is an **alpha version** of our APIs subject to change based on user feedback and ongoing development. Future iterations may feature updated endpoints or functions, along with new features and enhancements, or they might remove certain endpoints. To help us enhance the service for future releases, we encourage users to explore the API and share their feedback.",
-    "version": "1.0.0-alpha.1"
+    "description": "The **Beta version** of this API is a pre-release version made available for external testing and feedback. It may contain new features and functionality that are still under development. While the API is largely functional, it is not guaranteed to be fully stable, and breaking changes may occur as we refine the product based on user feedback.\n\nWe encourage developers to use the Beta version for testing purposes but advise caution when integrating it into production systems. Feedback from users during the Beta phase will help improve the API before the final, stable release.",
+    "version": "1.0.0-beta.1"
   },
   "servers": [
     {
       "url": "https://**baseurl**/v1",
       "description": "api url details shared upon api access approval"
+    }
+  ],
+  "security": [
+    {
+      "ApiSubscriptionKey": [],
+      "ApiAccessToken": []
     }
   ],
   "paths": {
@@ -35,27 +41,11 @@
                 "type": "object",
                 "properties": {
                   "movementData": {
-                    "type": "object",
-                    "allOf": [
-                      {
-                        "$ref": "#/components/schemas/ReportAuthor"
-                      },
-                      {
-                        "$ref": "#/components/schemas/BasicMovement"
-                      },
-                      {
-                        "$ref": "#/components/schemas/Import"
-                      },
-                      {
-                        "$ref": "#/components/schemas/Export"
-                      },
-                      {
-                        "$ref": "#/components/schemas/FciInformation"
-                      },
-                      {
-                        "$ref": "#/components/schemas/Documents"
-                      }
-                    ]
+                    "$ref": "#/components/schemas/movement"
+                  },
+                  "document": {
+                    "type": "string",
+                    "format": "binary"
                   }
                 }
               },
@@ -72,6 +62,14 @@
         },
         "responses": {
           "200": {
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            },
             "description": "OK - Successful operation with identifier in response body.",
             "content": {
               "application/json": {
@@ -90,20 +88,35 @@
           },
           "202": {
             "description": "OK - Successful operation, async request has been accepted. Response headers contain request-id and retry-after to check the request status afterwards",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AsyncAcceptedResponse"
+                }
+              }
+            },
             "headers": {
-              "X-Request-Id": {
+              "LI-Request-Id": {
                 "$ref": "#/components/headers/xRequestId"
               },
-              "X-Correlation-Id": {
+              "LI-Correlation-Id": {
                 "$ref": "#/components/headers/xCorrelationId"
               },
-              "X-Retry-After": {
+              "Retry-After": {
                 "$ref": "#/components/headers/xRetryAfter"
               }
             }
           },
           "400": {
             "description": "Invalid request",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            },
             "content": {
               "application/json": {
                 "schema": {
@@ -113,7 +126,29 @@
             }
           },
           "500": {
-            "description": "Internal Server Error. An error occurred while processing the request."
+            "description": "Internal Server Error. An error occurred while processing the request.",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            }
+          },
+          "503": {
+            "description": "The service is currently unavailable.",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/xRetryAfter"
+              }
+            }
           }
         }
       },
@@ -143,6 +178,18 @@
             "style": "form"
           },
           {
+            "name": "siteIdentifier",
+            "in": "query",
+            "allowEmptyValue": false,
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "string"
+            },
+            "description": "The end-point returns movements where departure/arrival is this site.",
+            "example": "28/822/2977"
+          },
+          {
             "name": "movementStatus",
             "in": "query",
             "required": false,
@@ -150,19 +197,7 @@
             "schema": {
               "type": "array",
               "items": {
-                "type": "string",
-                "enum": [
-                  "blocked",
-                  "cancelled",
-                  "completed",
-                  "confirmed",
-                  "inDispute",
-                  "pending",
-                  "received",
-                  "rejected",
-                  "reported",
-                  "warnings"
-                ]
+                "$ref": "#/components/schemas/movementState"
               }
             },
             "style": "form"
@@ -175,14 +210,7 @@
             "schema": {
               "type": "array",
               "items": {
-                "type": "string",
-                "enum": [
-                  "bison",
-                  "buffalo",
-                  "cattle",
-                  "species2",
-                  "species3"
-                ]
+                "$ref": "#/components/schemas/species"
               }
             },
             "style": "form"
@@ -191,26 +219,21 @@
             "name": "minDepartureDate",
             "in": "query",
             "schema": {
-              "type": "string",
-              "format": "date-time"
+              "$ref": "#/components/schemas/datetime"
             }
           },
           {
             "name": "maxDepartureDate",
             "in": "query",
             "schema": {
-              "type": "string",
-              "format": "date-time"
+              "$ref": "#/components/schemas/datetime"
             }
           },
           {
-            "name": "pageSize",
-            "in": "query",
-            "required": false,
-            "allowEmptyValue": false,
-            "schema": {
-              "type": "integer"
-            }
+            "$ref": "#/components/parameters/xPage"
+          },
+          {
+            "$ref": "#/components/parameters/xPageSize"
           },
           {
             "name": "order",
@@ -220,24 +243,14 @@
             "schema": {
               "type": "string",
               "enum": [
-                "id",
+                "movementNumber",
                 "departureDate",
                 "state"
               ]
             }
           },
           {
-            "name": "sort",
-            "in": "query",
-            "required": false,
-            "allowEmptyValue": false,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "asc",
-                "desc"
-              ]
-            }
+            "$ref": "#/components/parameters/xSort"
           }
         ],
         "responses": {
@@ -251,8 +264,41 @@
               }
             }
           },
+          "400": {
+            "description": "Invalid Request. Please verify the parameters/values and submit the request again.",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            }
+          },
           "500": {
-            "description": "Internal Server Error. An error occurred while processing the request."
+            "description": "Internal Server Error. An error occurred while processing the request.",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            }
+          },
+          "503": {
+            "description": "The service is currently unavailable.",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/xRetryAfter"
+              }
+            }
           }
         }
       }
@@ -283,64 +329,69 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/GetMovement"
-                    },
-                    {
-                      "$ref": "#/components/schemas/Import"
-                    },
-                    {
-                      "$ref": "#/components/schemas/Export"
-                    },
-                    {
-                      "$ref": "#/components/schemas/FciInformation"
-                    },
-                    {
-                      "$ref": "#/components/schemas/Documents"
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "movementReports": {
-                          "type": "array",
-                          "nullable": false,
-                          "items": {
-                            "allOf": [
-                              {
-                                "$ref": "#/components/schemas/ReportAuthor"
-                              },
-                              {
-                                "$ref": "#/components/schemas/Movement"
-                              },
-                              {
-                                "type": "object",
-                                "properties": {
-                                  "createdDateTime": {
-                                    "type": "string",
-                                    "format": "date-time"
-                                  },
-                                  "lastUpdateDateTime": {
-                                    "type": "string",
-                                    "format": "date-time"
-                                  }
-                                }
-                              }
-                            ]
-                          }
-                        }
-                      }
-                    }
-                  ]
+                  "$ref": "#/components/schemas/movement"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                },
+                "examples": {
+                  "forbidden": {
+                    "$ref": "#/components/examples/forbidden"
+                  }
                 }
               }
             }
           },
           "404": {
-            "description": "Not Found. The specified movement number was not found."
+            "description": "Not Found. The specified movement number was not found.",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            }
           },
           "500": {
-            "description": "Internal Server Error. An error occurred while processing the request."
+            "description": "Internal Server Error. An error occurred while processing the request.",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            }
+          },
+          "503": {
+            "description": "The service is currently unavailable.",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/xRetryAfter"
+              }
+            }
           }
         }
       },
@@ -377,27 +428,11 @@
                 "type": "object",
                 "properties": {
                   "movementData": {
-                    "type": "object",
-                    "allOf": [
-                      {
-                        "$ref": "#/components/schemas/ReportAuthor"
-                      },
-                      {
-                        "$ref": "#/components/schemas/BasicMovement"
-                      },
-                      {
-                        "$ref": "#/components/schemas/Import"
-                      },
-                      {
-                        "$ref": "#/components/schemas/Export"
-                      },
-                      {
-                        "$ref": "#/components/schemas/FciInformation"
-                      },
-                      {
-                        "$ref": "#/components/schemas/Documents"
-                      }
-                    ]
+                    "$ref": "#/components/schemas/movement"
+                  },
+                  "document": {
+                    "type": "string",
+                    "format": "binary"
                   }
                 }
               },
@@ -405,7 +440,7 @@
                 "movementData": {
                   "contentType": "application/json"
                 },
-                "document": {
+                "documents": {
                   "contentType": "application/octet-stream"
                 }
               }
@@ -415,6 +450,14 @@
         "responses": {
           "200": {
             "description": "OK - Successful operation - We are processing your request.",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            },
             "content": {
               "application/json": {
                 "schema": {
@@ -432,20 +475,35 @@
           },
           "202": {
             "description": "OK - Successful operation, async request has been accepted. Response headers contain request-id and retry-after to check the request status afterwards",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AsyncAcceptedResponse"
+                }
+              }
+            },
             "headers": {
-              "X-Request-Id": {
+              "LI-Request-Id": {
                 "$ref": "#/components/headers/xRequestId"
               },
-              "X-Correlation-Id": {
+              "LI-Correlation-Id": {
                 "$ref": "#/components/headers/xCorrelationId"
               },
-              "X-Retry-After": {
+              "Retry-After": {
                 "$ref": "#/components/headers/xRetryAfter"
               }
             }
           },
           "400": {
             "description": "Invalid request",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            },
             "content": {
               "application/json": {
                 "schema": {
@@ -455,10 +513,40 @@
             }
           },
           "404": {
-            "description": "Not Found. The specified movement number was not found."
+            "description": "Not Found. The specified movement number was not found.",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            }
           },
           "500": {
-            "description": "Internal Server Error. An error occurred while processing the request."
+            "description": "Internal Server Error. An error occurred while processing the request.",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            }
+          },
+          "503": {
+            "description": "The service is currently unavailable.",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/xRetryAfter"
+              }
+            }
           }
         }
       },
@@ -489,37 +577,82 @@
         "responses": {
           "202": {
             "description": "OK - Successful operation, async request has been accepted. Response headers contain request-id and retry-after to check the request status afterwards",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AsyncAcceptedResponse"
+                }
+              }
+            },
             "headers": {
-              "X-Request-Id": {
+              "LI-Request-Id": {
                 "$ref": "#/components/headers/xRequestId"
               },
-              "X-Correlation-Id": {
+              "LI-Correlation-Id": {
                 "$ref": "#/components/headers/xCorrelationId"
               },
-              "X-Retry-After": {
+              "Retry-After": {
                 "$ref": "#/components/headers/xRetryAfter"
               }
             }
           },
           "204": {
-            "description": "No Content. The movement was successfully cancelled."
+            "description": "No Content. The movement was successfully cancelled.",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            }
           },
           "404": {
-            "description": "Not Found. The specified movement number was not found."
+            "description": "Not Found. The specified movement number was not found.",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            }
           },
           "500": {
-            "description": "Internal Server Error. An error occurred while processing the request."
+            "description": "Internal Server Error. An error occurred while processing the request.",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            }
+          },
+          "503": {
+            "description": "The service is currently unavailable.",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/xRetryAfter"
+              }
+            }
           }
         }
       }
     },
-    "/movements/{movementNumber}/documents": {
-      "post": {
+    "/movements/{movementNumber}/documents/{documentId}": {
+      "put": {
         "tags": [
           "movements"
         ],
-        "summary": "Upload a document for a specific movement",
-        "operationId": "uploadMovementDocument",
+        "summary": "Update a document for a specific movement",
+        "operationId": "updateMovementDocument",
         "parameters": [
           {
             "name": "movementNumber",
@@ -528,6 +661,14 @@
             "schema": {
               "type": "number",
               "example": 55663427
+            }
+          },
+          {
+            "name": "documentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/uuid"
             }
           }
         ],
@@ -546,6 +687,14 @@
         "responses": {
           "200": {
             "description": "Document successfully uploaded",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            },
             "content": {
               "application/json": {
                 "schema": {
@@ -563,10 +712,54 @@
             }
           },
           "400": {
-            "description": "Invalid input or file type"
+            "description": "Invalid input or file type",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden. Insufficent access to perform the operation.",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            }
           },
           "404": {
-            "description": "Movement not found"
+            "description": "Not Found. The specified movement number was not found.",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error. An error occurred while processing the request."
+          },
+          "503": {
+            "description": "The service is currently unavailable.",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/xRetryAfter"
+              }
+            }
           }
         }
       }
@@ -610,6 +803,14 @@
         "responses": {
           "200": {
             "description": "OK - Successfull",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            },
             "content": {
               "application/json": {
                 "schema": {
@@ -620,33 +821,81 @@
           },
           "202": {
             "description": "OK - Successful operation, async request has been accepted. Response headers contain request-id and retry-after to check the request status afterwards",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AsyncAcceptedResponse"
+                }
+              }
+            },
             "headers": {
-              "X-Request-Id": {
+              "LI-Request-Id": {
                 "$ref": "#/components/headers/xRequestId"
               },
-              "X-Correlation-Id": {
+              "LI-Correlation-Id": {
                 "$ref": "#/components/headers/xCorrelationId"
               },
-              "X-Retry-After": {
+              "Retry-After": {
                 "$ref": "#/components/headers/xRetryAfter"
               }
             }
           },
           "400": {
             "description": "Invalid request",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            },
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ConfirmationError"
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
           },
+          "403": {
+            "description": "Forbidden. Insufficent access to perform the operation.",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            }
+          },
           "404": {
-            "description": "Not Found. The specified movement number was not found."
+            "description": "Not Found. The specified movement number was not found.",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            }
           },
           "500": {
             "description": "Internal Server Error. An error occurred while processing the request."
+          },
+          "503": {
+            "description": "The service is currently unavailable.",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/xRetryAfter"
+              }
+            }
           }
         }
       }
@@ -666,20 +915,14 @@
             "schema": {
               "type": "array",
               "items": {
-                "type": "string",
-                "enum": [
-                  "cattle",
-                  "bison",
-                  "buffalo",
-                  "species2"
-                ]
+                "$ref": "#/components/schemas/species"
               }
             },
             "allowEmptyValue": false,
             "required": false
           },
           {
-            "name": "text",
+            "name": "name",
             "in": "query",
             "schema": {
               "type": "string"
@@ -688,22 +931,10 @@
             "allowEmptyValue": false
           },
           {
-            "name": "page",
-            "in": "query",
-            "required": false,
-            "allowEmptyValue": false,
-            "schema": {
-              "type": "integer"
-            }
+            "$ref": "#/components/parameters/xPage"
           },
           {
-            "name": "pageSize",
-            "in": "query",
-            "required": false,
-            "allowEmptyValue": false,
-            "schema": {
-              "type": "integer"
-            }
+            "$ref": "#/components/parameters/xPageSize"
           },
           {
             "name": "order",
@@ -713,33 +944,67 @@
             "schema": {
               "type": "string",
               "enum": [
-                "id",
+                "partyNumber",
                 "name"
               ]
             }
           },
           {
-            "name": "sort",
-            "in": "query",
-            "required": false,
-            "allowEmptyValue": false,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "asc",
-                "desc"
-              ]
-            }
+            "$ref": "#/components/parameters/xSort"
           }
         ],
         "responses": {
           "200": {
-            "description": "OK - Successful",
+            "description": "OK - Successful operation",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            },
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/HaulierList"
                 }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid Request. Please verify the parameters/values and submit the request again.",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error. An error occurred while processing the request.",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            }
+          },
+          "503": {
+            "description": "The service is currently unavailable.",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/xRetryAfter"
               }
             }
           }
@@ -761,8 +1026,7 @@
             "required": true,
             "allowEmptyValue": false,
             "schema": {
-              "type": "string",
-              "example": "cattle"
+              "$ref": "#/components/schemas/species"
             },
             "style": "form"
           },
@@ -779,11 +1043,55 @@
         "responses": {
           "200": {
             "description": "OK - Successful",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            },
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/RejectionReasonList"
                 }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid Request. Please verify the parameters/values and submit the request again.",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error. An error occurred while processing the request.",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            }
+          },
+          "503": {
+            "description": "The service is currently unavailable.",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/xRetryAfter"
               }
             }
           }
@@ -811,11 +1119,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/Animal"
-                  }
-                ],
+                "$ref": "#/components/schemas/Animal",
                 "description": "Animal"
               }
             }
@@ -824,6 +1128,14 @@
         "responses": {
           "200": {
             "description": "OK - Successful operation.",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            },
             "content": {
               "application/json": {
                 "schema": {
@@ -833,31 +1145,97 @@
             }
           },
           "202": {
-            "description": "OK - Successful operation, async request has been accepted. Response headers contain request-id and retry-after to check the request status afterwards",
+            "description": "OK - Successful operation. The request has been accepted for processing, but the processing has not been completed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AsyncAcceptedResponse"
+                }
+              }
+            },
             "headers": {
-              "X-Request-Id": {
+              "LI-Request-Id": {
                 "$ref": "#/components/headers/xRequestId"
               },
-              "X-Correlation-Id": {
+              "LI-Correlation-Id": {
                 "$ref": "#/components/headers/xCorrelationId"
               },
-              "X-Retry-After": {
+              "Retry-After": {
                 "$ref": "#/components/headers/xRetryAfter"
               }
             }
           },
           "400": {
             "description": "Invalid request",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            },
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Errors"
+                },
+                "examples": {
+                  "validation-error": {
+                    "$ref": "#/components/examples/validation-error"
+                  }
                 }
               }
             }
           },
           "500": {
-            "description": "Internal Server Error. An error occurred while processing the request."
+            "description": "Internal Server Error",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                },
+                "examples": {
+                  "server-error": {
+                    "$ref": "#/components/examples/server-error"
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/xRetryAfter"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                },
+                "examples": {
+                  "server-error": {
+                    "$ref": "#/components/examples/service-unavailable"
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -865,73 +1243,183 @@
         "tags": [
           "animals"
         ],
-        "summary": "Get all animal of a species on holding",
-        "description": "Get details about all animals of a species on the holding.",
+        "summary": "Get animals",
+        "description": "The endpoint returns animals summary list.",
         "operationId": "getAnimals",
         "parameters": [
           {
-            "in": "query",
             "name": "species",
+            "in": "query",
+            "allowEmptyValue": false,
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/species"
+            },
+            "description": "The end-point returns animals of this species."
+          },
+          {
+            "name": "siteIdentifier",
+            "in": "query",
+            "allowEmptyValue": false,
             "required": true,
             "schema": {
               "type": "string",
-              "example": "cattle"
+              "format": "string"
             },
-            "description": "animal species."
+            "description": "The end-point returns animals for this site.",
+            "example": "28/822/2977"
           },
           {
-            "name": "state",
+            "$ref": "#/components/parameters/xPage"
+          },
+          {
+            "$ref": "#/components/parameters/xPageSize"
+          },
+          {
+            "name": "order",
             "in": "query",
+            "required": false,
+            "allowEmptyValue": false,
             "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
+              "type": "string",
               "enum": [
-                "dead",
-                "lost",
-                "registered",
-                "restricted"
+                "animalIdentifier",
+                "state"
               ]
-            },
-            "description": "An array of states to return.",
-            "example": [
-              "registered",
-              "dead"
-            ]
+            }
+          },
+          {
+            "$ref": "#/components/parameters/xSort"
           }
         ],
         "responses": {
           "200": {
-            "description": "OK - Successful",
+            "description": "OK - Successful operation",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            },
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AnimalArray"
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "integer"
+                    },
+                    "values": {
+                      "items": {
+                        "$ref": "#/components/schemas/AnimalSummary"
+                      }
+                    }
+                  }
                 }
               }
             }
           },
-          "400": {
-            "description": "Invalid request",
+          "403": {
+            "description": "Forbidden",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            },
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Errors"
+                },
+                "examples": {
+                  "forbidden": {
+                    "$ref": "#/components/examples/forbidden"
+                  }
                 }
               }
             }
           },
           "404": {
-            "description": "Not Found. The specified animal identifier was not found."
+            "description": "Not found",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                },
+                "examples": {
+                  "not-found": {
+                    "$ref": "#/components/examples/not-found"
+                  }
+                }
+              }
+            }
           },
           "500": {
-            "description": "Internal Server Error. An error occurred while processing the request."
+            "description": "Internal Server Error",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                },
+                "examples": {
+                  "server-error": {
+                    "$ref": "#/components/examples/server-error"
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/xRetryAfter"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                },
+                "examples": {
+                  "server-error": {
+                    "$ref": "#/components/examples/service-unavailable"
+                  }
+                }
+              }
+            }
           }
         }
       }
     },
-    "/animals/{animalIdentifier}": {
+    "/animals/{identifier}": {
       "get": {
         "tags": [
           "animals"
@@ -941,7 +1429,7 @@
         "operationId": "getAnimal",
         "parameters": [
           {
-            "name": "animalIdentifier",
+            "name": "identifier",
             "in": "path",
             "required": true,
             "schema": {
@@ -953,42 +1441,121 @@
         ],
         "responses": {
           "200": {
-            "description": "OK - Successful",
+            "description": "OK - Successful operation",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            },
             "content": {
               "application/json": {
                 "schema": {
                   "allOf": [
                     {
                       "$ref": "#/components/schemas/Animal"
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "birthDam": {
-                          "$ref": "#/components/schemas/Dam"
-                        }
-                      }
                     }
                   ]
                 }
               }
             }
           },
-          "400": {
-            "description": "Invalid request",
+          "403": {
+            "description": "Forbidden",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            },
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Errors"
+                },
+                "examples": {
+                  "forbidden": {
+                    "$ref": "#/components/examples/forbidden"
+                  }
                 }
               }
             }
           },
           "404": {
-            "description": "Not Found. The specified animal identifier was not found."
+            "description": "Not found",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                },
+                "examples": {
+                  "not-found": {
+                    "$ref": "#/components/examples/not-found"
+                  }
+                }
+              }
+            }
           },
           "500": {
-            "description": "Internal Server Error. An error occurred while processing the request."
+            "description": "Internal Server Error",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                },
+                "examples": {
+                  "server-error": {
+                    "$ref": "#/components/examples/server-error"
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/xRetryAfter"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                },
+                "examples": {
+                  "server-error": {
+                    "$ref": "#/components/examples/service-unavailable"
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -1007,7 +1574,7 @@
             "$ref": "#/components/parameters/xRequestMode"
           },
           {
-            "name": "animalIdentifier",
+            "name": "identifier",
             "in": "path",
             "required": true,
             "schema": {
@@ -1029,85 +1596,15 @@
         },
         "responses": {
           "200": {
-            "description": "OK - Successful",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AnimalResponse"
-                }
-              }
-            }
-          },
-          "202": {
-            "description": "OK - Successful operation, async request has been accepted. Response headers contain request-id and retry-after to check the request status afterwards",
+            "description": "OK - Successful operation.",
             "headers": {
-              "X-Request-Id": {
+              "LI-Request-Id": {
                 "$ref": "#/components/headers/xRequestId"
               },
-              "X-Correlation-Id": {
+              "LI-Correlation-Id": {
                 "$ref": "#/components/headers/xCorrelationId"
-              },
-              "X-Retry-After": {
-                "$ref": "#/components/headers/xRetryAfter"
               }
-            }
-          },
-          "400": {
-            "description": "Invalid request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found. The specified animal identifier was not found."
-          },
-          "500": {
-            "description": "Internal Server Error. An error occurred while processing the request."
-          }
-        }
-      },
-      "patch": {
-        "tags": [
-          "animals"
-        ],
-        "summary": "Update an animal",
-        "description": "Update information about a specific animal using its identifier.",
-        "operationId": "updateAnimalPatch",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/xCorrelationId"
-          },
-          {
-            "$ref": "#/components/parameters/xRequestMode"
-          },
-          {
-            "name": "animalIdentifier",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": "UK654326123455"
             },
-            "description": "The identifier of the animal to update."
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Animal"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK - Successful",
             "content": {
               "application/json": {
                 "schema": {
@@ -1117,34 +1614,143 @@
             }
           },
           "202": {
-            "description": "OK - Successful operation, async request has been accepted. Response headers contain request-id and retry-after to check the request status afterwards",
+            "description": "OK - Successful operation. The request has been accepted for processing, but the processing has not been completed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AsyncAcceptedResponse"
+                }
+              }
+            },
             "headers": {
-              "X-Request-Id": {
+              "LI-Request-Id": {
                 "$ref": "#/components/headers/xRequestId"
               },
-              "X-Correlation-Id": {
+              "LI-Correlation-Id": {
                 "$ref": "#/components/headers/xCorrelationId"
               },
-              "X-Retry-After": {
+              "Retry-After": {
                 "$ref": "#/components/headers/xRetryAfter"
               }
             }
           },
           "400": {
             "description": "Invalid request",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            },
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/Errors"
+                },
+                "examples": {
+                  "validation-error": {
+                    "$ref": "#/components/examples/validation-error"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                },
+                "examples": {
+                  "forbidden": {
+                    "$ref": "#/components/examples/forbidden"
+                  }
                 }
               }
             }
           },
           "404": {
-            "description": "Not Found. The specified animal identifier was not found."
+            "description": "Not found",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                },
+                "examples": {
+                  "not-found": {
+                    "$ref": "#/components/examples/not-found"
+                  }
+                }
+              }
+            }
           },
           "500": {
-            "description": "Internal Server Error. An error occurred while processing the request."
+            "description": "Internal Server Error",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                },
+                "examples": {
+                  "server-error": {
+                    "$ref": "#/components/examples/server-error"
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/xRetryAfter"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                },
+                "examples": {
+                  "server-error": {
+                    "$ref": "#/components/examples/service-unavailable"
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -1163,7 +1769,7 @@
             "$ref": "#/components/parameters/xRequestMode"
           },
           {
-            "name": "animalIdentifier",
+            "name": "identifier",
             "in": "path",
             "required": true,
             "schema": {
@@ -1175,27 +1781,154 @@
         ],
         "responses": {
           "202": {
-            "description": "OK - Successful operation, async request has been accepted. Response headers contain request-id and retry-after to check the request status afterwards",
+            "description": "OK - Successful operation. The request has been accepted for processing, but the processing has not been completed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AsyncAcceptedResponse"
+                }
+              }
+            },
             "headers": {
-              "X-Request-Id": {
+              "LI-Request-Id": {
                 "$ref": "#/components/headers/xRequestId"
               },
-              "X-Correlation-Id": {
+              "LI-Correlation-Id": {
                 "$ref": "#/components/headers/xCorrelationId"
               },
-              "X-Retry-After": {
+              "Retry-After": {
                 "$ref": "#/components/headers/xRetryAfter"
               }
             }
           },
           "204": {
-            "description": "No Content. The animal was successfully deleted."
+            "description": "No Content. The request has succeeded.",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                },
+                "examples": {
+                  "validation-error": {
+                    "$ref": "#/components/examples/validation-error"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                },
+                "examples": {
+                  "forbidden": {
+                    "$ref": "#/components/examples/forbidden"
+                  }
+                }
+              }
+            }
           },
           "404": {
-            "description": "Not Found. The specified animal id was not found."
+            "description": "Not found",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                },
+                "examples": {
+                  "not-found": {
+                    "$ref": "#/components/examples/not-found"
+                  }
+                }
+              }
+            }
           },
           "500": {
-            "description": "Internal Server Error. An error occurred while processing the request."
+            "description": "Internal Server Error",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                },
+                "examples": {
+                  "server-error": {
+                    "$ref": "#/components/examples/server-error"
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/xRetryAfter"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                },
+                "examples": {
+                  "server-error": {
+                    "$ref": "#/components/examples/service-unavailable"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -1205,6 +1938,8 @@
         "tags": [
           "animal lostfounds"
         ],
+        "summary": "Get animal lost/found records.",
+        "description": "Get animal lost/found records for a site.",
         "operationId": "getLostFounds",
         "parameters": [
           {
@@ -1220,11 +1955,12 @@
             "example": "28/822/2977"
           },
           {
-            "name": "animalIdentifier",
+            "name": "identifer",
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "identifer of the Animal"
           },
           {
             "name": "state",
@@ -1272,11 +2008,41 @@
               "type": "string",
               "format": "date"
             }
+          },
+          {
+            "$ref": "#/components/parameters/xPage"
+          },
+          {
+            "$ref": "#/components/parameters/xPageSize"
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "allowEmptyValue": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "animalIdentifier",
+                "state"
+              ]
+            }
+          },
+          {
+            "$ref": "#/components/parameters/xSort"
           }
         ],
         "responses": {
           "200": {
-            "description": "OK - Successful",
+            "description": "OK - Successful operation",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            },
             "content": {
               "application/json": {
                 "schema": {
@@ -1295,6 +2061,78 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Invalid request",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                },
+                "examples": {
+                  "invalid-request-schema": {
+                    "$ref": "#/components/examples/invalid-request-schema"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                },
+                "examples": {
+                  "server-error": {
+                    "$ref": "#/components/examples/server-error"
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/xRetryAfter"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                },
+                "examples": {
+                  "server-error": {
+                    "$ref": "#/components/examples/service-unavailable"
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -1302,6 +2140,8 @@
         "tags": [
           "animal lostfounds"
         ],
+        "summary": "Record an animal lost/found.",
+        "description": "Use this endpoint to report an animal as lost/found on a site.",
         "operationId": "createLostFound",
         "parameters": [
           {
@@ -1323,11 +2163,112 @@
         },
         "responses": {
           "200": {
-            "description": "OK - Successful",
+            "description": "OK - Successful operation",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            },
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/LostFound"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "OK - Successful operation. The request has been accepted for processing, but the processing has not been completed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AsyncAcceptedResponse"
+                }
+              }
+            },
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/xRetryAfter"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                },
+                "examples": {
+                  "validation-error": {
+                    "$ref": "#/components/examples/validation-error"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                },
+                "examples": {
+                  "server-error": {
+                    "$ref": "#/components/examples/server-error"
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/xRetryAfter"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                },
+                "examples": {
+                  "server-error": {
+                    "$ref": "#/components/examples/service-unavailable"
+                  }
                 }
               }
             }
@@ -1340,6 +2281,8 @@
         "tags": [
           "animal lostfounds"
         ],
+        "summary": "Edit an animal lost/found record.",
+        "description": "Use this endpoint to edit an animal as lost/found on a site.",
         "operationId": "amendLostFound",
         "parameters": [
           {
@@ -1347,8 +2290,14 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "uuid"
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/uuid"
+                },
+                {
+                  "example": "df44b048-aa6a-4b2f-8ae7-daad7d3f6dc4"
+                }
+              ]
             }
           }
         ],
@@ -1363,11 +2312,158 @@
         },
         "responses": {
           "200": {
-            "description": "OK - Successful",
+            "description": "OK - Successful operation",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            },
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/LostFound"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "OK - Successful operation. The request has been accepted for processing, but the processing has not been completed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AsyncAcceptedResponse"
+                }
+              }
+            },
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/xRetryAfter"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                },
+                "examples": {
+                  "validation-error": {
+                    "$ref": "#/components/examples/validation-error"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                },
+                "examples": {
+                  "forbidden": {
+                    "$ref": "#/components/examples/forbidden"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                },
+                "examples": {
+                  "not-found": {
+                    "$ref": "#/components/examples/not-found"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                },
+                "examples": {
+                  "server-error": {
+                    "$ref": "#/components/examples/server-error"
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/xRetryAfter"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                },
+                "examples": {
+                  "server-error": {
+                    "$ref": "#/components/examples/service-unavailable"
+                  }
                 }
               }
             }
@@ -1390,18 +2486,97 @@
             "required": true,
             "allowEmptyValue": false,
             "schema": {
-              "type": "string",
-              "example": "cattle"
+              "$ref": "#/components/schemas/species"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "OK - Successful",
+            "description": "OK - Successful operation",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            },
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/DeathReasonList"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                },
+                "examples": {
+                  "invalid-request": {
+                    "$ref": "#/components/examples/invalid-request-schema"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                },
+                "examples": {
+                  "server-error": {
+                    "$ref": "#/components/examples/server-error"
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/xRetryAfter"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                },
+                "examples": {
+                  "server-error": {
+                    "$ref": "#/components/examples/service-unavailable"
+                  }
                 }
               }
             }
@@ -1424,18 +2599,97 @@
             "required": true,
             "allowEmptyValue": false,
             "schema": {
-              "type": "string",
-              "example": "cattle"
+              "$ref": "#/components/schemas/species"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "OK - Successful",
+            "description": "OK - Successful operation",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            },
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/BreedList"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                },
+                "examples": {
+                  "invalid-request": {
+                    "$ref": "#/components/examples/invalid-request-schema"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                },
+                "examples": {
+                  "server-error": {
+                    "$ref": "#/components/examples/server-error"
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/xRetryAfter"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                },
+                "examples": {
+                  "server-error": {
+                    "$ref": "#/components/examples/service-unavailable"
+                  }
                 }
               }
             }
@@ -1458,18 +2712,97 @@
             "required": true,
             "allowEmptyValue": false,
             "schema": {
-              "type": "string",
-              "example": "species3"
+              "$ref": "#/components/schemas/species"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "OK - Successful",
+            "description": "OK - Successful operation",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            },
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GenotypeList"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                },
+                "examples": {
+                  "invalid-request": {
+                    "$ref": "#/components/examples/invalid-request-schema"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                },
+                "examples": {
+                  "server-error": {
+                    "$ref": "#/components/examples/server-error"
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/xRetryAfter"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                },
+                "examples": {
+                  "server-error": {
+                    "$ref": "#/components/examples/service-unavailable"
+                  }
                 }
               }
             }
@@ -1490,15 +2823,28 @@
             "allowEmptyValue": false,
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "uuid",
-              "example": "064a508d-bc88-4457-8392-048da3892838"
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/uuid"
+                },
+                {
+                  "example": "b0df91f3-918e-4cb1-908f-cb489f1e9c63"
+                }
+              ]
             }
           }
         ],
         "responses": {
           "200": {
             "description": "OK - Successful",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            },
             "content": {
               "application/json": {
                 "schema": {
@@ -1508,46 +2854,285 @@
             }
           },
           "404": {
-            "description": "Not Found. The specified requestId was not found."
+            "description": "Not found",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                },
+                "examples": {
+                  "not-found": {
+                    "$ref": "#/components/examples/not-found"
+                  }
+                }
+              }
+            }
           },
           "500": {
-            "description": "Internal Server Error. An error occurred while processing the request."
+            "description": "Internal Server Error",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                },
+                "examples": {
+                  "server-error": {
+                    "$ref": "#/components/examples/server-error"
+                  }
+                }
+              }
+            }
           },
           "503": {
-            "description": "Service Unavailable."
+            "description": "Service Unavailable",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/xRetryAfter"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                },
+                "examples": {
+                  "server-error": {
+                    "$ref": "#/components/examples/service-unavailable"
+                  }
+                }
+              }
+            }
           }
         }
       }
     }
   },
   "components": {
+    "securitySchemes": {
+      "ApiSubscriptionKey": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "Ocp-Apim-Subscription-Key",
+        "description": "Your API key. Pass it in the `Ocp-Apim-Subscription-Key` header. This is used to identify your application."
+      },
+      "ApiAccessToken": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Use your JWT access token to authorize requests. Pass it in the `Authorization` header. The token is acquired via user authorization flow"
+      }
+    },
     "schemas": {
-      "Site": {
+      "movementState": {
+        "type": "string",
+        "enum": [
+          "blocked",
+          "cancelled",
+          "confirmed",
+          "inDispute",
+          "rejected",
+          "reported",
+          "warnings",
+          "matched",
+          "inferred"
+        ]
+      },
+      "species": {
+        "type": "string",
+        "enum": [
+          "bison",
+          "buffalo",
+          "cattle",
+          "deer",
+          "goats",
+          "sheep"
+        ]
+      },
+      "datetime": {
+        "type": "string",
+        "format": "date-time",
+        "description": "A date and time, in the RFC 3339 format (aka ISO8601)."
+      },
+      "batches": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "species": {
+              "$ref": "#/components/schemas/species"
+            },
+            "animals": {
+              "type": "array",
+              "items": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "animalIdentifier": {
+                        "type": "string",
+                        "example": "UK12345678910"
+                      }
+                    },
+                    "required": [
+                      "animalIdentifier"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "mark": {
+                        "type": "string",
+                        "example": "556743"
+                      },
+                      "quantity": {
+                        "type": "integer",
+                        "example": 1
+                      }
+                    },
+                    "required": [
+                      "quantity"
+                    ],
+                    "additionalProperties": false
+                  }
+                ]
+              }
+            }
+          },
+          "required": [
+            "species"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "date": {
+        "type": "string",
+        "format": "date",
+        "description": "A date without a time component, in the RFC 3339 format (aka ISO8601)."
+      },
+      "time": {
+        "type": "string",
+        "format": "time",
+        "example": "23:30Z",
+        "description": "A time (no date component), in the RFC 3339 format (aka ISO8601)."
+      },
+      "siteType": {
         "type": "object",
         "properties": {
-          "siteIdentifier": {
-            "type": "string",
-            "format": "string",
-            "nullable": false,
-            "example": "27/811/2976"
+          "type": {
+            "type": "string"
           },
-          "siteIdentifierType": {
-            "type": "string",
-            "nullable": false,
-            "enum": [
-              "fsaNumber",
-              "holdingNumber",
-              "portNumber",
-              "lipNumber"
-            ],
-            "example": "holdingNumber"
-          },
-          "siteType": {
-            "type": "string",
-            "readOnly": true,
-            "example": "Agriultural Holding"
+          "description": {
+            "type": "string"
           }
-        }
+        },
+        "readOnly": true,
+        "required": [
+          "type",
+          "description"
+        ]
+      },
+      "site": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/siteType"
+              },
+              {
+                "description": "This refers to the type of site activity, such as Market, Abattoir, etc."
+              }
+            ]
+          },
+          "identifiers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "identifier": {
+                  "type": "string",
+                  "example": "27/811/2976"
+                },
+                "type": {
+                  "type": "string",
+                  "description": "This refers to the type of site identifier, such as holdingNumber, fsaNumber, etc.",
+                  "example": "holdingNumber",
+                  "readOnly": true
+                }
+              },
+              "required": [
+                "identifier",
+                "type"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "name": {
+            "allOf": [
+              {
+                "type": "string"
+              },
+              {
+                "readOnly": true
+              }
+            ]
+          }
+        },
+        "required": [
+          "type",
+          "identifiers"
+        ]
+      },
+      "timestampedSite": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "$ref": "#/components/schemas/date"
+          },
+          "time": {
+            "$ref": "#/components/schemas/time"
+          },
+          "site": {
+            "$ref": "#/components/schemas/site"
+          }
+        },
+        "required": [
+          "site"
+        ],
+        "additionalProperties": false
+      },
+      "movementReviewState": {
+        "type": "string",
+        "enum": [
+          "forReview",
+          "inReview",
+          "finalReview",
+          "reviewed",
+          "notApplicable"
+        ]
       },
       "Movements": {
         "type": "object",
@@ -1564,219 +3149,392 @@
                   "type": "number",
                   "example": 55663427
                 },
-                "numberOfAnimals": {
-                  "type": "number",
-                  "example": 10
+                "batches": {
+                  "$ref": "#/components/schemas/batches"
                 },
-                "species": {
-                  "type": "string",
-                  "example": "bison"
+                "departure": {
+                  "$ref": "#/components/schemas/timestampedSite"
                 },
-                "departureSite": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/Site"
-                    }
-                  ]
-                },
-                "arrivalSite": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/Site"
-                    }
-                  ]
-                },
-                "departureDate": {
-                  "type": "string",
-                  "format": "date"
+                "arrival": {
+                  "$ref": "#/components/schemas/timestampedSite"
                 },
                 "state": {
-                  "type": "string",
-                  "example": "received"
+                  "$ref": "#/components/schemas/movementState"
                 },
                 "reviewState": {
-                  "type": "string",
-                  "example": "forReview"
+                  "$ref": "#/components/schemas/movementReviewState"
                 }
               }
             }
           }
         }
       },
-      "ReportAuthor": {
-        "type": "object",
-        "properties": {
-          "reportingSite": {
-            "type": "string",
-            "enum": [
-              "departure",
-              "arrival",
-              "both"
-            ],
-            "example": "departure"
-          }
-        }
+      "uuid": {
+        "type": "string",
+        "format": "uuid",
+        "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+        "description": "A Universally Unique Identifier"
       },
-      "IdentifiedAnimal": {
-        "type": "object",
-        "properties": {
-          "animalIdentifier": {
-            "type": "string",
-            "format": "string",
-            "nullable": false,
-            "example": "UK654326123456"
-          }
-        }
-      },
-      "CollectiveAnimals": {
-        "type": "object",
-        "properties": {
-          "mark": {
-            "format": "string",
-            "nullable": true,
-            "example": 556743
-          },
-          "quantity": {
-            "type": "integer",
-            "nullable": false,
-            "example": 1
-          }
-        }
-      },
-      "MovementBatch": {
-        "type": "object",
-        "properties": {
-          "species": {
-            "type": "string",
-            "enum": [
-              "bison",
-              "cattle",
-              "species2",
-              "species3",
-              "buffalo"
-            ]
-          },
-          "animals": {
-            "type": "array",
-            "items": {
-              "anyOf": [
-                {
-                  "$ref": "#/components/schemas/IdentifiedAnimal"
-                },
-                {
-                  "$ref": "#/components/schemas/CollectiveAnimals"
-                }
-              ]
-            }
-          }
-        }
-      },
-      "Haulier": {
+      "departureSiteType": {
         "type": "object",
         "properties": {
           "type": {
             "type": "string",
-            "nullable": true,
-            "enum": [
-              "departure",
-              "arrival",
-              "haulier"
-            ]
+            "readOnly": true
           },
-          "partyNumber": {
-            "type": "number",
-            "readOnly": false,
-            "example": 12345
-          },
-          "trailerNumber": {
+          "description": {
             "type": "string",
-            "example": "TRL 0125/3",
-            "nullable": true
-          }
-        }
-      },
-      "BasicMovement": {
-        "type": "object",
-        "properties": {
-          "movementNumber": {
-            "type": "number",
-            "readOnly": true,
-            "example": 55663427
+            "readOnly": true
           },
-          "batches": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/MovementBatch"
-            }
-          },
-          "departureSite": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Site"
-              }
-            ]
-          },
-          "departureDate": {
-            "type": "string",
-            "format": "date",
-            "nullable": false
-          },
-          "departureTime": {
-            "type": "string",
-            "format": "time",
-            "example": "06:07Z",
-            "nullable": true
-          },
-          "haulier": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Haulier"
-              }
-            ]
-          },
-          "vehicleRegistrationNumber": {
-            "type": "string",
-            "example": "YM24 DLY",
-            "nullable": true
-          },
-          "arrivalSite": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Site"
-              }
-            ]
-          },
-          "arrivalDate": {
-            "type": "string",
-            "format": "date",
-            "nullable": false
-          },
-          "arrivalTime": {
-            "type": "string",
-            "format": "time",
-            "example": "23:30Z",
-            "nullable": true
-          },
-          "returnDate": {
-            "type": "string",
-            "format": "date",
-            "nullable": true
-          },
-          "returnTime": {
-            "type": "string",
-            "format": "time",
-            "example": "23:30Z",
-            "nullable": true
-          }
-        }
-      },
-      "Import": {
-        "type": "object",
-        "properties": {
-          "importInformation": {
+          "activity": {
             "type": "object",
             "properties": {
-              "importDeclarationFlag": {
+              "type": {
+                "type": "string",
+                "example": "slaughterMarket"
+              }
+            }
+          }
+        },
+        "required": [
+          "type",
+          "description"
+        ]
+      },
+      "departureSite": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/departureSiteType"
+              },
+              {
+                "description": "This refers to the type of site activity, such as Market, Abattoir, etc."
+              }
+            ]
+          },
+          "identifiers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "identifier": {
+                  "type": "string",
+                  "example": "27/811/2976"
+                },
+                "type": {
+                  "type": "string",
+                  "description": "This refers to the type of site identifier, such as holdingNumber, fsaNumber, etc.",
+                  "example": "holdingNumber",
+                  "readOnly": true
+                }
+              },
+              "required": [
+                "identifier",
+                "type"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "name": {
+            "allOf": [
+              {
+                "type": "string"
+              },
+              {
+                "readOnly": true
+              }
+            ]
+          }
+        },
+        "required": [
+          "type",
+          "identifiers"
+        ]
+      },
+      "departureTimestampedSite": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "$ref": "#/components/schemas/date"
+          },
+          "time": {
+            "$ref": "#/components/schemas/time"
+          },
+          "site": {
+            "$ref": "#/components/schemas/departureSite"
+          }
+        },
+        "required": [
+          "site"
+        ],
+        "additionalProperties": false
+      },
+      "movementReport": {
+        "type": "object",
+        "properties": {
+          "departure": {
+            "$ref": "#/components/schemas/departureTimestampedSite"
+          },
+          "arrival": {
+            "$ref": "#/components/schemas/timestampedSite"
+          },
+          "movementNumber": {
+            "type": "integer",
+            "example": 55663427,
+            "readOnly": true
+          },
+          "receivedDate": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/date"
+              },
+              {
+                "readOnly": true
+              }
+            ]
+          },
+          "potentialMatchMovementNumbers": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "integer"
+                },
+                "readOnly": true,
+                "example": [
+                  55663450,
+                  55663451,
+                  55663452
+                ]
+              }
+            ]
+          },
+          "batches": {
+            "$ref": "#/components/schemas/batches"
+          },
+          "return": {
+            "type": "object",
+            "properties": {
+              "date": {
+                "$ref": "#/components/schemas/date"
+              },
+              "time": {
+                "$ref": "#/components/schemas/time"
+              },
+              "movementNumber": {
+                "type": "integer",
+                "example": 55663427,
+                "readOnly": true
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "departure",
+          "arrival",
+          "batches",
+          "movementNumber"
+        ]
+      },
+      "internationalAddress": {
+        "type": "object",
+        "properties": {
+          "singleLineAddress": {
+            "type": "string",
+            "example": "Grawertstrasse 16, 48146 Munster, Germany"
+          },
+          "region": {
+            "type": "string",
+            "example": "North Rhine-Westphalia"
+          },
+          "countryCode": {
+            "title": "ISO 3166-1 Alpha-2 Country code",
+            "description": "A valid 2-digit ISO country code (ISO 3166-1 alpha-2), or, an array of valid ISO codes.",
+            "type": "string",
+            "pattern": "^[A-Z]{2}$",
+            "example": "DE"
+          }
+        },
+        "required": [
+          "region",
+          "countryCode"
+        ]
+      },
+      "movement": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/movementReport"
+          }
+        ],
+        "properties": {
+          "matchedMovementNumbers": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            },
+            "readOnly": true,
+            "example": [
+              55663427,
+              55663428
+            ]
+          },
+          "movementKind": {
+            "type": "string",
+            "readOnly": true,
+            "enum": [
+              "regular",
+              "circular",
+              "export",
+              "import"
+            ]
+          },
+          "state": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/movementState"
+              },
+              {
+                "readOnly": true
+              }
+            ]
+          },
+          "reviewState": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/movementReviewState"
+              },
+              {
+                "readOnly": true
+              }
+            ]
+          },
+          "confirmations": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "reportingSite": {
+                      "type": "string",
+                      "enum": [
+                        "departure",
+                        "arrival",
+                        "both"
+                      ]
+                    },
+                    "action": {
+                      "type": "string",
+                      "enum": [
+                        "confirmOff",
+                        "accept",
+                        "reject"
+                      ]
+                    },
+                    "number": {
+                      "type": "integer",
+                      "example": 10321
+                    },
+                    "reason": {
+                      "type": "string",
+                      "example": "Possible TB Hazard"
+                    },
+                    "otherReason": {
+                      "type": "string",
+                      "example": "Other"
+                    },
+                    "createdDateTime": {
+                      "$ref": "#/components/schemas/datetime"
+                    }
+                  },
+                  "required": [
+                    "action"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              {
+                "readOnly": true
+              }
+            ]
+          },
+          "movementReports": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/movementReport"
+                    }
+                  ],
+                  "properties": {
+                    "reportingSite": {
+                      "type": "string",
+                      "enum": [
+                        "departure",
+                        "arrival",
+                        "both"
+                      ]
+                    },
+                    "createdDateTime": {
+                      "$ref": "#/components/schemas/datetime"
+                    },
+                    "updatedDateTime": {
+                      "$ref": "#/components/schemas/datetime"
+                    }
+                  }
+                }
+              },
+              {
+                "readOnly": true
+              }
+            ]
+          },
+          "haulier": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "departure",
+                  "arrival",
+                  "haulier"
+                ]
+              },
+              "authorisationNumber": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "trailerNumber": {
+                "type": "string",
+                "example": "TRL 0125/3"
+              },
+              "vehicleRegistrationNumber": {
+                "type": "string",
+                "example": "YM24 DLY"
+              }
+            }
+          },
+          "exportInformation": {
+            "$ref": "#/components/schemas/internationalAddress"
+          },
+          "importInformation": {
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/internationalAddress"
+              }
+            ],
+            "properties": {
+              "importDelisrationFlag": {
                 "type": "boolean"
               },
               "healthCertificateNumber": {
@@ -1786,106 +3544,93 @@
               "ipaffsReferenceNumber": {
                 "type": "string",
                 "example": "CHEDA.GB.2024.1234567"
-              },
-              "importSingleLineAddress": {
-                "type": "string",
-                "example": "Grawertstrasse 16, 48146 Munster, Germany"
-              },
-              "importRegion": {
-                "type": "string",
-                "example": "North Rhine-Westphalia"
-              },
-              "importCountryCode": {
-                "type": "string",
-                "example": "DE"
               }
             },
             "required": [
-              "importDeclarationFlag",
-              "importRegion",
-              "importCountryCode",
-              "ipaffsReferenceNumber"
+              "importDelisrationFlag",
+              "ipaffsReferenceNumber",
+              "region",
+              "countryCode"
             ]
-          }
-        }
-      },
-      "Export": {
-        "type": "object",
-        "properties": {
-          "exportInformation": {
-            "type": "object",
-            "properties": {
-              "exportSingleLineAddress": {
-                "type": "string",
-                "nullable": true,
-                "example": "Grawertstrasse 16, 48146 Munster, Germany"
-              },
-              "exportRegion": {
-                "type": "string",
-                "nullable": true,
-                "example": "North Rhine-Westphalia"
-              },
-              "exportCountryCode": {
-                "type": "string",
-                "nullable": true,
-                "example": "GB-ENG"
-              }
-            }
-          }
-        }
-      },
-      "FciInformation": {
-        "type": "object",
-        "properties": {
+          },
           "fciInformation": {
             "type": "object",
             "properties": {
-              "fciDeclarationFlag": {
+              "delisrationFlag": {
                 "type": "boolean"
               },
-              "fciDiseaseDetails": {
+              "diseaseDetails": {
                 "type": "string",
                 "example": "BVD"
               },
-              "fciTreatmentDetails": {
+              "treatmentDetails": {
                 "type": "string",
                 "example": "BVDV Vaccine X"
               },
-              "fciAnalysisSamples": {
+              "analysisSamples": {
                 "type": "string",
                 "example": "Fecal samples show no sign of parasites"
               }
-            }
-          }
-        }
-      },
-      "Documents": {
-        "type": "object",
-        "properties": {
+            },
+            "required": [
+              "delisrationFlag"
+            ]
+          },
           "documents": {
             "type": "array",
             "items": {
               "type": "object",
               "properties": {
-                "documentType": {
+                "type": {
                   "type": "string",
                   "enum": [
                     "importHealthCertificate",
                     "circularMovementPermit"
                   ]
                 },
-                "documentId": {
-                  "type": "string",
-                  "readOnly": true,
-                  "format": "uuid"
+                "id": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/uuid"
+                    },
+                    {
+                      "readOnly": true
+                    }
+                  ]
                 }
-              },
-              "required": [
-                "documentType"
-              ]
+              }
             }
+          },
+          "createdDateTime": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/datetime"
+              },
+              {
+                "readOnly": true
+              }
+            ]
+          },
+          "updatedDateTime": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/datetime"
+              },
+              {
+                "readOnly": true
+              }
+            ]
           }
-        }
+        },
+        "required": [
+          "movementReports",
+          "movementNumber",
+          "reviewState",
+          "state",
+          "movementKind",
+          "createdDateTime",
+          "updatedDateTime"
+        ]
       },
       "MovementResponse1": {
         "type": "object",
@@ -1986,6 +3731,19 @@
           }
         ]
       },
+      "AsyncAcceptedResponse": {
+        "type": "object",
+        "required": [
+          "requestStatusUrl"
+        ],
+        "properties": {
+          "requestStatusUrl": {
+            "type": "string",
+            "format": "uri",
+            "example": "/requeststatus/df44b048-aa6a-4b2f-8ae7-daad7d3f6dc4"
+          }
+        }
+      },
       "Error": {
         "allOf": [
           {
@@ -1996,47 +3754,73 @@
           "items": [
             {
               "code": 1,
-              "message": "Departure date must be on or before the arrival date"
+              "message": "Error 1"
             },
             {
               "code": 2,
-              "message": "Invalid arrival site"
+              "message": "Error 2"
             },
             {
               "code": 3,
-              "message": "Invalid haulier"
+              "message": "Error 3"
             },
             {
               "code": 4,
-              "message": "One or more animals must be included"
+              "message": "Error 4"
             }
           ]
         }
       },
-      "Movement": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/BasicMovement"
+      "ErrorDetail": {
+        "type": "object",
+        "description": "An object to provide explicit details on a problem towards an API consumer.",
+        "properties": {
+          "detail": {
+            "type": "string",
+            "description": "A granular description on the specific error related to a body property, query parameter, path parameters, and/or header.",
+            "maxLength": 4096
           },
-          {
-            "type": "object",
-            "properties": {
-              "returnMovementNumber": {
-                "type": "number",
-                "example": 55663427,
-                "readOnly": true
-              },
-              "potentialMatchMovementNumber": {
-                "type": "array",
-                "items": {
-                  "type": "number",
-                  "example": 55663427
-                },
-                "readOnly": true
-              }
-            }
+          "source": {
+            "type": "string",
+            "description": "The source of the error, e.g. the name of a header, query or path parameter, or a JSON pointer to a specific request body property.",
+            "maxLength": 1024
+          },
+          "values": {
+            "type": "string",
+            "description": "The value that has caused the error, e.g. the value passed in as a header, query or path parameter, or a request body property that lead to the error."
+          },
+          "code": {
+            "type": "string",
+            "description": "A string containing additional provider specific codes to identify the error context.",
+            "maxLength": 50
           }
+        },
+        "required": [
+          "detail"
         ]
+      },
+      "Errors": {
+        "type": "array",
+        "description": "An array of error details to accompany a problem details response.",
+        "minItems": 1,
+        "maxItems": 1000,
+        "items": {
+          "$ref": "#/components/schemas/ErrorDetail"
+        }
+      },
+      "ReportAuthor": {
+        "type": "object",
+        "properties": {
+          "reportingSite": {
+            "type": "string",
+            "enum": [
+              "departure",
+              "arrival",
+              "both"
+            ],
+            "example": "departure"
+          }
+        }
       },
       "Confirmation": {
         "allOf": [
@@ -2046,11 +3830,6 @@
           {
             "type": "object",
             "properties": {
-              "id": {
-                "type": "string",
-                "format": "uuid",
-                "readOnly": true
-              },
               "number": {
                 "type": "number",
                 "readOnly": true,
@@ -2076,103 +3855,77 @@
                 "example": "Possible TB Hazard"
               },
               "createdDateTime": {
-                "type": "string",
-                "format": "date-time",
-                "readOnly": true
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/datetime"
+                  },
+                  {
+                    "readOnly": true
+                  }
+                ]
               }
             }
-          }
-        ]
-      },
-      "GetMovement": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Movement"
-          },
-          {
-            "type": "object",
-            "properties": {
-              "confirmations": {
-                "type": "array",
-                "items": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/Confirmation"
-                    }
-                  ]
-                }
-              },
-              "state": {
-                "type": "string",
-                "example": "received"
-              },
-              "reviewState": {
-                "type": "string",
-                "example": "forReview"
-              }
-            }
-          }
-        ]
-      },
-      "ConfirmationError": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/BasicMessage"
           }
         ],
-        "example": {
-          "items": [
-            {
-              "code": 101,
-              "message": "confirm no allowed, check review state"
-            },
-            {
-              "code": 102,
-              "message": "confirmOff required"
-            },
-            {
-              "code": 103,
-              "message": "reject no allowed, check review state"
-            }
-          ]
+        "required": [
+          "action"
+        ]
+      },
+      "haulierState": {
+        "description": "The state of a person or organisation.",
+        "type": "string",
+        "enum": [
+          "active",
+          "inactive",
+          "unknown"
+        ]
+      },
+      "postcode": {
+        "type": "string",
+        "pattern": "^[A-Z]{1,2}[0-9][0-9A-Z]? ?[0-9][A-Z]{2}$"
+      },
+      "correspondenceAddress": {
+        "type": "object",
+        "description": "The contact address of a person or organisation.",
+        "properties": {
+          "singleLineAddress": {
+            "type": "string",
+            "example": "The Livery Yard, Hunshelf Bank, Stocksbridge"
+          },
+          "postcode": {
+            "$ref": "#/components/schemas/postcode"
+          }
         }
       },
-      "schemas-Haulier": {
+      "haulier": {
         "type": "object",
         "properties": {
-          "partyNumber": {
-            "type": "number",
-            "readOnly": true,
-            "example": 12345
+          "authorisationNumber": {
+            "type": "string"
           },
           "name": {
-            "type": "string",
-            "example": "Hunshelf Animal Transporters Ltd"
-          },
-          "correspondenceAddress": {
-            "type": "object",
-            "properties": {
-              "singleLineAddress": {
-                "type": "string",
-                "example": "The Livery Yard, Hunshelf Bank, Stocksbridge"
-              },
-              "postcode": {
-                "type": "string",
-                "example": "S36 2BS"
-              }
-            }
+            "type": "string"
           },
           "species": {
             "type": "array",
             "items": {
-              "type": "string"
-            },
-            "example": [
-              "cattle",
-              "bison",
-              "buffalo",
-              "species2"
-            ]
+              "$ref": "#/components/schemas/species"
+            }
+          },
+          "state": {
+            "$ref": "#/components/schemas/haulierState"
+          },
+          "mobile": {
+            "type": "string"
+          },
+          "landline": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "correspondenceAddress": {
+            "$ref": "#/components/schemas/correspondenceAddress"
           }
         }
       },
@@ -2186,7 +3939,7 @@
           "values": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/schemas-Haulier"
+              "$ref": "#/components/schemas/haulier"
             }
           }
         }
@@ -2216,166 +3969,222 @@
           }
         }
       },
-      "Dam": {
-        "type": "object",
-        "properties": {
-          "animalIdentifier": {
-            "type": "string",
-            "example": "UK654326123456"
-          },
-          "breed": {
-            "type": "string",
-            "readOnly": true,
-            "example": "Dexter"
-          }
-        }
+      "sex": {
+        "type": "string",
+        "enum": [
+          "female",
+          "male"
+        ]
       },
-      "AnimalSire": {
+      "animal": {
         "type": "object",
+        "description": "A record of attributes identifying an animal",
         "properties": {
-          "animalIdentifier": {
+          "identifier": {
             "type": "string",
-            "example": "UK123456123456"
+            "example": "UK12345678910"
+          },
+          "species": {
+            "$ref": "#/components/schemas/species"
           },
           "name": {
             "type": "string",
-            "readOnly": true,
-            "example": "Driller"
+            "example": "Ian"
           },
-          "breed": {
+          "sex": {
+            "$ref": "#/components/schemas/sex"
+          }
+        },
+        "required": [
+          "identifier"
+        ]
+      },
+      "animalState": {
+        "type": "string",
+        "enum": [
+          "registered",
+          "dead",
+          "lost",
+          "stolen"
+        ]
+      },
+      "breed": {
+        "type": "object",
+        "properties": {
+          "name": {
             "type": "string",
-            "readOnly": true,
-            "example": "Dexter"
+            "example": "Dexter Cross",
+            "readOnly": true
+          },
+          "code": {
+            "type": "string",
+            "example": "DEX"
+          },
+          "crossBreed": {
+            "type": "boolean",
+            "readOnly": true
           }
         }
       },
-      "AnimalBirth": {
+      "AnimalSummary": {
         "type": "object",
         "properties": {
-          "birthSite": {
+          "animal": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/Site"
+                "$ref": "#/components/schemas/animal"
+              },
+              {
+                "type": "object"
               }
+            ],
+            "properties": {
+              "state": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/animalState"
+                  },
+                  {
+                    "readOnly": true
+                  }
+                ]
+              }
+            },
+            "required": [
+              "species",
+              "sex"
             ]
           },
-          "birthDate": {
-            "type": "string",
-            "format": "date",
-            "example": "2023-11-13",
-            "nullable": false
-          },
-          "birthYear": {
-            "type": "string",
-            "nullable": true,
-            "example": 2023
-          },
-          "birthMark": {
-            "type": "string",
-            "nullable": true,
-            "example": 556773
-          },
-          "assistedBirthFlag": {
-            "type": "boolean",
-            "nullable": false,
-            "example": "N"
-          },
-          "multipleBirthsFlag": {
-            "type": "boolean",
-            "nullable": false,
-            "example": "N"
-          },
-          "birthUpdatedDateTime": {
-            "type": "string",
-            "readOnly": true,
-            "format": "date-time"
+          "breed": {
+            "$ref": "#/components/schemas/breed"
           }
-        },
-        "required": [
-          "birthSite"
+        }
+      },
+      "productionType": {
+        "type": "string",
+        "enum": [
+          "meat",
+          "dairy",
+          "beef"
         ]
       },
-      "AnimalDeath": {
+      "ParentAnimal": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/animal"
+          },
+          {
+            "type": "object"
+          },
+          {
+            "properties": {
+              "species": {
+                "readOnly": true
+              },
+              "name": {
+                "readOnly": true
+              },
+              "sex": {
+                "readOnly": true
+              }
+            }
+          }
+        ]
+      },
+      "animalBirth": {
         "type": "object",
         "properties": {
-          "deathSite": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Site"
-              }
-            ]
+          "site": {
+            "$ref": "#/components/schemas/site"
           },
-          "deathDate": {
+          "date": {
+            "$ref": "#/components/schemas/date"
+          },
+          "year": {
+            "type": "integer"
+          },
+          "mark": {
             "type": "string",
-            "format": "date",
-            "nullable": false,
-            "example": "2023-11-13"
+            "example": "556773"
           },
-          "deathTime": {
-            "type": "string",
-            "example": "10:30Z"
+          "assistedBirthFlag": {
+            "type": "boolean"
           },
-          "deathReason": {
-            "type": "string",
-            "nullable": true,
-            "format": "string",
-            "example": "Abattoir Kill"
-          },
-          "carcassCollectionSite": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Site"
-              }
-            ]
-          },
-          "tseTestRequiredFlag": {
-            "type": "boolean",
-            "readOnly": true
-          },
-          "deathReportedDateTime": {
-            "type": "string",
-            "readOnly": true,
-            "format": "date-time"
-          },
-          "deathUpdatedDateTime": {
-            "type": "string",
-            "readOnly": true,
-            "format": "date-time"
+          "multipleBirthsFlag": {
+            "type": "boolean"
           }
         },
         "required": [
-          "deathSite",
-          "deathDate"
-        ]
+          "site",
+          "year",
+          "assistedBirthFlag",
+          "multipleBirthsFlag"
+        ],
+        "additionalProperties": false
+      },
+      "animalDeath": {
+        "type": "object",
+        "properties": {
+          "carcassCollectionSite": {
+            "$ref": "#/components/schemas/site"
+          },
+          "date": {
+            "$ref": "#/components/schemas/date"
+          },
+          "reason": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "example": "Abattoir Kill"
+              }
+            },
+            "required": [
+              "name"
+            ]
+          },
+          "receivedDate": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/date"
+              },
+              {
+                "readOnly": true
+              }
+            ]
+          },
+          "site": {
+            "$ref": "#/components/schemas/site"
+          },
+          "tseTestRequiredFlag": {
+            "type": "boolean"
+          },
+          "createdDateTime": {
+            "$ref": "#/components/schemas/datetime"
+          },
+          "updatedDateTime": {
+            "$ref": "#/components/schemas/datetime"
+          }
+        }
       },
       "AnimalBirthingHistory": {
         "type": "array",
         "items": {
           "type": "object",
           "properties": {
-            "animalIdentifier": {
+            "identifier": {
               "type": "string",
               "readOnly": true,
               "example": "UK654321123456"
             },
-            "birthDate": {
-              "type": "string",
-              "format": "date",
-              "example": "2023-11-13"
+            "date": {
+              "$ref": "#/components/schemas/date"
             },
             "sex": {
-              "type": "string",
-              "enum": [
-                "male",
-                "female"
-              ]
+              "$ref": "#/components/schemas/sex"
             },
             "birthSite": {
-              "allOf": [
-                {
-                  "$ref": "#/components/schemas/Site"
-                }
-              ]
+              "$ref": "#/components/schemas/site"
             }
           }
         }
@@ -2407,19 +4216,13 @@
                   "example": "VAN-5544234-10/203/1005-11-24"
                 },
                 "certificationDate": {
-                  "type": "string",
-                  "format": "date",
-                  "example": "2023-11-13"
+                  "$ref": "#/components/schemas/date"
                 },
                 "expiryDate": {
-                  "type": "string",
-                  "format": "date",
-                  "example": "2024-11-13"
+                  "$ref": "#/components/schemas/date"
                 },
                 "revocationDate": {
-                  "type": "string",
-                  "format": "date",
-                  "example": null
+                  "$ref": "#/components/schemas/date"
                 },
                 "veterinarianName": {
                   "type": "string",
@@ -2449,130 +4252,126 @@
       "Animal": {
         "type": "object",
         "properties": {
-          "animalIdentifier": {
-            "type": "string",
-            "example": "UK123456654321",
-            "readOnly": true
-          },
-          "originalIdentifier": {
-            "type": "string",
-            "nullable": true,
-            "example": "USA005516557866"
-          },
-          "species": {
-            "type": "string",
-            "nullable": false,
-            "example": "cattle"
-          },
-          "breed": {
-            "type": "string",
-            "example": "Dexter"
-          },
-          "genotype": {
-            "type": "string",
-            "example": "QQQ/QRR"
-          },
-          "name": {
-            "type": "string",
-            "nullable": true,
-            "example": "Ian"
-          },
-          "sex": {
-            "type": "string",
-            "nullable": false,
-            "enum": [
-              "male",
-              "female"
+          "animal": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/animal"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "genotype": {
+                    "type": "string",
+                    "example": "QQQ/QRR",
+                    "nullable": true
+                  },
+                  "originalIdentifier": {
+                    "type": "string",
+                    "example": "USA005516557866",
+                    "nullable": true
+                  },
+                  "productionType": {
+                    "$ref": "#/components/schemas/productionType"
+                  },
+                  "state": {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/animalState"
+                      },
+                      {
+                        "readOnly": true
+                      }
+                    ]
+                  }
+                }
+              }
+            ],
+            "required": [
+              "species",
+              "sex"
             ]
           },
-          "productionType": {
-            "type": "string",
-            "nullable": true,
-            "example": "beef"
+          "breed": {
+            "$ref": "#/components/schemas/breed"
           },
-          "identificationDate": {
-            "type": "string",
-            "nullable": true,
-            "example": "2023-11-13"
-          },
-          "geneticDam": {
-            "$ref": "#/components/schemas/Dam"
-          },
-          "sire": {
-            "$ref": "#/components/schemas/AnimalSire"
-          },
-          "surrogateDam": {
-            "$ref": "#/components/schemas/Dam"
+          "currentSite": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/site"
+              },
+              {
+                "readOnly": true
+              }
+            ]
           },
           "importParents": {
             "type": "object",
             "properties": {
-              "geneticDam": {
-                "type": "string",
-                "example": "USA12345676543"
-              },
               "sire": {
-                "type": "string",
-                "example": "USA9999676543"
+                "$ref": "#/components/schemas/ParentAnimal"
               },
-              "surrogateDam": {
-                "type": "string",
-                "example": "USA88885676543"
+              "geneticDam": {
+                "$ref": "#/components/schemas/ParentAnimal"
+              },
+              "birthDam": {
+                "description": "The animal giving birth to the animal in question. If the animal is a surrogate mother, there will be a genetic dam.",
+                "$ref": "#/components/schemas/ParentAnimal"
               }
             }
           },
           "birth": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/AnimalBirth"
-              }
-            ],
-            "nullable": true,
-            "readOnly": false
+            "$ref": "#/components/schemas/animalBirth"
           },
           "death": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/AnimalDeath"
-              }
-            ],
-            "nullable": true,
-            "readOnly": false
+            "$ref": "#/components/schemas/animalDeath",
+            "nullable": true
           },
-          "registrationSite": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Site"
+          "registration": {
+            "type": "object",
+            "properties": {
+              "birthDam": {
+                "description": "The animal giving birth to the animal in question. If the animal is a surrogate mother, there will be a genetic dam.",
+                "$ref": "#/components/schemas/ParentAnimal"
+              },
+              "geneticDam": {
+                "description": "The genetic dam if different from the birth dam.",
+                "$ref": "#/components/schemas/ParentAnimal"
+              },
+              "sire": {
+                "$ref": "#/components/schemas/ParentAnimal"
+              },
+              "site": {
+                "$ref": "#/components/schemas/site"
+              },
+              "date": {
+                "$ref": "#/components/schemas/date"
+              },
+              "category": {
+                "type": "string",
+                "enum": [
+                  "birthRegistration",
+                  "registration"
+                ]
+              },
+              "identificationDate": {
+                "$ref": "#/components/schemas/date"
               }
+            },
+            "required": [
+              "site",
+              "date",
+              "category"
             ]
           },
           "homeSite": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/Site"
-              }
-            ]
-          },
-          "currentSite": {
-            "allOf": [
+                "$ref": "#/components/schemas/site"
+              },
               {
-                "$ref": "#/components/schemas/Site"
+                "readOnly": true
               }
             ]
-          },
-          "registrationDate": {
-            "type": "string",
-            "nullable": false,
-            "format": "date"
-          },
-          "registrationCategory": {
-            "type": "string",
-            "nullable": false,
-            "enum": [
-              "birthRegistration",
-              "registration"
-            ],
-            "example": "birthRegistration"
           },
           "birthingHistory": {
             "allOf": [
@@ -2583,27 +4382,25 @@
             "nullable": true,
             "readOnly": true
           },
-          "state": {
-            "type": "string",
-            "readOnly": true,
-            "example": "restricted"
-          },
-          "submittedBySite": {
+          "createdDateTime": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/Site"
+                "$ref": "#/components/schemas/datetime"
+              },
+              {
+                "readOnly": true
               }
             ]
           },
-          "createdDateTime": {
-            "type": "string",
-            "format": "date-time",
-            "readOnly": true
-          },
           "updatedDateTime": {
-            "type": "string",
-            "format": "date-time",
-            "readOnly": true
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/datetime"
+              },
+              {
+                "readOnly": true
+              }
+            ]
           },
           "assurance": {
             "allOf": [
@@ -2616,23 +4413,14 @@
           }
         },
         "required": [
-          "species",
-          "sex",
-          "registrationSite",
-          "registrationDate",
-          "registrationCategory"
+          "animal",
+          "registration"
         ]
-      },
-      "AnimalArray": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/Animal"
-        }
       },
       "AnimalResponse": {
         "type": "object",
         "properties": {
-          "animalIdentifier": {
+          "identifier": {
             "type": "string",
             "format": "string",
             "readOnly": true,
@@ -2655,11 +4443,16 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
-            "format": "uuid",
-            "readOnly": true
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/uuid"
+              },
+              {
+                "readOnly": true
+              }
+            ]
           },
-          "animalIdntifier": {
+          "identifier": {
             "type": "string",
             "format": "string",
             "nullable": false,
@@ -2668,7 +4461,10 @@
           "site": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/Site"
+                "$ref": "#/components/schemas/site"
+              },
+              {
+                "readOnly": true
               }
             ]
           },
@@ -2681,12 +4477,10 @@
             ]
           },
           "eventDate": {
-            "type": "string",
-            "format": "date"
+            "$ref": "#/components/schemas/date"
           },
           "reportedDateTime": {
-            "type": "string",
-            "format": "date-time"
+            "$ref": "#/components/schemas/datetime"
           },
           "crimeReferenceNumber": {
             "type": "string",
@@ -2698,12 +4492,9 @@
           }
         },
         "required": [
-          "animalIdentifier",
-          "site",
+          "identifier",
           "status",
-          "eventDate",
-          "reportedDateTime",
-          "foundDead"
+          "eventDate"
         ]
       },
       "DeathReasonList": {
@@ -2735,17 +4526,7 @@
           "values": {
             "type": "array",
             "items": {
-              "type": "object",
-              "properties": {
-                "breed": {
-                  "type": "string",
-                  "example": "Aberdeen Angus"
-                },
-                "code": {
-                  "type": "string",
-                  "example": "AA"
-                }
-              }
+              "$ref": "#/components/schemas/breed"
             }
           }
         }
@@ -2793,18 +4574,54 @@
       }
     },
     "parameters": {
-      "xCorrelationId": {
-        "in": "header",
-        "name": "X-Correlation-Id",
+      "xPage": {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "allowEmptyValue": false,
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "xPageSize": {
+        "name": "pageSize",
+        "in": "query",
+        "required": false,
+        "allowEmptyValue": false,
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "xSort": {
+        "name": "sort",
+        "in": "query",
+        "required": false,
+        "allowEmptyValue": false,
         "schema": {
           "type": "string",
-          "format": "string",
-          "example": "1889185f-adb9-46aa-9035-1a752e9c3833"
+          "enum": [
+            "asc",
+            "desc"
+          ]
+        }
+      },
+      "xCorrelationId": {
+        "in": "header",
+        "name": "LI-Correlation-Id",
+        "schema": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/uuid"
+            },
+            {
+              "example": "1889185f-adb9-46aa-9035-1a752e9c3833"
+            }
+          ]
         }
       },
       "xRequestMode": {
         "in": "header",
-        "name": "X-Request-Mode",
+        "name": "LI-Request-Mode",
         "schema": {
           "type": "string",
           "enum": [
@@ -2818,17 +4635,27 @@
     "headers": {
       "xRequestId": {
         "schema": {
-          "type": "string",
-          "format": "uuid",
-          "example": "df44b048-aa6a-4b2f-8ae7-daad7d3f6dc4"
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/uuid"
+            },
+            {
+              "example": "df44b048-aa6a-4b2f-8ae7-daad7d3f6dc4"
+            }
+          ]
         },
-        "description": "Uniquely identfies an HTTP request, used to track the request thru differnt stages."
+        "description": "Uniquely identfies an HTTP request."
       },
       "xCorrelationId": {
         "schema": {
-          "type": "string",
-          "format": "uuid",
-          "example": "3eb0c71f-d237-49c5-b2f9-17d4bc8ec870"
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/uuid"
+            },
+            {
+              "example": "3eb0c71f-d237-49c5-b2f9-17d4bc8ec870"
+            }
+          ]
         },
         "description": "Request correlation id, the id is generated by the server if not provided by the client."
       },
@@ -2836,7 +4663,82 @@
         "schema": {
           "type": "integer"
         },
-        "description": "The number of seconds/minutes before you can call /requeststatus/{requestId} endpoint."
+        "description": "The number of seconds/minutes before you can call this endpoint again."
+      }
+    },
+    "examples": {
+      "forbidden": {
+        "value": {
+          "type": "https://datatracker.ietf.org/doc/html/rfc9110#section-15.5.4",
+          "title": "Forbidden",
+          "detail": "The resource could not be returned as the requestor is not authorized",
+          "status": 403
+        }
+      },
+      "not-found": {
+        "value": {
+          "type": "https://datatracker.ietf.org/doc/html/rfc9110#section-15.5.5",
+          "title": "Not found",
+          "detail": "The requested resource was not found",
+          "status": 404
+        }
+      },
+      "server-error": {
+        "value": {
+          "type": "https://datatracker.ietf.org/doc/html/rfc9110#section-15.6.1",
+          "title": "Server Error",
+          "detail": "The server encountered an unexpected error",
+          "status": 500
+        }
+      },
+      "service-unavailable": {
+        "value": {
+          "type": "https://datatracker.ietf.org/doc/html/rfc9110#section-15.6.4",
+          "title": "Service Unavailable",
+          "detail": "The service is currently unavailable",
+          "status": 503
+        }
+      },
+      "validation-error": {
+        "description": "Representation of a 400 Bad Request response where the request does not meet the validation rules.",
+        "value": {
+          "type": "https://datatracker.ietf.org/doc/html/rfc9110#section-15.5.1",
+          "status": 400,
+          "title": "Validation Error",
+          "detail": "The request is invalid.",
+          "errors": [
+            {
+              "detail": "Birth site not known to LIS",
+              "code": "V038"
+            },
+            {
+              "detail": "The genetic or surrogate dam is not the same species as the animal being registered",
+              "code": "V006"
+            }
+          ]
+        }
+      },
+      "invalid-request-schema": {
+        "description": "Representation of a 400 Bad Request response where the request has failed schema validation.",
+        "value": {
+          "type": "https://datatracker.ietf.org/doc/html/rfc9110#section-15.5.1",
+          "status": 400,
+          "title": "Request Schema Error",
+          "detail": "The request failed schema validation.",
+          "errors": [
+            {
+              "detail": "The request is missing the required query parameter {siteId}",
+              "code": "S002",
+              "source": "siteId"
+            },
+            {
+              "detail": "The format of the request body property {birthDate} is invalid",
+              "code": "S008",
+              "source": "#/birth/birthDate",
+              "value": "2024-11/01"
+            }
+          ]
+        }
       }
     }
   }
