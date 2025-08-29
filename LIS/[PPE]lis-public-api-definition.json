@@ -2175,7 +2175,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/LostFound"
+                  "$ref": "#/components/schemas/LostFoundResponse"
                 }
               }
             }
@@ -2277,6 +2277,117 @@
       }
     },
     "/lostfounds/{id}": {
+      "get": {
+        "tags": [
+          "animal lostfounds"
+        ],
+        "summary": "Get an animal lost/found record.",
+        "description": "Get an animal lost/found record.",
+        "operationId": "getLostFoundsRecord",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/uuid"
+            },
+            "description": "Lostfound record id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK - Successful operation",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LostFound"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                },
+                "examples": {
+                  "invalid-request-schema": {
+                    "$ref": "#/components/examples/invalid-request-schema"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                },
+                "examples": {
+                  "server-error": {
+                    "$ref": "#/components/examples/server-error"
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "headers": {
+              "LI-Request-Id": {
+                "$ref": "#/components/headers/xRequestId"
+              },
+              "LI-Correlation-Id": {
+                "$ref": "#/components/headers/xCorrelationId"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/xRetryAfter"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                },
+                "examples": {
+                  "server-error": {
+                    "$ref": "#/components/examples/service-unavailable"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
       "put": {
         "tags": [
           "animal lostfounds"
@@ -2324,7 +2435,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/LostFound"
+                  "$ref": "#/components/schemas/LostFoundResponse"
                 }
               }
             }
@@ -3534,7 +3645,7 @@
               }
             ],
             "properties": {
-              "importDelisrationFlag": {
+              "importDeclarationFlag": {
                 "type": "boolean"
               },
               "healthCertificateNumber": {
@@ -3547,7 +3658,7 @@
               }
             },
             "required": [
-              "importDelisrationFlag",
+              "importDeclarationFlag",
               "ipaffsReferenceNumber",
               "region",
               "countryCode"
@@ -3556,7 +3667,7 @@
           "fciInformation": {
             "type": "object",
             "properties": {
-              "delisrationFlag": {
+              "declarationFlag": {
                 "type": "boolean"
               },
               "diseaseDetails": {
@@ -3573,7 +3684,7 @@
               }
             },
             "required": [
-              "delisrationFlag"
+              "declarationFlag"
             ]
           },
           "documents": {
@@ -3771,31 +3882,40 @@
           ]
         }
       },
-      "ErrorDetail": {
+      "ProblemDetails": {
         "type": "object",
-        "description": "An object to provide explicit details on a problem towards an API consumer.",
         "properties": {
-          "detail": {
+          "type": {
             "type": "string",
-            "description": "A granular description on the specific error related to a body property, query parameter, path parameters, and/or header.",
-            "maxLength": 4096
-          },
-          "source": {
-            "type": "string",
-            "description": "The source of the error, e.g. the name of a header, query or path parameter, or a JSON pointer to a specific request body property.",
+            "description": "A URI reference that identifies the problem type.",
+            "format": "uri",
             "maxLength": 1024
           },
-          "values": {
-            "type": "string",
-            "description": "The value that has caused the error, e.g. the value passed in as a header, query or path parameter, or a request body property that lead to the error."
+          "status": {
+            "type": "integer",
+            "description": "The HTTP status code generated by the origin server for this occurrence of the problem.",
+            "format": "int32",
+            "minimum": 100,
+            "maximum": 599
           },
-          "code": {
+          "title": {
             "type": "string",
-            "description": "A string containing additional provider specific codes to identify the error context.",
-            "maxLength": 50
+            "description": "A short, human-readable summary of the problem type. It should not change from occurrence to occurrence of the problem, except for purposes of localization.",
+            "maxLength": 1024
+          },
+          "detail": {
+            "type": "string",
+            "description": "A human-readable explanation specific to this occurrence of the problem.",
+            "maxLength": 4096
+          },
+          "errors": {
+            "$ref": "#/components/schemas/ProblemDetails"
           }
         },
         "required": [
+          "type",
+          "status",
+          "title",
           "detail"
         ]
       },
@@ -3805,7 +3925,7 @@
         "minItems": 1,
         "maxItems": 1000,
         "items": {
-          "$ref": "#/components/schemas/ErrorDetail"
+          "$ref": "#/components/schemas/ProblemDetails"
         }
       },
       "ReportAuthor": {
@@ -3955,10 +4075,8 @@
             "items": {
               "type": "object",
               "properties": {
-                "rejectionReasonIdentifier": {
-                  "type": "string",
-                  "format": "string",
-                  "example": "12345"
+                "rejectionReasonId": {
+                  "$ref": "#/components/schemas/uuid"
                 },
                 "rejectionReason": {
                   "type": "string",
@@ -4134,12 +4252,17 @@
           "reason": {
             "type": "object",
             "properties": {
+              "id": {
+                "$ref": "#/components/schemas/uuid"
+              },
               "name": {
                 "type": "string",
-                "example": "Abattoir Kill"
+                "example": "Abattoir Kill",
+                "readOnly": true
               }
             },
             "required": [
+              "id",
               "name"
             ]
           },
@@ -4479,8 +4602,15 @@
           "eventDate": {
             "$ref": "#/components/schemas/date"
           },
-          "reportedDateTime": {
-            "$ref": "#/components/schemas/datetime"
+          "createdDateTime": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/datetime"
+              },
+              {
+                "readOnly": true
+              }
+            ]
           },
           "crimeReferenceNumber": {
             "type": "string",
@@ -4497,6 +4627,32 @@
           "eventDate"
         ]
       },
+      "LostFoundResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/uuid"
+              },
+              {
+                "example": "84ebdc54-27cf-4a12-a0aa-359041de4f9d"
+              }
+            ]
+          },
+          "links": {
+            "type": "object",
+            "properties": {
+              "self": {
+                "type": "string",
+                "format": "uri",
+                "readOnly": true,
+                "example": "/lostfounds/84ebdc54-27cf-4a12-a0aa-359041de4f9d"
+              }
+            }
+          }
+        }
+      },
       "DeathReasonList": {
         "type": "object",
         "properties": {
@@ -4508,6 +4664,9 @@
             "items": {
               "type": "object",
               "properties": {
+                "deathReasonId": {
+                  "$ref": "#/components/schemas/uuid"
+                },
                 "deathReason": {
                   "type": "string",
                   "example": "Killed for human consumption"
