@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "https://**baseurl**/v1",
+	  "url": "https://**baseurl**/v1",
       "description": "api url details shared upon api access approval"
     }
   ],
@@ -44,8 +44,7 @@
                     "$ref": "#/components/schemas/movement"
                   },
                   "document": {
-                    "type": "string",
-                    "format": "binary"
+                    "$ref": "#/components/schemas/DocumentRequest"
                   }
                 }
               },
@@ -423,26 +422,9 @@
         "requestBody": {
           "required": true,
           "content": {
-            "multipart/form-data": {
+            "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "movementData": {
-                    "$ref": "#/components/schemas/movement"
-                  },
-                  "document": {
-                    "type": "string",
-                    "format": "binary"
-                  }
-                }
-              },
-              "encoding": {
-                "movementData": {
-                  "contentType": "application/json"
-                },
-                "documents": {
-                  "contentType": "application/octet-stream"
-                }
+                "$ref": "#/components/schemas/movement"
               }
             }
           }
@@ -628,124 +610,6 @@
                 "$ref": "#/components/headers/xCorrelationId"
               }
             }
-          },
-          "503": {
-            "description": "The service is currently unavailable.",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              },
-              "Retry-After": {
-                "$ref": "#/components/headers/xRetryAfter"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/movements/{movementNumber}/documents/{documentId}": {
-      "put": {
-        "tags": [
-          "movements"
-        ],
-        "summary": "Update a document for a specific movement",
-        "operationId": "updateMovementDocument",
-        "parameters": [
-          {
-            "name": "movementNumber",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "number",
-              "example": 55663427
-            }
-          },
-          {
-            "name": "documentId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/uuid"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/octet-stream": {
-              "schema": {
-                "type": "string",
-                "format": "binary"
-              }
-            }
-          },
-          "description": "The document to upload (PDF and PNG are allowed)"
-        },
-        "responses": {
-          "200": {
-            "description": "Document successfully uploaded",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string"
-                    }
-                  }
-                },
-                "example": {
-                  "message": "Document uploaded successfully"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid input or file type",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden. Insufficent access to perform the operation.",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found. The specified movement number was not found.",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error. An error occurred while processing the request."
           },
           "503": {
             "description": "The service is currently unavailable.",
@@ -1963,7 +1827,7 @@
             "description": "identifer of the Animal"
           },
           {
-            "name": "state",
+            "name": "status",
             "in": "query",
             "schema": {
               "type": "array",
@@ -1994,22 +1858,6 @@
             }
           },
           {
-            "name": "minReportDate",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "date"
-            }
-          },
-          {
-            "name": "maxReportDate",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "date"
-            }
-          },
-          {
             "$ref": "#/components/parameters/xPage"
           },
           {
@@ -2022,9 +1870,10 @@
             "allowEmptyValue": false,
             "schema": {
               "type": "string",
+              "default": "eventDate",
               "enum": [
-                "animalIdentifier",
-                "state"
+                "status",
+                "eventDate"
               ]
             }
           },
@@ -3391,7 +3240,7 @@
           "arrival": {
             "$ref": "#/components/schemas/timestampedSite"
           },
-          "movementNumber": {
+          "number": {
             "type": "integer",
             "example": 55663427,
             "readOnly": true
@@ -3434,7 +3283,7 @@
               "time": {
                 "$ref": "#/components/schemas/time"
               },
-              "movementNumber": {
+              "number": {
                 "type": "integer",
                 "example": 55663427,
                 "readOnly": true
@@ -3447,7 +3296,7 @@
           "departure",
           "arrival",
           "batches",
-          "movementNumber"
+          "number"
         ]
       },
       "internationalAddress": {
@@ -3553,6 +3402,14 @@
                     "reason": {
                       "type": "string",
                       "example": "Possible TB Hazard"
+                    },
+                    "rejectionReasonId": {
+                      "$ref": "#/components/schemas/uuid",
+                      "example": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                    },
+                    "rejectionReason": {
+                      "type": "string",
+                      "example": "Other"
                     },
                     "otherReason": {
                       "type": "string",
@@ -3731,17 +3588,60 @@
                 "readOnly": true
               }
             ]
+          },
+          "messages": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "example": "DR001"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Movement state cannot be updated."
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ]
+                },
+                "minItems": 1
+              },
+              {
+                "readOnly": true
+              }
+            ]
           }
         },
         "required": [
           "movementReports",
-          "movementNumber",
+          "number",
           "reviewState",
           "state",
           "movementKind",
           "createdDateTime",
           "updatedDateTime"
         ]
+      },
+      "DocumentRequest": {
+        "type": "object",
+        "properties": {
+          "fileName": {
+            "type": "string",
+            "description": "The name of the document being uploaded."
+          },
+          "documentContent": {
+            "type": "string",
+            "format": "binary",
+            "description": "The binary content of the document to be uploaded (max 5MB).",
+            "maxLength": 5242880
+          }
+        }
       },
       "MovementResponse1": {
         "type": "object",
@@ -3964,10 +3864,14 @@
                 ],
                 "example": "reject"
               },
-              "reason": {
+              "rejectionReasonId": {
+                "$ref": "#/components/schemas/uuid"
+              },
+              "rejectionReason": {
                 "type": "string",
-                "nullable": false,
-                "example": "Other"
+                "example": "Other",
+                "readOnly": true,
+                "nullable": true
               },
               "otherReason": {
                 "type": "string",
@@ -4230,13 +4134,18 @@
           },
           "multipleBirthsFlag": {
             "type": "boolean"
+          },
+          "embryoTransferFlag": {
+            "type": "boolean",
+            "description": "Indicates if the animal was born via embryo transfer"
           }
         },
         "required": [
           "site",
           "year",
           "assistedBirthFlag",
-          "multipleBirthsFlag"
+          "multipleBirthsFlag",
+          "embryoTransferFlag"
         ],
         "additionalProperties": false
       },
@@ -4262,7 +4171,6 @@
               }
             },
             "required": [
-              "id",
               "name"
             ]
           },
