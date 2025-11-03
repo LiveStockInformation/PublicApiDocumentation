@@ -1,0 +1,3577 @@
+{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "#{API_NAME}#",
+    "description": "#{API_NAME}#",
+    "version": "2"
+  },
+  "paths": {
+    "/Orders/Conventional": {
+      "post": {
+        "tags": [
+          "Api"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Luis.Models.Dto.ConventionalOrderDto"
+                  }
+                ]
+              }
+            },
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Luis.Models.Dto.ConventionalOrderDto"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Luis.Models.Dto.ConventionalOrderDto"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Luis.Models.Dto.ConventionalOrderDto"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Luis.Domain.Models.Orders.Conventional"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Luis.Api.Models.ServerError"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/Orders/EID": {
+      "post": {
+        "tags": [
+          "Api"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Luis.Models.Dto.EidOrderDto"
+                  }
+                ]
+              }
+            },
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Luis.Models.Dto.EidOrderDto"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Luis.Models.Dto.EidOrderDto"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Luis.Models.Dto.EidOrderDto"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Luis.Domain.Models.Orders.EID"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Luis.Api.Models.ServerError"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/Orders/GBTags": {
+      "post": {
+        "tags": [
+          "Api"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Luis.Api.Models.GBTagsOrder"
+                  }
+                ]
+              }
+            },
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Luis.Api.Models.GBTagsOrder"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Luis.Api.Models.GBTagsOrder"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Luis.Api.Models.GBTagsOrder"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Luis.Api.Models.GBTagsOrder"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Luis.Api.Models.ServerError"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/Orders/Replica": {
+      "post": {
+        "tags": [
+          "Api"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Luis.Api.Models.ReplicaOrder"
+                  }
+                ]
+              }
+            },
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Luis.Api.Models.ReplicaOrder"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Luis.Api.Models.ReplicaOrder"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Luis.Api.Models.ReplicaOrder"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Luis.Domain.Models.Orders.Replica"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Luis.Api.Models.ServerError"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/Orders/Slaughter": {
+      "post": {
+        "tags": [
+          "Api"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Luis.Api.Models.SlaughterOrder"
+                  }
+                ]
+              }
+            },
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Luis.Api.Models.SlaughterOrder"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Luis.Api.Models.SlaughterOrder"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Luis.Api.Models.SlaughterOrder"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Luis.Domain.Models.Orders.Slaughter"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/TagHistory/{searchTerm}": {
+      "get": {
+        "tags": [
+          "Api"
+        ],
+        "parameters": [
+          {
+            "name": "searchTerm",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Luis.Api.Models.OrderTag"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Luis.Api.Models.ServerError"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/RecentOrders/{Max}": {
+      "get": {
+        "tags": [
+          "Api"
+        ],
+        "parameters": [
+          {
+            "name": "Max",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": "20"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Luis.Domain.Models.Orders.Search.Order"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Luis.Api.Models.ServerError"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/KeeperRecentOrders/{C}/{P}/{H}/{Max}": {
+      "get": {
+        "tags": [
+          "Api"
+        ],
+        "parameters": [
+          {
+            "name": "C",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "P",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "H",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Max",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": "20"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Luis.Domain.Models.Orders.Search.Order"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Luis.Api.Models.ServerError"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/HerdSpeciesRecentOrders/{C}/{P}/{H}/{Herd}/{Species}/{Max}": {
+      "get": {
+        "tags": [
+          "Api"
+        ],
+        "parameters": [
+          {
+            "name": "C",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "P",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "H",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Herd",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Species",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Max",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": "20"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Luis.Domain.Models.Orders.Search.Order"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Luis.Api.Models.ServerError"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/Orders/{Defra_Ref}/Tags": {
+      "get": {
+        "tags": [
+          "Api"
+        ],
+        "parameters": [
+          {
+            "name": "Defra_Ref",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Luis.Api.Models.OrderTag"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/Tags/{Tag_Code}": {
+      "get": {
+        "tags": [
+          "Api"
+        ],
+        "parameters": [
+          {
+            "name": "Tag_Code",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Luis.Api.Models.Tag"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/KeeperHerds/{C}/{P}/{H}/{Herd}": {
+      "get": {
+        "tags": [
+          "Api"
+        ],
+        "parameters": [
+          {
+            "name": "C",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "P",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "H",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Herd",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Luis.Api.Models.KeeperHerd"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Approved_Tags": {
+      "get": {
+        "tags": [
+          "Api"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Luis.Api.Models.Approved_Tag"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Approved_Tags/{Approved_Tag_Id}": {
+      "get": {
+        "tags": [
+          "Api"
+        ],
+        "parameters": [
+          {
+            "name": "Approved_Tag_Id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Luis.Api.Models.Approved_Tag"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/HerdSpecies/{C}/{P}/{H}": {
+      "get": {
+        "tags": [
+          "Api"
+        ],
+        "parameters": [
+          {
+            "name": "C",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "P",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "H",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Luis.Api.Models.CPHHerdSpecies"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Species": {
+      "get": {
+        "tags": [
+          "Api"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/SpeciesApprovedTags/{Species}": {
+      "get": {
+        "tags": [
+          "Api"
+        ],
+        "parameters": [
+          {
+            "name": "Species",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Luis.Api.Models.Approved_Tag"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/KeeperUnmatchedTags/{C}/{P}/{H}": {
+      "get": {
+        "tags": [
+          "Api"
+        ],
+        "parameters": [
+          {
+            "name": "C",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "P",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "H",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Luis.Api.Models.UnmatchedTagSet"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ValidTagCombinations/{Species}": {
+      "get": {
+        "tags": [
+          "Api"
+        ],
+        "parameters": [
+          {
+            "name": "Species",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ServiceMessages": {
+      "get": {
+        "tags": [
+          "Api"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Luis.Api.Models.Service_Message"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/CommonApprovedTags": {
+      "get": {
+        "tags": [
+          "Api"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Luis.Api.Models.Approved_Tag"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/AnimalsOnHolding/{C}/{P}/{H}/{Species}": {
+      "get": {
+        "tags": [
+          "Api"
+        ],
+        "parameters": [
+          {
+            "name": "C",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "P",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "H",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Species",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Tags": {
+      "get": {
+        "tags": [
+          "Tags"
+        ],
+        "parameters": [
+          {
+            "name": "StartTag",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "EndTag",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Luis.Api.Models.Tag"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Tags/next-allocated/{c}/{p}/{h}/{herd}/{species}": {
+      "get": {
+        "tags": [
+          "Tags"
+        ],
+        "parameters": [
+          {
+            "name": "c",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "p",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "h",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "herd",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "species",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "quantity",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "hasEid",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Luis.Models.NextTag.HerdTagNumbers"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/Tags/next-allocated/{c}/{p}/{h}/{herd}": {
+      "get": {
+        "tags": [
+          "Tags"
+        ],
+        "parameters": [
+          {
+            "name": "c",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "p",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "h",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "herd",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Luis.Models.NextTag.HerdSpeciesTagSummary"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Luis.Api.Models.Approved_Tag": {
+        "type": "object",
+        "properties": {
+          "Approved_Tag_Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Manufacturer_Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Tag_Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Tag_EID": {
+            "type": "boolean"
+          },
+          "Tag_Primary": {
+            "type": "boolean"
+          },
+          "Tag_Slaughter": {
+            "type": "boolean"
+          },
+          "Tag_Approval_Date": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "Tag_Approval_End_Date": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "Legacy_Code": {
+            "type": "string",
+            "nullable": true
+          },
+          "Manufacturers_Code": {
+            "type": "string",
+            "nullable": true
+          },
+          "Notes": {
+            "type": "string",
+            "nullable": true
+          },
+          "Parent_Approved_Tag_Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Tag_Class": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Luis.Api.Models.Tag_Class"
+              }
+            ],
+            "nullable": true
+          },
+          "Rear_Class": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Luis.Api.Models.Tag_Class"
+              }
+            ],
+            "nullable": true
+          },
+          "Colours": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Luis.Api.Models.Tag_Colour"
+            },
+            "nullable": true
+          },
+          "Species": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Luis.Api.Models.Tag_Species"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Luis.Api.Models.CPHHerdSpecies": {
+        "type": "object",
+        "properties": {
+          "CPH": {
+            "type": "string",
+            "nullable": true
+          },
+          "Species": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "Herds": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Luis.Api.Models.HerdSpecies"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Luis.Api.Models.GBTagsOrder": {
+        "type": "object",
+        "properties": {
+          "Order_Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "CPH": {
+            "type": "string",
+            "nullable": true
+          },
+          "Species_Id": {
+            "type": "string",
+            "nullable": true
+          },
+          "User_Id": {
+            "type": "string",
+            "nullable": true
+          },
+          "Caller_Id": {
+            "type": "string",
+            "nullable": true
+          },
+          "Order_Date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "AIM_Ref": {
+            "type": "string",
+            "nullable": true
+          },
+          "Tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "Has_Errors": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Luis.Api.Models.Herd": {
+        "type": "object",
+        "properties": {
+          "Herd_Ref": {
+            "type": "string",
+            "nullable": true
+          },
+          "CPH": {
+            "type": "string",
+            "nullable": true
+          },
+          "Inactive": {
+            "type": "boolean"
+          },
+          "Species": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Luis.Api.Models.HerdSpecies": {
+        "type": "object",
+        "properties": {
+          "Herd_Ref": {
+            "type": "string",
+            "nullable": true
+          },
+          "Species_Id": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Luis.Api.Models.Keeper": {
+        "type": "object",
+        "properties": {
+          "OCCUPIER_TITLE": {
+            "type": "string",
+            "nullable": true
+          },
+          "OCCUPIER_NAME": {
+            "type": "string",
+            "nullable": true
+          },
+          "SAON_START_NUMBER": {
+            "type": "string",
+            "nullable": true
+          },
+          "SAON_START_NUMBER_SUFFIX": {
+            "type": "string",
+            "nullable": true
+          },
+          "SAON_END_NUMBER": {
+            "type": "string",
+            "nullable": true
+          },
+          "SAON_END_NUMBER_SUFFIX": {
+            "type": "string",
+            "nullable": true
+          },
+          "SAON_DESCRIPTION": {
+            "type": "string",
+            "nullable": true
+          },
+          "PAON_START_NUMBER": {
+            "type": "string",
+            "nullable": true
+          },
+          "PAON_START_NUMBER_SUFFIX": {
+            "type": "string",
+            "nullable": true
+          },
+          "PAON_END_NUMBER": {
+            "type": "string",
+            "nullable": true
+          },
+          "PAON_END_NUMBER_SUFFIX": {
+            "type": "string",
+            "nullable": true
+          },
+          "PAON_DESCRIPTION": {
+            "type": "string",
+            "nullable": true
+          },
+          "STREET": {
+            "type": "string",
+            "nullable": true
+          },
+          "LOCALITY": {
+            "type": "string",
+            "nullable": true
+          },
+          "TOWN": {
+            "type": "string",
+            "nullable": true
+          },
+          "ADMINISTRATIVE_AREA": {
+            "type": "string",
+            "nullable": true
+          },
+          "POSTCODE": {
+            "type": "string",
+            "nullable": true
+          },
+          "TELEPHONE": {
+            "type": "string",
+            "nullable": true
+          },
+          "MOBILE_NUMBER": {
+            "type": "string",
+            "nullable": true
+          },
+          "DATE_UPDATED": {
+            "type": "string",
+            "nullable": true
+          },
+          "CPH": {
+            "type": "string",
+            "nullable": true
+          },
+          "COUNTRY_CODE": {
+            "type": "string",
+            "nullable": true
+          },
+          "UK_INTERNAL_CODE": {
+            "type": "string",
+            "nullable": true
+          },
+          "STATUS": {
+            "type": "string",
+            "nullable": true
+          },
+          "Easting": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Northing": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Address1": {
+            "type": "string",
+            "nullable": true
+          },
+          "Full_Address": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Luis.Api.Models.KeeperHerd": {
+        "type": "object",
+        "properties": {
+          "Keeper": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Luis.Api.Models.Keeper"
+              }
+            ],
+            "nullable": true
+          },
+          "Herd": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Luis.Api.Models.Herd"
+              }
+            ],
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Luis.Api.Models.OrderCancellation": {
+        "type": "object",
+        "properties": {
+          "Cancellation_Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Order_Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "User_Id": {
+            "type": "string",
+            "nullable": true
+          },
+          "Caller_Id": {
+            "type": "string",
+            "nullable": true
+          },
+          "DeclarationReason": {
+            "type": "string",
+            "nullable": true
+          },
+          "Action": {
+            "type": "string",
+            "nullable": true
+          },
+          "Reason": {
+            "type": "string",
+            "nullable": true
+          },
+          "ReOrder": {
+            "type": "boolean"
+          },
+          "AIMRef": {
+            "type": "string",
+            "nullable": true
+          },
+          "All_Tags": {
+            "type": "boolean"
+          },
+          "Answers": {
+            "type": "object",
+            "additionalProperties": {
+              "nullable": true
+            },
+            "nullable": true
+          },
+          "Tag_1": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "nullable": true
+          },
+          "Tag_2": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "nullable": true
+          },
+          "Document": {
+            "type": "string",
+            "nullable": true
+          },
+          "AmendmentDeclaration_Json": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Luis.Api.Models.OrderTag": {
+        "type": "object",
+        "properties": {
+          "Ordered_Tag_Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Order_Id": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "CPH": {
+            "type": "string",
+            "nullable": true
+          },
+          "Herd_Ref": {
+            "type": "string",
+            "nullable": true
+          },
+          "For_Tag": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Tag_Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Approved_Tag_Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Colour": {
+            "type": "string",
+            "nullable": true
+          },
+          "Approved_Tag_Colour_Id": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "Attributes_Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Manufacturer_Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Tag_Start_Date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "Tag_End_Date": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "Tag_End_Reason": {
+            "type": "string",
+            "nullable": true
+          },
+          "Tag_Status": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Tag_Replica_Count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Disregard_Count": {
+            "type": "boolean"
+          },
+          "Last_Replica": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Frozen_Until": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "Cancellation_Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Recovery_Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Tag": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Luis.Api.Models.Tag"
+              }
+            ],
+            "nullable": true
+          },
+          "Approved_Tag": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Luis.Api.Models.Approved_Tag"
+              }
+            ],
+            "nullable": true
+          },
+          "Order_Cancellation": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Luis.Api.Models.OrderCancellation"
+              }
+            ],
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Luis.Api.Models.Ordered_Tag": {
+        "type": "object",
+        "properties": {
+          "For": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "New_Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Colour": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Luis.Api.Models.ReplicaOrder": {
+        "type": "object",
+        "properties": {
+          "CPH": {
+            "type": "string",
+            "nullable": true
+          },
+          "Species_Id": {
+            "type": "string",
+            "nullable": true
+          },
+          "AIM_Ref": {
+            "type": "string",
+            "nullable": true
+          },
+          "Tags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Luis.Api.Models.ReplicaTag"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Luis.Api.Models.ReplicaTag": {
+        "type": "object",
+        "properties": {
+          "Tag": {
+            "type": "string",
+            "nullable": true
+          },
+          "Ordered_Tags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Luis.Api.Models.Ordered_Tag"
+            },
+            "nullable": true
+          },
+          "Has_EID": {
+            "type": "boolean"
+          },
+          "Slaughter": {
+            "type": "boolean"
+          },
+          "Replacement": {
+            "type": "boolean"
+          },
+          "Has_Internal": {
+            "type": "boolean"
+          },
+          "Error": {
+            "type": "string",
+            "nullable": true
+          },
+          "GB_Suffix": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Luis.Api.Models.ServerError": {
+        "type": "object",
+        "properties": {
+          "Property": {
+            "type": "string",
+            "nullable": true
+          },
+          "ErrorCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "Message": {
+            "type": "string",
+            "nullable": true
+          },
+          "AttemptedValue": {
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Luis.Api.Models.Service_Message": {
+        "type": "object",
+        "properties": {
+          "Service_Message_Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Effective_From": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "Effective_To": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "Headline": {
+            "type": "string",
+            "nullable": true
+          },
+          "Details": {
+            "type": "string",
+            "nullable": true
+          },
+          "Priority": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Icon": {
+            "type": "string",
+            "nullable": true
+          },
+          "Roles_List": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Luis.Api.Models.SlaughterOrder": {
+        "type": "object",
+        "properties": {
+          "CPH": {
+            "type": "string",
+            "nullable": true
+          },
+          "Herd_Ref": {
+            "type": "string",
+            "nullable": true
+          },
+          "Species_Id": {
+            "type": "string",
+            "nullable": true
+          },
+          "Tag_1": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Tag_1_Colour": {
+            "type": "string",
+            "nullable": true
+          },
+          "Tag_1_Quantity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "AIM_Ref": {
+            "type": "string",
+            "nullable": true
+          },
+          "Replacement": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Luis.Api.Models.Tag": {
+        "type": "object",
+        "properties": {
+          "Printed_Tag": {
+            "type": "string",
+            "nullable": true
+          },
+          "Link_Tag": {
+            "type": "string",
+            "nullable": true
+          },
+          "Visual_Tag": {
+            "type": "string",
+            "nullable": true
+          },
+          "CPH": {
+            "type": "string",
+            "nullable": true
+          },
+          "Animal_No": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Country": {
+            "type": "string",
+            "nullable": true
+          },
+          "Herd_Ref": {
+            "type": "string",
+            "nullable": true
+          },
+          "Species_Id": {
+            "type": "string",
+            "nullable": true
+          },
+          "HasEID": {
+            "type": "boolean"
+          },
+          "HasGBTag": {
+            "type": "boolean"
+          },
+          "HasGBSuffix": {
+            "type": "boolean"
+          },
+          "Order_Status": {
+            "type": "string",
+            "nullable": true
+          },
+          "HasInternal": {
+            "type": "boolean"
+          },
+          "ExpectedOrderStatus": {
+            "type": "string",
+            "nullable": true
+          },
+          "Tags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Luis.Api.Models.TagDetails"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Luis.Api.Models.TagDetails": {
+        "type": "object",
+        "properties": {
+          "Replica_Count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Tag_Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Tag_EID": {
+            "type": "boolean"
+          },
+          "Tag_Primary": {
+            "type": "boolean"
+          },
+          "Manufacturers_Code": {
+            "type": "string",
+            "nullable": true
+          },
+          "Tag_Slaughter": {
+            "type": "boolean"
+          },
+          "Tag_Class": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Luis.Api.Models.Tag_Class": {
+        "type": "object",
+        "properties": {
+          "Class_Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Internal": {
+            "type": "boolean"
+          },
+          "No_Colour": {
+            "type": "boolean"
+          },
+          "Tag_Type": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Luis.Api.Models.Tag_Colour": {
+        "type": "object",
+        "properties": {
+          "Colour": {
+            "type": "string",
+            "nullable": true
+          },
+          "Dye": {
+            "type": "string",
+            "nullable": true
+          },
+          "Colour_Group": {
+            "type": "string",
+            "nullable": true
+          },
+          "Colour_Tag_End_Date": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Luis.Api.Models.Tag_Species": {
+        "type": "object",
+        "properties": {
+          "Species_Id": {
+            "type": "string",
+            "nullable": true
+          },
+          "Species_Tag_End_Date": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Luis.Api.Models.UnmatchedTagSet": {
+        "type": "object",
+        "properties": {
+          "OrderType": {
+            "type": "string",
+            "nullable": true
+          },
+          "Replacement": {
+            "type": "boolean"
+          },
+          "Herd_Ref": {
+            "type": "string",
+            "nullable": true
+          },
+          "Species_Id": {
+            "type": "string",
+            "nullable": true
+          },
+          "For_Tag": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Primary": {
+            "type": "boolean"
+          },
+          "Internal": {
+            "type": "boolean"
+          },
+          "Count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Open": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Luis.Domain.Models.Exports.WelshAnimalMovement": {
+        "type": "object",
+        "properties": {
+          "BreedCode": {
+            "type": "string"
+          },
+          "DateOfBirth": {
+            "type": "string"
+          },
+          "DateOfDeath": {
+            "type": "string"
+          },
+          "DepartureDate": {
+            "type": "string"
+          },
+          "Gender": {
+            "type": "string"
+          },
+          "PrintedTag": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Luis.Domain.Models.Manufacturers.ManufacturerModel": {
+        "required": [
+          "Name"
+        ],
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Name": {
+            "maxLength": 50,
+            "minLength": 1,
+            "type": "string"
+          },
+          "Address": {
+            "type": "string",
+            "nullable": true
+          },
+          "Postcode": {
+            "maxLength": 10,
+            "type": "string",
+            "nullable": true
+          },
+          "TelephoneNumber": {
+            "maxLength": 30,
+            "type": "string",
+            "nullable": true
+          },
+          "Email": {
+            "type": "string",
+            "format": "email",
+            "nullable": true
+          },
+          "HeatId": {
+            "maxLength": 250,
+            "type": "string",
+            "nullable": true
+          },
+          "ETASId": {
+            "maxLength": 250,
+            "type": "string",
+            "nullable": true
+          },
+          "CETASId": {
+            "maxLength": 250,
+            "type": "string",
+            "nullable": true
+          },
+          "DenyCancellation": {
+            "type": "boolean"
+          },
+          "DenyCancellationReason": {
+            "type": "string",
+            "nullable": true
+          },
+          "IsLuis": {
+            "type": "boolean"
+          },
+          "Inactive": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Luis.Domain.Models.Orders.Conventional": {
+        "type": "object",
+        "properties": {
+          "Order_Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Manufacturer_Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Defra_Ref": {
+            "type": "string",
+            "nullable": true
+          },
+          "AIM_Ref": {
+            "type": "string",
+            "nullable": true
+          },
+          "User_Id": {
+            "type": "string",
+            "nullable": true
+          },
+          "Caller_Id": {
+            "type": "string",
+            "nullable": true
+          },
+          "Order_Date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "CPH": {
+            "type": "string"
+          },
+          "Species_Id": {
+            "type": "string"
+          },
+          "Replacement": {
+            "type": "boolean"
+          },
+          "Herd_Ref": {
+            "type": "string",
+            "nullable": true
+          },
+          "Document": {
+            "type": "string"
+          },
+          "Tag_1": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Luis.Domain.Models.Orders.Type"
+              }
+            ],
+            "nullable": true
+          },
+          "Tag_2": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Luis.Domain.Models.Orders.Type"
+              }
+            ],
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Luis.Domain.Models.Orders.EID": {
+        "type": "object",
+        "properties": {
+          "Order_Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Manufacturer_Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Defra_Ref": {
+            "type": "string",
+            "nullable": true
+          },
+          "AIM_Ref": {
+            "type": "string",
+            "nullable": true
+          },
+          "User_Id": {
+            "type": "string",
+            "nullable": true
+          },
+          "Caller_Id": {
+            "type": "string",
+            "nullable": true
+          },
+          "Order_Date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "CPH": {
+            "type": "string"
+          },
+          "Species_Id": {
+            "type": "string"
+          },
+          "Replacement": {
+            "type": "boolean"
+          },
+          "Herd_Ref": {
+            "type": "string",
+            "nullable": true
+          },
+          "Document": {
+            "type": "string"
+          },
+          "Tag_1": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Luis.Domain.Models.Orders.Type"
+              }
+            ],
+            "nullable": true
+          },
+          "Tag_2": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Luis.Domain.Models.Orders.Type"
+              }
+            ],
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Luis.Domain.Models.Orders.Replica": {
+        "type": "object",
+        "properties": {
+          "Order_Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Manufacturer_Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Defra_Ref": {
+            "type": "string",
+            "nullable": true
+          },
+          "AIM_Ref": {
+            "type": "string",
+            "nullable": true
+          },
+          "User_Id": {
+            "type": "string",
+            "nullable": true
+          },
+          "Caller_Id": {
+            "type": "string",
+            "nullable": true
+          },
+          "Order_Date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "CPH": {
+            "type": "string"
+          },
+          "Species_Id": {
+            "type": "string"
+          },
+          "Tags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Luis.Domain.Models.Tags.ReplicaTag"
+            }
+          },
+          "Has_Errors": {
+            "type": "boolean"
+          },
+          "Quantity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Document": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Luis.Domain.Models.Orders.Search.Order": {
+        "type": "object",
+        "properties": {
+          "Order_Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Manufacturer_Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Manufacturer_Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "OtherAIM": {
+            "type": "boolean"
+          },
+          "Defra_Ref": {
+            "type": "string",
+            "nullable": true
+          },
+          "AIM_Ref": {
+            "type": "string",
+            "nullable": true
+          },
+          "User_Id": {
+            "type": "string",
+            "nullable": true
+          },
+          "Caller_Id": {
+            "type": "string",
+            "nullable": true
+          },
+          "Order_Date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "Order_Type_Id": {
+            "type": "string",
+            "nullable": true
+          },
+          "Order_Type": {
+            "type": "string",
+            "nullable": true
+          },
+          "CPH": {
+            "type": "string",
+            "nullable": true
+          },
+          "Herd_Ref": {
+            "type": "string",
+            "nullable": true
+          },
+          "Keeper": {
+            "type": "string",
+            "nullable": true
+          },
+          "Species_Id": {
+            "type": "string",
+            "nullable": true
+          },
+          "Replacement": {
+            "type": "boolean"
+          },
+          "Has_Cancellations": {
+            "type": "boolean"
+          },
+          "Tag_1": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Luis.Domain.Models.Tags.TagInformation"
+              }
+            ],
+            "nullable": true
+          },
+          "Tag_2": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Luis.Domain.Models.Tags.TagInformation"
+              }
+            ],
+            "nullable": true
+          },
+          "AnimalNumbers": {
+            "type": "string",
+            "nullable": true
+          },
+          "HasEID": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Luis.Domain.Models.Orders.Slaughter": {
+        "type": "object",
+        "properties": {
+          "Order_Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Manufacturer_Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Defra_Ref": {
+            "type": "string",
+            "nullable": true
+          },
+          "AIM_Ref": {
+            "type": "string",
+            "nullable": true
+          },
+          "User_Id": {
+            "type": "string",
+            "nullable": true
+          },
+          "Caller_Id": {
+            "type": "string",
+            "nullable": true
+          },
+          "Order_Date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "CPH": {
+            "type": "string"
+          },
+          "Species_Id": {
+            "type": "string"
+          },
+          "Replacement": {
+            "type": "boolean"
+          },
+          "Herd_Ref": {
+            "type": "string",
+            "nullable": true
+          },
+          "Document": {
+            "type": "string"
+          },
+          "Country": {
+            "type": "string"
+          },
+          "Quantity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Tag": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Luis.Domain.Models.Orders.Type": {
+        "type": "object",
+        "properties": {
+          "Tag": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Quantity": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Luis.Domain.Models.Tags.Ordered_Tag": {
+        "type": "object",
+        "properties": {
+          "For": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "New_Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ReplicaCount": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Luis.Domain.Models.Tags.ReplicaTag": {
+        "type": "object",
+        "properties": {
+          "Tag": {
+            "type": "string"
+          },
+          "Ordered_Tags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Luis.Domain.Models.Tags.Ordered_Tag"
+            }
+          },
+          "Error": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Luis.Domain.Models.Tags.TagInformation": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Quantity": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "TagList": {
+            "type": "string",
+            "nullable": true
+          },
+          "Colour": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Luis.Export.Models.API": {
+        "type": "object",
+        "properties": {
+          "Entity_Type": {
+            "type": "string",
+            "nullable": true
+          },
+          "Entity_Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Export_Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Status": {
+            "type": "string",
+            "nullable": true
+          },
+          "Country": {
+            "type": "string",
+            "nullable": true
+          },
+          "CPH": {
+            "type": "string",
+            "nullable": true
+          },
+          "Herd": {
+            "type": "string",
+            "nullable": true
+          },
+          "For_Tag": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Tag_Replica_Count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Replacement": {
+            "type": "boolean"
+          },
+          "Order_Type_Id": {
+            "type": "string",
+            "nullable": true
+          },
+          "Order_Date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "Species": {
+            "type": "string",
+            "nullable": true
+          },
+          "Defra_Ref": {
+            "type": "string",
+            "nullable": true
+          },
+          "Colour": {
+            "type": "string",
+            "nullable": true
+          },
+          "Species_Iso": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Replica_Count_Display": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Tag": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Luis.Export.Models.Tag"
+              }
+            ],
+            "nullable": true
+          },
+          "Manufacturer": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Luis.Export.Models.Manufacturer"
+              }
+            ],
+            "nullable": true
+          },
+          "Approved_Tag": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Luis.Export.Models.Approved_Tag"
+              }
+            ],
+            "nullable": true
+          },
+          "KeeperDetails": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Luis.Export.Models.KeeperDetails"
+              }
+            ],
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Luis.Export.Models.APIResponse": {
+        "type": "object",
+        "properties": {
+          "Tags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Luis.Export.Models.API"
+            },
+            "nullable": true
+          },
+          "Records": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Further": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Luis.Export.Models.Approved_Tag": {
+        "type": "object",
+        "properties": {
+          "Approved_Tag_Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Tag_Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Tag_EID": {
+            "type": "boolean"
+          },
+          "Tag_Primary": {
+            "type": "boolean"
+          },
+          "Tag_Slaughter": {
+            "type": "boolean"
+          },
+          "Legacy_Code": {
+            "type": "string",
+            "nullable": true
+          },
+          "Manufacturers_Code": {
+            "type": "string",
+            "nullable": true
+          },
+          "Tag_Class_Name": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Luis.Export.Models.KeeperDetails": {
+        "type": "object",
+        "properties": {
+          "OCCUPIER_TITLE": {
+            "type": "string",
+            "nullable": true
+          },
+          "OCCUPIER_NAME": {
+            "type": "string",
+            "nullable": true
+          },
+          "SAON_START_NUMBER": {
+            "type": "string",
+            "nullable": true
+          },
+          "SAON_START_NUMBER_SUFFIX": {
+            "type": "string",
+            "nullable": true
+          },
+          "SAON_END_NUMBER": {
+            "type": "string",
+            "nullable": true
+          },
+          "SAON_END_NUMBER_SUFFIX": {
+            "type": "string",
+            "nullable": true
+          },
+          "SAON_DESCRIPTION": {
+            "type": "string",
+            "nullable": true
+          },
+          "PAON_START_NUMBER": {
+            "type": "string",
+            "nullable": true
+          },
+          "PAON_START_NUMBER_SUFFIX": {
+            "type": "string",
+            "nullable": true
+          },
+          "PAON_END_NUMBER": {
+            "type": "string",
+            "nullable": true
+          },
+          "PAON_END_NUMBER_SUFFIX": {
+            "type": "string",
+            "nullable": true
+          },
+          "PAON_DESCRIPTION": {
+            "type": "string",
+            "nullable": true
+          },
+          "STREET": {
+            "type": "string",
+            "nullable": true
+          },
+          "LOCALITY": {
+            "type": "string",
+            "nullable": true
+          },
+          "TOWN": {
+            "type": "string",
+            "nullable": true
+          },
+          "ADMINISTRATIVE_AREA": {
+            "type": "string",
+            "nullable": true
+          },
+          "POSTCODE": {
+            "type": "string",
+            "nullable": true
+          },
+          "TELEPHONE": {
+            "type": "string",
+            "nullable": true
+          },
+          "MOBILE_NUMBER": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Luis.Export.Models.Manufacturer": {
+        "type": "object",
+        "properties": {
+          "Manufacturer_Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Manufacturer_Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "ETAS_Id": {
+            "type": "string",
+            "nullable": true
+          },
+          "CETAS_Id": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Luis.Export.Models.Tag": {
+        "type": "object",
+        "properties": {
+          "Animal_No": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "HasEID": {
+            "type": "boolean"
+          },
+          "HasInternal": {
+            "type": "boolean"
+          },
+          "Upgraded_To_EID": {
+            "type": "boolean"
+          },
+          "Printed_Tag": {
+            "type": "string",
+            "nullable": true
+          },
+          "Link_Tag": {
+            "type": "string",
+            "nullable": true
+          },
+          "Upgrade_Tag": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Luis.Models.Dto.ApprovedTagDto": {
+        "type": "object",
+        "properties": {
+          "Approved_Tag_Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Manufacturer_Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Tag_Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Tag_EID": {
+            "type": "boolean"
+          },
+          "Tag_Primary": {
+            "type": "boolean"
+          },
+          "Tag_Slaughter": {
+            "type": "boolean"
+          },
+          "Tag_Approval_Date": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "Tag_Approval_End_Date": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "End_Date_Reason_Id": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "Legacy_Code": {
+            "type": "string",
+            "nullable": true
+          },
+          "Manufacturers_Code": {
+            "type": "string",
+            "nullable": true
+          },
+          "Notes": {
+            "type": "string",
+            "nullable": true
+          },
+          "Class_Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Rear_Class_Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Parent_Approved_Tag_Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Current_Attributes_Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Tag_Class": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Luis.Models.Dto.TagClassDto"
+              }
+            ],
+            "nullable": true
+          },
+          "Search_Value": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Luis.Models.Dto.ConventionalOrderDto": {
+        "required": [
+          "CPH",
+          "Herd_Ref",
+          "Species_Id"
+        ],
+        "type": "object",
+        "properties": {
+          "AIM_Ref": {
+            "type": "string",
+            "nullable": true
+          },
+          "CPH": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "GB_Suffix": {
+            "type": "boolean"
+          },
+          "Herd_Ref": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "Replacement": {
+            "type": "boolean"
+          },
+          "Species_Id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "Tag_1": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Tag_1_Colour": {
+            "type": "string",
+            "nullable": true
+          },
+          "Tag_1_Quantity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Tag_2": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Tag_2_Colour": {
+            "type": "string",
+            "nullable": true
+          },
+          "Tag_2_Quantity": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Luis.Models.Dto.EidOrderDto": {
+        "required": [
+          "CPH",
+          "Herd_Ref",
+          "Species_Id"
+        ],
+        "type": "object",
+        "properties": {
+          "AIM_Ref": {
+            "type": "string",
+            "nullable": true
+          },
+          "CPH": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "GB_Suffix": {
+            "type": "boolean"
+          },
+          "Herd_Ref": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "Replacement": {
+            "type": "boolean"
+          },
+          "InternalOnly": {
+            "type": "boolean"
+          },
+          "Species_Id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "Tag_1": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Tag_1_Colour": {
+            "type": "string",
+            "nullable": true
+          },
+          "Tag_1_Quantity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Tag_2": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Tag_2_Colour": {
+            "type": "string",
+            "nullable": true
+          },
+          "Tag_2_Quantity": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Luis.Models.Dto.TagClassDto": {
+        "type": "object",
+        "properties": {
+          "Class_Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Internal": {
+            "type": "boolean"
+          },
+          "No_Colour": {
+            "type": "boolean"
+          },
+          "Tag_Type": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Luis.Models.NextTag.AvailableTagRange": {
+        "type": "object",
+        "properties": {
+          "StartTag": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Luis.Models.NextTag.TagSummary"
+              }
+            ],
+            "nullable": true
+          },
+          "EndTag": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Luis.Models.NextTag.TagSummary"
+              }
+            ],
+            "nullable": true
+          },
+          "TagCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Range": {
+            "type": "string",
+            "nullable": true
+          },
+          "Species": {
+            "type": "string",
+            "nullable": true
+          },
+          "Source": {
+            "type": "string",
+            "nullable": true
+          },
+          "HasEid": {
+            "type": "boolean",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Luis.Models.NextTag.HerdSpeciesTagSummary": {
+        "type": "object",
+        "additionalProperties": false
+      },
+      "Luis.Models.NextTag.HerdTagNumbers": {
+        "type": "object",
+        "properties": {
+          "AllocatedTags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Luis.Models.NextTag.AvailableTagRange"
+            },
+            "nullable": true
+          },
+          "HerdReference": {
+            "type": "string",
+            "nullable": true
+          },
+          "Species": {
+            "type": "string",
+            "nullable": true
+          },
+          "TagCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Range": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Luis.Models.NextTag.TagSummary": {
+        "type": "object",
+        "properties": {
+          "AnimalNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "HasEid": {
+            "type": "boolean"
+          },
+          "PrintedTag": {
+            "type": "string",
+            "nullable": true
+          },
+          "Species": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Microsoft.AspNetCore.Mvc.ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": {}
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "apiKey",
+        "description": "Please enter JWT with Bearer into field",
+        "name": "Authorization",
+        "in": "header"
+      }
+    }
+  },
+  "security": [
+    {
+      "Bearer": []
+    }
+  ]
+}
