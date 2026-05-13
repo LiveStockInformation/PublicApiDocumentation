@@ -3,11 +3,11 @@
   "info": {
     "title": "3rd Party LIS API",
     "description": "The **Beta version** of this API is a pre-release version made available for external testing and feedback. It may contain new features and functionality that are still under development. While the API is largely functional, it is not guaranteed to be fully stable, and breaking changes may occur as we refine the product based on user feedback.\n\nWe encourage developers to use the Beta version for testing purposes but advise caution when integrating it into production systems. Feedback from users during the Beta phase will help improve the API before the final, stable release.",
-    "version": "1.0.0-beta.1"
+    "version": "1.0.0-beta.2"
   },
   "servers": [
     {
-	  "url": "https://**baseurl**/v1",
+      "url": "https://**baseurl**/v1",
       "description": "api url details shared upon api access approval"
     }
   ],
@@ -21,10 +21,11 @@
     "/movements": {
       "post": {
         "tags": [
-          "movements"
+          "Movements"
         ],
-        "summary": "Submit a new animal movement",
-        "description": "The endpoint allows the registration of an animal movement (on or off). The following request modes are allowed  \n\nRequest Mode\n- sync - Request will be actioned in a synchronous mode\n- async - Request will be actioned in an asynchronous mode\n",
+        "summary": "Creates a new movement record (sync or async).",
+        "description": "Creates a new movement in the system using the details provided in the request body. The response behaviour depends on the requested processing mode. In sync mode, the movement is created immediately and the created resource is returned in the response. In async mode, the request is accepted for processing and a tracking reference is returned to allow the client to monitor the creation status.\n",
+        "operationId": "postMovements",
         "parameters": [
           {
             "$ref": "#/components/parameters/xCorrelationId"
@@ -73,123 +74,46 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "oneOf": [
-                    {
-                      "$ref": "#/components/schemas/MovementResponse1"
-                    },
-                    {
-                      "$ref": "#/components/schemas/MovementResponse2"
-                    }
-                  ]
+                  "$ref": "#/components/schemas/MovementResponse1"
                 }
               }
             }
           },
           "202": {
-            "description": "OK - Successful operation, async request has been accepted. Response headers contain request-id and retry-after to check the request status afterwards",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AsyncAcceptedResponse"
-                }
-              }
-            },
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              },
-              "Retry-After": {
-                "$ref": "#/components/headers/xRetryAfter"
-              }
-            }
+            "$ref": "#/components/responses/Accepted"
           },
           "400": {
-            "description": "Invalid request",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
+            "$ref": "#/components/responses/MovementBadRequest"
           },
           "500": {
-            "description": "Internal Server Error. An error occurred while processing the request.",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              }
-            }
+            "$ref": "#/components/responses/ServerError"
           },
           "503": {
-            "description": "The service is currently unavailable.",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              },
-              "Retry-After": {
-                "$ref": "#/components/headers/xRetryAfter"
-              }
-            }
+            "$ref": "#/components/responses/ServiceUnavailable"
           }
         }
       },
       "get": {
         "tags": [
-          "movements"
+          "Movements"
         ],
-        "summary": "Retrieve the list of movements",
-        "description": "The endpoint permits to obtain a list of movements defined in the system.\nQuerystring parametrization allows the list to be filtered, sorted, and paginated.",
+        "summary": "Retrieves movement records.",
+        "description": "Retrieves one or more movement records from the system based on the supplied query parameters. The response returns matching records that meet the filtering criteria. If no filters are provided, the endpoint returns records according to the default retrieval rules.\nThe movement `state` value returned in each record is context-sensitive and depends on the role of the requesting user. The state may differ depending on whether the viewer is the Originator or the Counterparty of the movement.\n",
         "operationId": "getMovements",
         "parameters": [
-          {
-            "name": "movementType",
-            "in": "query",
-            "required": false,
-            "allowEmptyValue": true,
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "enum": [
-                  "sending",
-                  "receiving"
-                ]
-              }
-            },
-            "style": "form"
-          },
           {
             "name": "siteIdentifier",
             "in": "query",
             "allowEmptyValue": false,
-            "required": false,
+            "required": true,
             "schema": {
-              "type": "string",
-              "format": "string"
+              "type": "string"
             },
             "description": "The end-point returns movements where departure/arrival is this site.",
             "example": "28/822/2977"
           },
           {
-            "name": "movementStatus",
+            "name": "state",
             "in": "query",
             "required": false,
             "allowEmptyValue": true,
@@ -199,7 +123,8 @@
                 "$ref": "#/components/schemas/movementState"
               }
             },
-            "style": "form"
+            "style": "form",
+            "explode": true
           },
           {
             "name": "species",
@@ -212,7 +137,8 @@
                 "$ref": "#/components/schemas/species"
               }
             },
-            "style": "form"
+            "style": "form",
+            "explode": true
           },
           {
             "name": "minDepartureDate",
@@ -264,40 +190,13 @@
             }
           },
           "400": {
-            "description": "Invalid Request. Please verify the parameters/values and submit the request again.",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              }
-            }
+            "$ref": "#/components/responses/BadRequest"
           },
           "500": {
-            "description": "Internal Server Error. An error occurred while processing the request.",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              }
-            }
+            "$ref": "#/components/responses/ServerError"
           },
           "503": {
-            "description": "The service is currently unavailable.",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              },
-              "Retry-After": {
-                "$ref": "#/components/headers/xRetryAfter"
-              }
-            }
+            "$ref": "#/components/responses/ServiceUnavailable"
           }
         }
       }
@@ -305,20 +204,30 @@
     "/movements/{movementNumber}": {
       "get": {
         "tags": [
-          "movements"
+          "Movements"
         ],
-        "summary": "Retrieve a specific movement",
-        "description": "Retrieve information about a specific movement using its number.",
+        "summary": "Retrieves a specific movement by movement number.",
+        "description": "Retrieves the details of a single movement using its unique movementNumber. If the specified movement exists, the full resource is returned. If the movement does not exist, an appropriate error response is returned.\nThe movement `state` value returned is context-sensitive and depends on the role of the requesting user. The state may differ depending on whether the viewer is the Originator or the Counterparty of the movement.        \n",
         "operationId": "getMovementById",
         "parameters": [
           {
             "name": "movementNumber",
             "in": "path",
-            "description": "movement number of the movement to retrieve",
+            "description": "Movement number of the movement to retrieve",
             "required": true,
             "schema": {
               "type": "number",
               "example": 55663427
+            }
+          },
+          {
+            "name": "siteIdentifier",
+            "in": "query",
+            "description": "Specifies the site context for the request. The endpoint returns movements where this site is either the departure or arrival location.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "28/822/2977"
             }
           }
         ],
@@ -334,72 +243,25 @@
             }
           },
           "403": {
-            "description": "Forbidden",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Errors"
-                },
-                "examples": {
-                  "forbidden": {
-                    "$ref": "#/components/examples/forbidden"
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/Forbidden"
           },
           "404": {
-            "description": "Not Found. The specified movement number was not found.",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              }
-            }
+            "$ref": "#/components/responses/NotFound"
           },
           "500": {
-            "description": "Internal Server Error. An error occurred while processing the request.",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              }
-            }
+            "$ref": "#/components/responses/ServerError"
           },
           "503": {
-            "description": "The service is currently unavailable.",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              },
-              "Retry-After": {
-                "$ref": "#/components/headers/xRetryAfter"
-              }
-            }
+            "$ref": "#/components/responses/ServiceUnavailable"
           }
         }
       },
       "put": {
         "tags": [
-          "movements"
+          "Movements"
         ],
-        "summary": "Update a movement",
-        "description": "Update information about a specific movement using its number.  \n\n Request Mode\n - async - Request will be actioned in a synchronous mode\n - sync - Request will be actioned in an asynchronous mode\n",
+        "summary": "Updates an existing movement record (sync or async).",
+        "description": "Updates the details of an existing movement identified by the given movementNumber. The request body should contain the updated movement data. The response behaviour depends on the requested processing mode. In sync mode, the movement is updated immediately and the updated resource is returned in the response. In async mode, the request is accepted for processing and a tracking reference is returned to allow the client to monitor the update status. If the specified movement does not exist, an appropriate error response is returned.\n",
         "operationId": "updateMovement",
         "parameters": [
           {
@@ -431,7 +293,7 @@
         },
         "responses": {
           "200": {
-            "description": "OK - Successful operation - We are processing your request.",
+            "description": "OK - Successful operation.",
             "headers": {
               "LI-Request-Id": {
                 "$ref": "#/components/headers/xRequestId"
@@ -443,101 +305,35 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "oneOf": [
-                    {
-                      "$ref": "#/components/schemas/MovementResponse1"
-                    },
-                    {
-                      "$ref": "#/components/schemas/MovementResponse2"
-                    }
-                  ]
+                  "$ref": "#/components/schemas/MovementResponse1"
                 }
               }
             }
           },
           "202": {
-            "description": "OK - Successful operation, async request has been accepted. Response headers contain request-id and retry-after to check the request status afterwards",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AsyncAcceptedResponse"
-                }
-              }
-            },
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              },
-              "Retry-After": {
-                "$ref": "#/components/headers/xRetryAfter"
-              }
-            }
+            "$ref": "#/components/responses/Accepted"
           },
           "400": {
-            "description": "Invalid request",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
+            "$ref": "#/components/responses/MovementBadRequest"
           },
           "404": {
-            "description": "Not Found. The specified movement number was not found.",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              }
-            }
+            "$ref": "#/components/responses/NotFound"
           },
           "500": {
-            "description": "Internal Server Error. An error occurred while processing the request.",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              }
-            }
+            "$ref": "#/components/responses/ServerError"
           },
           "503": {
-            "description": "The service is currently unavailable.",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              },
-              "Retry-After": {
-                "$ref": "#/components/headers/xRetryAfter"
-              }
-            }
+            "$ref": "#/components/responses/ServiceUnavailable"
           }
         }
       },
       "delete": {
         "tags": [
-          "movements"
+          "Movements"
         ],
-        "summary": "Delete (Cancel) a movement by number",
-        "description": "Delete will cancel a specific movement by its unique number.",
+        "summary": "Deletes an existing movement record (synchronous or asynchronous).",
+        "description": "Deletes an existing movement identified by the given movementNumber. The response behaviour depends on the requested processing mode. In synchronous mode, the movement is deleted immediately and a confirmation is returned in the response. In asynchronous mode, the request is accepted for processing and a tracking reference is returned to allow the client to monitor the deletion status. If the specified movement does not exist, an appropriate error response is returned.\n",
+        "operationId": "deleteMovement",
         "parameters": [
           {
             "$ref": "#/components/parameters/xCorrelationId"
@@ -558,25 +354,7 @@
         ],
         "responses": {
           "202": {
-            "description": "OK - Successful operation, async request has been accepted. Response headers contain request-id and retry-after to check the request status afterwards",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AsyncAcceptedResponse"
-                }
-              }
-            },
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              },
-              "Retry-After": {
-                "$ref": "#/components/headers/xRetryAfter"
-              }
-            }
+            "$ref": "#/components/responses/Accepted"
           },
           "204": {
             "description": "No Content. The movement was successfully cancelled.",
@@ -590,40 +368,13 @@
             }
           },
           "404": {
-            "description": "Not Found. The specified movement number was not found.",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              }
-            }
+            "$ref": "#/components/responses/NotFound"
           },
           "500": {
-            "description": "Internal Server Error. An error occurred while processing the request.",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              }
-            }
+            "$ref": "#/components/responses/ServerError"
           },
           "503": {
-            "description": "The service is currently unavailable.",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              },
-              "Retry-After": {
-                "$ref": "#/components/headers/xRetryAfter"
-              }
-            }
+            "$ref": "#/components/responses/ServiceUnavailable"
           }
         }
       }
@@ -631,10 +382,10 @@
     "/movements/{movementNumber}/confirmations": {
       "post": {
         "tags": [
-          "movements"
+          "Movements"
         ],
-        "summary": "Confirm a movement",
-        "description": "Confirm or reject a movement by posting an action with a reason where applicable.",
+        "summary": "Creates a confirmation for a specific movement (sync or async).",
+        "description": "Creates a confirmation for the movement identified by the given movementNumber. The request body should include the confirmation details. The response behaviour depends on the requested processing mode. In synchronous mode, the confirmation is processed immediately and the resulting resource is returned in the response. In asynchronous mode, the request is accepted for processing and a tracking reference is returned to allow the client to monitor the confirmation status. If the specified movement does not exist, an appropriate error response is returned.\n",
         "operationId": "confirmMovement",
         "parameters": [
           {
@@ -684,82 +435,22 @@
             }
           },
           "202": {
-            "description": "OK - Successful operation, async request has been accepted. Response headers contain request-id and retry-after to check the request status afterwards",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AsyncAcceptedResponse"
-                }
-              }
-            },
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              },
-              "Retry-After": {
-                "$ref": "#/components/headers/xRetryAfter"
-              }
-            }
+            "$ref": "#/components/responses/Accepted"
           },
           "400": {
-            "description": "Invalid request",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
+            "$ref": "#/components/responses/MovementBadRequest"
           },
           "403": {
-            "description": "Forbidden. Insufficent access to perform the operation.",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              }
-            }
+            "$ref": "#/components/responses/Forbidden"
           },
           "404": {
-            "description": "Not Found. The specified movement number was not found.",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              }
-            }
+            "$ref": "#/components/responses/NotFound"
           },
           "500": {
-            "description": "Internal Server Error. An error occurred while processing the request."
+            "$ref": "#/components/responses/ServerError"
           },
           "503": {
-            "description": "The service is currently unavailable.",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              },
-              "Retry-After": {
-                "$ref": "#/components/headers/xRetryAfter"
-              }
-            }
+            "$ref": "#/components/responses/ServiceUnavailable"
           }
         }
       }
@@ -767,7 +458,7 @@
     "/hauliers": {
       "get": {
         "tags": [
-          "hauliers"
+          "Hauliers"
         ],
         "summary": "Retrieve a list of hauliers.",
         "description": "The endpoint allows searching and retrieving a list of hauliers.",
@@ -837,40 +528,13 @@
             }
           },
           "400": {
-            "description": "Invalid Request. Please verify the parameters/values and submit the request again.",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              }
-            }
+            "$ref": "#/components/responses/BadRequest"
           },
           "500": {
-            "description": "Internal Server Error. An error occurred while processing the request.",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              }
-            }
+            "$ref": "#/components/responses/ServerError"
           },
           "503": {
-            "description": "The service is currently unavailable.",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              },
-              "Retry-After": {
-                "$ref": "#/components/headers/xRetryAfter"
-              }
-            }
+            "$ref": "#/components/responses/ServiceUnavailable"
           }
         }
       }
@@ -878,10 +542,10 @@
     "/rejectionreasons": {
       "get": {
         "tags": [
-          "movement reference"
+          "Movement Reference"
         ],
-        "summary": "Retrieve a list of movement rejection reasons",
-        "description": "This endpoint can be used to retrieve movement rejection reasons",
+        "summary": "Retrieves movement rejection reasons.",
+        "description": "Retrieves the list of valid rejection reasons that can be applied to movements. The response returns the configured rejection reason codes and their descriptions to support validation and client-side selection when rejecting a movement.\n",
         "operationId": "getMovementRejectionReasons",
         "parameters": [
           {
@@ -924,40 +588,13 @@
             }
           },
           "400": {
-            "description": "Invalid Request. Please verify the parameters/values and submit the request again.",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              }
-            }
+            "$ref": "#/components/responses/BadRequest"
           },
           "500": {
-            "description": "Internal Server Error. An error occurred while processing the request.",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              }
-            }
+            "$ref": "#/components/responses/ServerError"
           },
           "503": {
-            "description": "The service is currently unavailable.",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              },
-              "Retry-After": {
-                "$ref": "#/components/headers/xRetryAfter"
-              }
-            }
+            "$ref": "#/components/responses/ServiceUnavailable"
           }
         }
       }
@@ -965,11 +602,11 @@
     "/animals": {
       "post": {
         "tags": [
-          "animals"
+          "Animals"
         ],
-        "summary": "Create a new animal",
-        "description": "The endpoint allows the registration of an animal.",
-        "operationId": "createAnimal",
+        "summary": "Create a new animal record.",
+        "description": "Creates a new animal in the system using the details provided in the request body. The response behaviour depends on the requested processing mode. In sync mode, the animal is created immediately and the created resource is returned in the response. In async mode, the request is accepted for processing and a tracking reference is returned to allow the client to monitor the creation status.\n",
+        "operationId": "postAnimal",
         "parameters": [
           {
             "$ref": "#/components/parameters/xCorrelationId"
@@ -983,8 +620,14 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Animal",
-                "description": "Animal"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Animal"
+                  },
+                  {
+                    "description": "Animal"
+                  }
+                ]
               }
             }
           }
@@ -1009,106 +652,25 @@
             }
           },
           "202": {
-            "description": "OK - Successful operation. The request has been accepted for processing, but the processing has not been completed.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AsyncAcceptedResponse"
-                }
-              }
-            },
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              },
-              "Retry-After": {
-                "$ref": "#/components/headers/xRetryAfter"
-              }
-            }
+            "$ref": "#/components/responses/Accepted"
           },
           "400": {
-            "description": "Invalid request",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Errors"
-                },
-                "examples": {
-                  "validation-error": {
-                    "$ref": "#/components/examples/validation-error"
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/AnimalBadRequest"
           },
           "500": {
-            "description": "Internal Server Error",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Errors"
-                },
-                "examples": {
-                  "server-error": {
-                    "$ref": "#/components/examples/server-error"
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/ServerError"
           },
           "503": {
-            "description": "Service Unavailable",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              },
-              "Retry-After": {
-                "$ref": "#/components/headers/xRetryAfter"
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Errors"
-                },
-                "examples": {
-                  "server-error": {
-                    "$ref": "#/components/examples/service-unavailable"
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/ServiceUnavailable"
           }
         }
       },
       "get": {
         "tags": [
-          "animals"
+          "Animals"
         ],
-        "summary": "Get animals",
-        "description": "The endpoint returns animals summary list.",
+        "summary": "Retrieves animal records.",
+        "description": "Retrieves one or more animals from the system based on the supplied query parameters. The response returns matching animal summary records that meet the provided filtering criteria. If no filters are supplied, the endpoint returns animals according to the default retrieval rules.\n",
         "operationId": "getAnimals",
         "parameters": [
           {
@@ -1127,8 +689,7 @@
             "allowEmptyValue": false,
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "string"
+              "type": "string"
             },
             "description": "The end-point returns animals for this site.",
             "example": "28/822/2977"
@@ -1186,99 +747,16 @@
             }
           },
           "403": {
-            "description": "Forbidden",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Errors"
-                },
-                "examples": {
-                  "forbidden": {
-                    "$ref": "#/components/examples/forbidden"
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/Forbidden"
           },
           "404": {
-            "description": "Not found",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Errors"
-                },
-                "examples": {
-                  "not-found": {
-                    "$ref": "#/components/examples/not-found"
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/NotFound"
           },
           "500": {
-            "description": "Internal Server Error",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Errors"
-                },
-                "examples": {
-                  "server-error": {
-                    "$ref": "#/components/examples/server-error"
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/ServerError"
           },
           "503": {
-            "description": "Service Unavailable",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              },
-              "Retry-After": {
-                "$ref": "#/components/headers/xRetryAfter"
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Errors"
-                },
-                "examples": {
-                  "server-error": {
-                    "$ref": "#/components/examples/service-unavailable"
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/ServiceUnavailable"
           }
         }
       }
@@ -1286,10 +764,10 @@
     "/animals/{identifier}": {
       "get": {
         "tags": [
-          "animals"
+          "Animals"
         ],
-        "summary": "Get an animal",
-        "description": "Get information about a specific animal using its identifier.",
+        "summary": "Retrieves a specific animal by identifier.",
+        "description": "Retrieves the details of a single animal using its unique identifier. If the specified animal exists, the full resource is returned. If the animal does not exist, an appropriate error response is returned.\n",
         "operationId": "getAnimal",
         "parameters": [
           {
@@ -1327,108 +805,25 @@
             }
           },
           "403": {
-            "description": "Forbidden",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Errors"
-                },
-                "examples": {
-                  "forbidden": {
-                    "$ref": "#/components/examples/forbidden"
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/Forbidden"
           },
           "404": {
-            "description": "Not found",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Errors"
-                },
-                "examples": {
-                  "not-found": {
-                    "$ref": "#/components/examples/not-found"
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/NotFound"
           },
           "500": {
-            "description": "Internal Server Error",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Errors"
-                },
-                "examples": {
-                  "server-error": {
-                    "$ref": "#/components/examples/server-error"
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/ServerError"
           },
           "503": {
-            "description": "Service Unavailable",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              },
-              "Retry-After": {
-                "$ref": "#/components/headers/xRetryAfter"
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Errors"
-                },
-                "examples": {
-                  "server-error": {
-                    "$ref": "#/components/examples/service-unavailable"
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/ServiceUnavailable"
           }
         }
       },
       "put": {
         "tags": [
-          "animals"
+          "Animals"
         ],
-        "summary": "Update an animal",
-        "description": "Update information about a specific animal using its identifier.",
+        "summary": "Updates an existing animal record (sync or async).",
+        "description": "Updates the details of an existing animal identified by the given identifier. The request body should contain the updated animal data. The response behaviour depends on the requested processing mode. In sync mode, the animal is updated immediately and the updated resource is returned in the response. In async mode, the request is accepted for processing and a tracking reference is returned to allow the client to monitor the update status. If the specified animal does not exist, an appropriate error response is returned.\n",
         "operationId": "updateAnimalPut",
         "parameters": [
           {
@@ -1478,152 +873,31 @@
             }
           },
           "202": {
-            "description": "OK - Successful operation. The request has been accepted for processing, but the processing has not been completed.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AsyncAcceptedResponse"
-                }
-              }
-            },
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              },
-              "Retry-After": {
-                "$ref": "#/components/headers/xRetryAfter"
-              }
-            }
+            "$ref": "#/components/responses/Accepted"
           },
           "400": {
-            "description": "Invalid request",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Errors"
-                },
-                "examples": {
-                  "validation-error": {
-                    "$ref": "#/components/examples/validation-error"
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/AnimalBadRequest"
           },
           "403": {
-            "description": "Forbidden",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Errors"
-                },
-                "examples": {
-                  "forbidden": {
-                    "$ref": "#/components/examples/forbidden"
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/Forbidden"
           },
           "404": {
-            "description": "Not found",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Errors"
-                },
-                "examples": {
-                  "not-found": {
-                    "$ref": "#/components/examples/not-found"
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/NotFound"
           },
           "500": {
-            "description": "Internal Server Error",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Errors"
-                },
-                "examples": {
-                  "server-error": {
-                    "$ref": "#/components/examples/server-error"
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/ServerError"
           },
           "503": {
-            "description": "Service Unavailable",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              },
-              "Retry-After": {
-                "$ref": "#/components/headers/xRetryAfter"
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Errors"
-                },
-                "examples": {
-                  "server-error": {
-                    "$ref": "#/components/examples/service-unavailable"
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/ServiceUnavailable"
           }
         }
       },
       "delete": {
         "tags": [
-          "animals"
+          "Animals"
         ],
-        "summary": "Delete an animal by identifer",
-        "description": "Delete will delete the occurrence of a specific animal by its unique identifier but only if there are no other associated events recorded against the animal.",
+        "summary": "Deletes an existing animal record (sync or async).",
+        "description": "Deletes an existing animal identified by the given identifier. The response behaviour depends on the requested processing mode. In sync mode, the animal is deleted immediately and a confirmation is returned in the response. In async mode, the request is accepted for processing and a tracking reference is returned to allow the client to monitor the deletion status. If the specified animal does not exist, an appropriate error response is returned.\n",
         "operationId": "deleteAnimal",
         "parameters": [
           {
@@ -1645,25 +919,7 @@
         ],
         "responses": {
           "202": {
-            "description": "OK - Successful operation. The request has been accepted for processing, but the processing has not been completed.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AsyncAcceptedResponse"
-                }
-              }
-            },
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              },
-              "Retry-After": {
-                "$ref": "#/components/headers/xRetryAfter"
-              }
-            }
+            "$ref": "#/components/responses/Accepted"
           },
           "204": {
             "description": "No Content. The request has succeeded.",
@@ -1677,122 +933,19 @@
             }
           },
           "400": {
-            "description": "Invalid request",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Errors"
-                },
-                "examples": {
-                  "validation-error": {
-                    "$ref": "#/components/examples/validation-error"
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/AnimalBadRequest"
           },
           "403": {
-            "description": "Forbidden",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Errors"
-                },
-                "examples": {
-                  "forbidden": {
-                    "$ref": "#/components/examples/forbidden"
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/Forbidden"
           },
           "404": {
-            "description": "Not found",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Errors"
-                },
-                "examples": {
-                  "not-found": {
-                    "$ref": "#/components/examples/not-found"
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/NotFound"
           },
           "500": {
-            "description": "Internal Server Error",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Errors"
-                },
-                "examples": {
-                  "server-error": {
-                    "$ref": "#/components/examples/server-error"
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/ServerError"
           },
           "503": {
-            "description": "Service Unavailable",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              },
-              "Retry-After": {
-                "$ref": "#/components/headers/xRetryAfter"
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Errors"
-                },
-                "examples": {
-                  "server-error": {
-                    "$ref": "#/components/examples/service-unavailable"
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/ServiceUnavailable"
           }
         }
       }
@@ -1800,10 +953,10 @@
     "/lostfounds": {
       "get": {
         "tags": [
-          "animal lostfounds"
+          "Animal Lostfounds"
         ],
-        "summary": "Get animal lost/found records.",
-        "description": "Get animal lost/found records for a site.",
+        "summary": "Retrieves lost and found records.",
+        "description": "Retrieves one or more lost and found records from the system based on the supplied query parameters. The response returns matching records that meet the filtering criteria. If no filters are provided, the endpoint returns records according to the default retrieval rules.\n",
         "operationId": "getLostFounds",
         "parameters": [
           {
@@ -1812,8 +965,7 @@
             "allowEmptyValue": false,
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "string"
+              "type": "string"
             },
             "description": "If populated the end-point will return animals for this site.",
             "example": "28/822/2977"
@@ -1911,86 +1063,20 @@
               }
             }
           },
-          "400": {
-            "description": "Invalid request",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Errors"
-                },
-                "examples": {
-                  "invalid-request-schema": {
-                    "$ref": "#/components/examples/invalid-request-schema"
-                  }
-                }
-              }
-            }
-          },
           "500": {
-            "description": "Internal Server Error",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Errors"
-                },
-                "examples": {
-                  "server-error": {
-                    "$ref": "#/components/examples/server-error"
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/ServerError"
           },
           "503": {
-            "description": "Service Unavailable",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              },
-              "Retry-After": {
-                "$ref": "#/components/headers/xRetryAfter"
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Errors"
-                },
-                "examples": {
-                  "server-error": {
-                    "$ref": "#/components/examples/service-unavailable"
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/ServiceUnavailable"
           }
         }
       },
       "post": {
         "tags": [
-          "animal lostfounds"
+          "Animal Lostfounds"
         ],
-        "summary": "Record an animal lost/found.",
-        "description": "Use this endpoint to report an animal as lost/found on a site.",
+        "summary": "Creates a new lost and found record (sync or async).",
+        "description": "Creates a new lost and found record in the system using the details provided in the request body. The response behaviour depends on the requested processing mode. In sync mode, the record is created immediately and the newly created resource is returned in the response. In async mode, the request is accepted for processing and a tracking reference is returned to allow the client to monitor the creation status.\n",
         "operationId": "createLostFound",
         "parameters": [
           {
@@ -2030,97 +1116,16 @@
             }
           },
           "202": {
-            "description": "OK - Successful operation. The request has been accepted for processing, but the processing has not been completed.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AsyncAcceptedResponse"
-                }
-              }
-            },
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              },
-              "Retry-After": {
-                "$ref": "#/components/headers/xRetryAfter"
-              }
-            }
+            "$ref": "#/components/responses/Accepted"
           },
           "400": {
-            "description": "Invalid request",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Errors"
-                },
-                "examples": {
-                  "validation-error": {
-                    "$ref": "#/components/examples/validation-error"
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/AnimalBadRequest"
           },
           "500": {
-            "description": "Internal Server Error",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Errors"
-                },
-                "examples": {
-                  "server-error": {
-                    "$ref": "#/components/examples/server-error"
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/ServerError"
           },
           "503": {
-            "description": "Service Unavailable",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              },
-              "Retry-After": {
-                "$ref": "#/components/headers/xRetryAfter"
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Errors"
-                },
-                "examples": {
-                  "server-error": {
-                    "$ref": "#/components/examples/service-unavailable"
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/ServiceUnavailable"
           }
         }
       }
@@ -2128,10 +1133,10 @@
     "/lostfounds/{id}": {
       "get": {
         "tags": [
-          "animal lostfounds"
+          "Animal Lostfounds"
         ],
-        "summary": "Get an animal lost/found record.",
-        "description": "Get an animal lost/found record.",
+        "summary": "Retrieves a specific lost and found record by ID.",
+        "description": "Retrieves the details of a single lost and found record using its unique identifier. If the specified record exists, the full resource is returned. If the record does not exist, an appropriate error response is returned.\n",
         "operationId": "getLostFoundsRecord",
         "parameters": [
           {
@@ -2163,86 +1168,23 @@
               }
             }
           },
-          "400": {
-            "description": "Invalid request",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Errors"
-                },
-                "examples": {
-                  "invalid-request-schema": {
-                    "$ref": "#/components/examples/invalid-request-schema"
-                  }
-                }
-              }
-            }
+          "404": {
+            "$ref": "#/components/responses/NotFound"
           },
           "500": {
-            "description": "Internal Server Error",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Errors"
-                },
-                "examples": {
-                  "server-error": {
-                    "$ref": "#/components/examples/server-error"
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/ServerError"
           },
           "503": {
-            "description": "Service Unavailable",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              },
-              "Retry-After": {
-                "$ref": "#/components/headers/xRetryAfter"
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Errors"
-                },
-                "examples": {
-                  "server-error": {
-                    "$ref": "#/components/examples/service-unavailable"
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/ServiceUnavailable"
           }
         }
       },
       "put": {
         "tags": [
-          "animal lostfounds"
+          "Animal Lostfounds"
         ],
-        "summary": "Edit an animal lost/found record.",
-        "description": "Use this endpoint to edit an animal as lost/found on a site.",
+        "summary": "Updates an existing lost and found record (sync or async).",
+        "description": "Updates the details of an existing lost and found record identified by the given ID. The request body should contain the updated record data. The response behaviour depends on the requested processing mode. In sync mode, the record is updated immediately and the updated resource is returned in the response. In async mode, the request is accepted for processing and a tracking reference is returned to allow the client to monitor the update status. If the specified record does not exist, an appropriate error response is returned.\n",
         "operationId": "amendLostFound",
         "parameters": [
           {
@@ -2290,143 +1232,22 @@
             }
           },
           "202": {
-            "description": "OK - Successful operation. The request has been accepted for processing, but the processing has not been completed.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AsyncAcceptedResponse"
-                }
-              }
-            },
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              },
-              "Retry-After": {
-                "$ref": "#/components/headers/xRetryAfter"
-              }
-            }
+            "$ref": "#/components/responses/Accepted"
           },
           "400": {
-            "description": "Invalid request",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Errors"
-                },
-                "examples": {
-                  "validation-error": {
-                    "$ref": "#/components/examples/validation-error"
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/AnimalBadRequest"
           },
           "403": {
-            "description": "Forbidden",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Errors"
-                },
-                "examples": {
-                  "forbidden": {
-                    "$ref": "#/components/examples/forbidden"
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/Forbidden"
           },
           "404": {
-            "description": "Not found",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Errors"
-                },
-                "examples": {
-                  "not-found": {
-                    "$ref": "#/components/examples/not-found"
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/NotFound"
           },
           "500": {
-            "description": "Internal Server Error",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Errors"
-                },
-                "examples": {
-                  "server-error": {
-                    "$ref": "#/components/examples/server-error"
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/ServerError"
           },
           "503": {
-            "description": "Service Unavailable",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              },
-              "Retry-After": {
-                "$ref": "#/components/headers/xRetryAfter"
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Errors"
-                },
-                "examples": {
-                  "server-error": {
-                    "$ref": "#/components/examples/service-unavailable"
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/ServiceUnavailable"
           }
         }
       }
@@ -2434,10 +1255,10 @@
     "/deathreasons": {
       "get": {
         "tags": [
-          "animal reference"
+          "Animal Reference"
         ],
-        "summary": "Retrieve a list of animal death reasons by species",
-        "description": "This endpoint can be used to retrieve animal death reasons by species.",
+        "summary": "Retrieves death reason records.",
+        "description": "Retrieves one or more death reason records from the system based on the supplied query parameters. The response returns matching records that meet the filtering criteria. If no filters are provided, the endpoint returns records according to the default retrieval rules.\n",
         "operationId": "getAnimalDeathReasons",
         "parameters": [
           {
@@ -2469,77 +1290,11 @@
               }
             }
           },
-          "400": {
-            "description": "Invalid request",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Errors"
-                },
-                "examples": {
-                  "invalid-request": {
-                    "$ref": "#/components/examples/invalid-request-schema"
-                  }
-                }
-              }
-            }
-          },
           "500": {
-            "description": "Internal Server Error",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Errors"
-                },
-                "examples": {
-                  "server-error": {
-                    "$ref": "#/components/examples/server-error"
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/ServerError"
           },
           "503": {
-            "description": "Service Unavailable",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              },
-              "Retry-After": {
-                "$ref": "#/components/headers/xRetryAfter"
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Errors"
-                },
-                "examples": {
-                  "server-error": {
-                    "$ref": "#/components/examples/service-unavailable"
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/ServiceUnavailable"
           }
         }
       }
@@ -2547,10 +1302,10 @@
     "/breeds": {
       "get": {
         "tags": [
-          "animal reference"
+          "Animal Reference"
         ],
-        "summary": "Retrieve a list of animal breeds by species",
-        "description": "This endpoint can be used to retrieve animal breeds by species.",
+        "summary": "Retrieves breed records.",
+        "description": "Retrieves one or more breed records from the system based on the supplied query parameters. The response returns matching records that meet the filtering criteria. If no filters are provided, the endpoint returns records according to the default retrieval rules.\n",
         "operationId": "getAnimalBreeds",
         "parameters": [
           {
@@ -2582,77 +1337,11 @@
               }
             }
           },
-          "400": {
-            "description": "Invalid request",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Errors"
-                },
-                "examples": {
-                  "invalid-request": {
-                    "$ref": "#/components/examples/invalid-request-schema"
-                  }
-                }
-              }
-            }
-          },
           "500": {
-            "description": "Internal Server Error",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Errors"
-                },
-                "examples": {
-                  "server-error": {
-                    "$ref": "#/components/examples/server-error"
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/ServerError"
           },
           "503": {
-            "description": "Service Unavailable",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              },
-              "Retry-After": {
-                "$ref": "#/components/headers/xRetryAfter"
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Errors"
-                },
-                "examples": {
-                  "server-error": {
-                    "$ref": "#/components/examples/service-unavailable"
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/ServiceUnavailable"
           }
         }
       }
@@ -2660,10 +1349,10 @@
     "/genotypes": {
       "get": {
         "tags": [
-          "animal reference"
+          "Animal Reference"
         ],
-        "summary": "Retrieve a list of animal genotypes by species",
-        "description": "This endpoint can be used to retrieve animal genotypes by species.",
+        "summary": "Retrieves genotype records.",
+        "description": "Retrieves one or more genotype records from the system based on the supplied query parameters. The response returns matching records that meet the filtering criteria. If no filters are provided, the endpoint returns records according to the default retrieval rules.\n",
         "operationId": "getAnimalGenotypes",
         "parameters": [
           {
@@ -2695,77 +1384,11 @@
               }
             }
           },
-          "400": {
-            "description": "Invalid request",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Errors"
-                },
-                "examples": {
-                  "invalid-request": {
-                    "$ref": "#/components/examples/invalid-request-schema"
-                  }
-                }
-              }
-            }
-          },
           "500": {
-            "description": "Internal Server Error",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Errors"
-                },
-                "examples": {
-                  "server-error": {
-                    "$ref": "#/components/examples/server-error"
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/ServerError"
           },
           "503": {
-            "description": "Service Unavailable",
-            "headers": {
-              "LI-Request-Id": {
-                "$ref": "#/components/headers/xRequestId"
-              },
-              "LI-Correlation-Id": {
-                "$ref": "#/components/headers/xCorrelationId"
-              },
-              "Retry-After": {
-                "$ref": "#/components/headers/xRetryAfter"
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Errors"
-                },
-                "examples": {
-                  "server-error": {
-                    "$ref": "#/components/examples/service-unavailable"
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/ServiceUnavailable"
           }
         }
       }
@@ -2773,7 +1396,7 @@
     "/requeststatus/{requestId}": {
       "get": {
         "tags": [
-          "requeststatus"
+          "Request Status"
         ],
         "summary": "Get async http request status",
         "parameters": [
@@ -2908,15 +1531,14 @@
       "movementState": {
         "type": "string",
         "enum": [
+          "awaitingConfirmation",
+          "awaitingReview",
           "blocked",
+          "complete",
           "cancelled",
-          "confirmed",
           "inDispute",
-          "rejected",
-          "reported",
-          "warnings",
-          "matched",
-          "inferred"
+          "preNotified",
+          "resubmit"
         ]
       },
       "species": {
@@ -3084,22 +1706,50 @@
         ],
         "additionalProperties": false
       },
-      "movementReviewState": {
-        "type": "string",
-        "enum": [
-          "forReview",
-          "inReview",
-          "finalReview",
-          "reviewed",
-          "notApplicable"
+      "MovementError": {
+        "type": "object",
+        "properties": {
+          "movementNumber": {
+            "type": "number",
+            "example": 55663429
+          },
+          "code": {
+            "type": "string",
+            "example": "MOVEMENT_STATE_UNAVAILABLE"
+          },
+          "message": {
+            "type": "string",
+            "example": "The movement state could not be determined at this time. Please try again later or contact support if the issue persists."
+          }
+        },
+        "required": [
+          "movementNumber",
+          "code",
+          "message"
         ]
       },
-      "Movements": {
+      "MovementMeta": {
         "type": "object",
         "properties": {
           "count": {
             "type": "integer"
           },
+          "succeeded": {
+            "type": "integer"
+          },
+          "failed": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "count",
+          "succeeded",
+          "failed"
+        ]
+      },
+      "Movements": {
+        "type": "object",
+        "properties": {
           "values": {
             "type": "array",
             "items": {
@@ -3120,20 +1770,77 @@
                 },
                 "state": {
                   "$ref": "#/components/schemas/movementState"
-                },
-                "reviewState": {
-                  "$ref": "#/components/schemas/movementReviewState"
                 }
               }
             }
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MovementError"
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/MovementMeta"
           }
-        }
+        },
+        "required": [
+          "values",
+          "errors",
+          "meta"
+        ]
       },
       "uuid": {
         "type": "string",
         "format": "uuid",
         "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
         "description": "A Universally Unique Identifier"
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "A URI reference that identifies the problem type.",
+            "format": "uri",
+            "maxLength": 1024
+          },
+          "status": {
+            "type": "integer",
+            "description": "The HTTP status code generated by the origin server for this occurrence of the problem.",
+            "format": "int32",
+            "minimum": 100,
+            "maximum": 599
+          },
+          "title": {
+            "type": "string",
+            "description": "A short, human-readable summary of the problem type. It should not change from occurrence to occurrence of the problem, except for purposes of localization.",
+            "maxLength": 1024
+          },
+          "detail": {
+            "type": "string",
+            "description": "A human-readable explanation specific to this occurrence of the problem.",
+            "maxLength": 4096
+          },
+          "errors": {
+            "$ref": "#/components/schemas/ProblemDetails"
+          }
+        },
+        "required": [
+          "type",
+          "status",
+          "title",
+          "detail"
+        ]
+      },
+      "Errors": {
+        "type": "array",
+        "description": "An array of error details to accompany a problem details response.",
+        "minItems": 1,
+        "maxItems": 1000,
+        "items": {
+          "$ref": "#/components/schemas/ProblemDetails"
+        }
       },
       "departureSiteType": {
         "type": "object",
@@ -3235,15 +1942,30 @@
         "type": "object",
         "properties": {
           "departure": {
-            "$ref": "#/components/schemas/departureTimestampedSite"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/departureTimestampedSite"
+              },
+              {
+                "description": "The departure details - location, date and time for the movement. This is a required field for creating a movement record, representing the origin site where the animal is being moved from."
+              }
+            ]
           },
           "arrival": {
-            "$ref": "#/components/schemas/timestampedSite"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/timestampedSite"
+              },
+              {
+                "description": "The arrival location, date and time for the movement. This is a required field for creating a movement record, representing the destination site where the animal is being moved to."
+              }
+            ]
           },
           "number": {
             "type": "integer",
             "example": 55663427,
-            "readOnly": true
+            "readOnly": true,
+            "description": "A unique number for the movement. This field serves as the primary key for tracking individual movements, ensuring each movement record can be uniquely referenced within the system."
           },
           "receivedDate": {
             "allOf": [
@@ -3259,6 +1981,7 @@
             "allOf": [
               {
                 "type": "array",
+                "description": "A list of movement numbers that are potential matches based on similar departure and arrival sites, dates, and animals. These movements are identified by the system as potential duplicates, but have not yet been verified as matches. This helps track possible inconsistencies that may require further review or validation.",
                 "items": {
                   "type": "integer"
                 },
@@ -3272,7 +1995,14 @@
             ]
           },
           "batches": {
-            "$ref": "#/components/schemas/batches"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/batches"
+              },
+              {
+                "description": "A list of batches, each representing a group of animals of a specific species, specified at the time of creating the movement record. Each batch contains animals identified by their unique `AnimalIdentifiers`, which uniquely track individual animals within the batch."
+              }
+            ]
           },
           "return": {
             "type": "object",
@@ -3289,7 +2019,9 @@
                 "readOnly": true
               }
             },
-            "additionalProperties": false
+            "readOnly": true,
+            "additionalProperties": false,
+            "description": "If the movement is of 'roaming' kind, this field contains the details of the return movement. When fetching the movement details, it will include information about the return movement such as the movement number, date, and time. This helps track the return journey of the animals after roaming or temporary relocation."
           }
         },
         "required": [
@@ -3333,6 +2065,7 @@
         "properties": {
           "matchedMovementNumbers": {
             "type": "array",
+            "description": "A list of movement numbers that the system has automatically matched based on matching departure and arrival sites, dates, and animals. If multiple movements are found that meet these criteria, the system designates one as the main movement and returns the other matching movement numbers in this array. This ensures accurate tracking and resolution of potential duplicates.",
             "items": {
               "type": "integer"
             },
@@ -3345,12 +2078,19 @@
           "movementKind": {
             "type": "string",
             "readOnly": true,
+            "description": "The type of movement for the livestock, automatically set by the system based on the nature of the movement record. This could include values such as \"departure\", \"arrival\", \"transfer\", or other movement classifications, helping to categorize and differentiate between various types of livestock movements.",
             "enum": [
               "regular",
               "circular",
               "export",
               "import"
             ]
+          },
+          "inBusinessMoveFlag": {
+            "type": "boolean",
+            "description": "Indicates whether the movement is an in-business move (same keeper at departure and arrival).",
+            "readOnly": true,
+            "example": true
           },
           "state": {
             "allOf": [
@@ -3359,16 +2099,9 @@
               },
               {
                 "readOnly": true
-              }
-            ]
-          },
-          "reviewState": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/movementReviewState"
               },
               {
-                "readOnly": true
+                "description": "The current status or state of the movement, set by the system. This field tracks the progress or stage of the movementand helps monitor the status of movement throughout the movement review process."
               }
             ]
           },
@@ -3404,8 +2137,14 @@
                       "example": "Possible TB Hazard"
                     },
                     "rejectionReasonId": {
-                      "$ref": "#/components/schemas/uuid",
-                      "example": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/uuid"
+                        },
+                        {
+                          "example": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                        }
+                      ]
                     },
                     "rejectionReason": {
                       "type": "string",
@@ -3621,7 +2360,6 @@
         "required": [
           "movementReports",
           "number",
-          "reviewState",
           "state",
           "movementKind",
           "createdDateTime",
@@ -3664,82 +2402,12 @@
           }
         }
       },
-      "BasicMessage": {
-        "type": "object",
-        "properties": {
-          "items": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "code": {
-                  "type": "string"
-                },
-                "message": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      },
-      "Warning": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/BasicMessage"
-          }
-        ],
-        "example": {
-          "items": [
-            {
-              "code": 1,
-              "message": "Warning 1"
-            },
-            {
-              "code": 2,
-              "message": "Warning 2"
-            },
-            {
-              "code": 3,
-              "message": "Warning 3"
-            },
-            {
-              "code": 4,
-              "message": "Warning 4"
-            }
-          ]
-        }
-      },
-      "MovementResponse2": {
-        "allOf": [
-          {
-            "type": "object",
-            "properties": {
-              "movementNumber": {
-                "type": "number",
-                "readOnly": true,
-                "example": 55663427
-              },
-              "warning": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/Warning"
-                  }
-                ]
-              },
-              "links": {
-                "type": "object",
-                "properties": {
-                  "self": {
-                    "type": "string",
-                    "format": "uri",
-                    "readOnly": true,
-                    "example": "/movements/55663427"
-                  }
-                }
-              }
-            }
-          }
+      "AsyncRequestStatus": {
+        "type": "string",
+        "enum": [
+          "Pending",
+          "Completed",
+          "Failed"
         ]
       },
       "AsyncAcceptedResponse": {
@@ -3748,84 +2416,36 @@
           "requestStatusUrl"
         ],
         "properties": {
-          "requestStatusUrl": {
-            "type": "string",
-            "format": "uri",
-            "example": "/requeststatus/df44b048-aa6a-4b2f-8ae7-daad7d3f6dc4"
+          "id": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/uuid"
+              },
+              {
+                "example": "df44b048-aa6a-4b2f-8ae7-daad7d3f6dc4"
+              }
+            ]
+          },
+          "requestStatus": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AsyncRequestStatus"
+              },
+              {
+                "example": "Pending"
+              }
+            ]
+          },
+          "requestDate": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/datetime"
+              },
+              {
+                "example": "2024-05-08T12:45:55.235Z"
+              }
+            ]
           }
-        }
-      },
-      "Error": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/BasicMessage"
-          }
-        ],
-        "example": {
-          "items": [
-            {
-              "code": 1,
-              "message": "Error 1"
-            },
-            {
-              "code": 2,
-              "message": "Error 2"
-            },
-            {
-              "code": 3,
-              "message": "Error 3"
-            },
-            {
-              "code": 4,
-              "message": "Error 4"
-            }
-          ]
-        }
-      },
-      "ProblemDetails": {
-        "type": "object",
-        "properties": {
-          "type": {
-            "type": "string",
-            "description": "A URI reference that identifies the problem type.",
-            "format": "uri",
-            "maxLength": 1024
-          },
-          "status": {
-            "type": "integer",
-            "description": "The HTTP status code generated by the origin server for this occurrence of the problem.",
-            "format": "int32",
-            "minimum": 100,
-            "maximum": 599
-          },
-          "title": {
-            "type": "string",
-            "description": "A short, human-readable summary of the problem type. It should not change from occurrence to occurrence of the problem, except for purposes of localization.",
-            "maxLength": 1024
-          },
-          "detail": {
-            "type": "string",
-            "description": "A human-readable explanation specific to this occurrence of the problem.",
-            "maxLength": 4096
-          },
-          "errors": {
-            "$ref": "#/components/schemas/ProblemDetails"
-          }
-        },
-        "required": [
-          "type",
-          "status",
-          "title",
-          "detail"
-        ]
-      },
-      "Errors": {
-        "type": "array",
-        "description": "An array of error details to accompany a problem details response.",
-        "minItems": 1,
-        "maxItems": 1000,
-        "items": {
-          "$ref": "#/components/schemas/ProblemDetails"
         }
       },
       "ReportAuthor": {
@@ -4123,7 +2743,14 @@
             "$ref": "#/components/schemas/date"
           },
           "year": {
-            "type": "integer"
+            "allOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "nullable": true
+              }
+            ]
           },
           "mark": {
             "type": "string",
@@ -4142,7 +2769,6 @@
         },
         "required": [
           "site",
-          "year",
           "assistedBirthFlag",
           "multipleBirthsFlag",
           "embryoTransferFlag"
@@ -4345,8 +2971,14 @@
                 "$ref": "#/components/schemas/ParentAnimal"
               },
               "birthDam": {
-                "description": "The animal giving birth to the animal in question. If the animal is a surrogate mother, there will be a genetic dam.",
-                "$ref": "#/components/schemas/ParentAnimal"
+                "allOf": [
+                  {
+                    "description": "The animal giving birth to the animal in question. If the animal is a surrogate mother, there will be a genetic dam."
+                  },
+                  {
+                    "$ref": "#/components/schemas/ParentAnimal"
+                  }
+                ]
               }
             }
           },
@@ -4354,19 +2986,37 @@
             "$ref": "#/components/schemas/animalBirth"
           },
           "death": {
-            "$ref": "#/components/schemas/animalDeath",
-            "nullable": true
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/animalDeath"
+              },
+              {
+                "nullable": true
+              }
+            ]
           },
           "registration": {
             "type": "object",
             "properties": {
               "birthDam": {
-                "description": "The animal giving birth to the animal in question. If the animal is a surrogate mother, there will be a genetic dam.",
-                "$ref": "#/components/schemas/ParentAnimal"
+                "allOf": [
+                  {
+                    "description": "The animal giving birth to the animal in question. If the animal is a surrogate mother, there will be a genetic dam."
+                  },
+                  {
+                    "$ref": "#/components/schemas/ParentAnimal"
+                  }
+                ]
               },
               "geneticDam": {
-                "description": "The genetic dam if different from the birth dam.",
-                "$ref": "#/components/schemas/ParentAnimal"
+                "allOf": [
+                  {
+                    "description": "The genetic dam if different from the birth dam."
+                  },
+                  {
+                    "$ref": "#/components/schemas/ParentAnimal"
+                  }
+                ]
               },
               "sire": {
                 "$ref": "#/components/schemas/ParentAnimal"
@@ -4408,10 +3058,14 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/AnimalBirthingHistory"
+              },
+              {
+                "nullable": true
+              },
+              {
+                "readOnly": true
               }
-            ],
-            "nullable": true,
-            "readOnly": true
+            ]
           },
           "createdDateTime": {
             "allOf": [
@@ -4437,10 +3091,14 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/Assurance"
+              },
+              {
+                "nullable": true
+              },
+              {
+                "readOnly": true
               }
-            ],
-            "nullable": true,
-            "readOnly": true
+            ]
           }
         },
         "required": [
@@ -4453,7 +3111,6 @@
         "properties": {
           "identifier": {
             "type": "string",
-            "format": "string",
             "readOnly": true,
             "example": "UK543017404195"
           },
@@ -4485,7 +3142,6 @@
           },
           "identifier": {
             "type": "string",
-            "format": "string",
             "nullable": false,
             "example": "UK654321123456"
           },
@@ -4622,22 +3278,26 @@
         "type": "object",
         "properties": {
           "status": {
-            "type": "string",
-            "example": "Success",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AsyncRequestStatus"
+              }
+            ],
+            "example": "Completed",
             "readOnly": true
-          }
-        },
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/MovementResponse2"
           },
-          {
-            "$ref": "#/components/schemas/MovementResponse1"
-          },
-          {
-            "$ref": "#/components/schemas/AnimalResponse"
+          "result": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/MovementResponse1"
+              },
+              {
+                "$ref": "#/components/schemas/AnimalResponse"
+              }
+            ]
           }
-        ]
+        }
       }
     },
     "parameters": {
@@ -4711,7 +3371,7 @@
             }
           ]
         },
-        "description": "Uniquely identfies an HTTP request."
+        "description": "A unique identifier for the request."
       },
       "xCorrelationId": {
         "schema": {
@@ -4724,7 +3384,7 @@
             }
           ]
         },
-        "description": "Request correlation id, the id is generated by the server if not provided by the client."
+        "description": "A unique identifier used for traceability and correlation across systems; if not provided, the service will generate one."
       },
       "xRetryAfter": {
         "schema": {
@@ -4733,23 +3393,179 @@
         "description": "The number of seconds/minutes before you can call this endpoint again."
       }
     },
+    "responses": {
+      "BadRequest": {
+        "description": "Invalid request",
+        "headers": {
+          "LI-Request-Id": {
+            "$ref": "#/components/headers/xRequestId"
+          },
+          "LI-Correlation-Id": {
+            "$ref": "#/components/headers/xCorrelationId"
+          }
+        }
+      },
+      "ServerError": {
+        "description": "Server Error",
+        "headers": {
+          "LI-Request-Id": {
+            "$ref": "#/components/headers/xRequestId"
+          },
+          "LI-Correlation-Id": {
+            "$ref": "#/components/headers/xCorrelationId"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Errors"
+            },
+            "examples": {
+              "forbidden": {
+                "$ref": "#/components/examples/server-error"
+              }
+            }
+          }
+        }
+      },
+      "ServiceUnavailable": {
+        "description": "Service Unavailable",
+        "headers": {
+          "LI-Request-Id": {
+            "$ref": "#/components/headers/xRequestId"
+          },
+          "LI-Correlation-Id": {
+            "$ref": "#/components/headers/xCorrelationId"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Errors"
+            },
+            "examples": {
+              "forbidden": {
+                "$ref": "#/components/examples/service-unavailable"
+              }
+            }
+          }
+        }
+      },
+      "Accepted": {
+        "description": "Accepted",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/AsyncAcceptedResponse"
+            }
+          }
+        },
+        "headers": {
+          "LI-Request-Id": {
+            "$ref": "#/components/headers/xRequestId"
+          },
+          "LI-Correlation-Id": {
+            "$ref": "#/components/headers/xCorrelationId"
+          },
+          "Retry-After": {
+            "$ref": "#/components/headers/xRetryAfter"
+          }
+        }
+      },
+      "MovementBadRequest": {
+        "description": "Invalid request",
+        "headers": {
+          "LI-Request-Id": {
+            "$ref": "#/components/headers/xRequestId"
+          },
+          "LI-Correlation-Id": {
+            "$ref": "#/components/headers/xCorrelationId"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Errors"
+            },
+            "examples": {
+              "invalid-request-schema-movement": {
+                "$ref": "#/components/examples/invalid-request-schema-movement"
+              }
+            }
+          }
+        }
+      },
+      "Forbidden": {
+        "description": "Forbidden",
+        "headers": {
+          "LI-Request-Id": {
+            "$ref": "#/components/headers/xRequestId"
+          },
+          "LI-Correlation-Id": {
+            "$ref": "#/components/headers/xCorrelationId"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Errors"
+            },
+            "examples": {
+              "forbidden": {
+                "$ref": "#/components/examples/forbidden"
+              }
+            }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "Not found",
+        "headers": {
+          "LI-Request-Id": {
+            "$ref": "#/components/headers/xRequestId"
+          },
+          "LI-Correlation-Id": {
+            "$ref": "#/components/headers/xCorrelationId"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Errors"
+            },
+            "examples": {
+              "not-found": {
+                "$ref": "#/components/examples/not-found"
+              }
+            }
+          }
+        }
+      },
+      "AnimalBadRequest": {
+        "description": "Invalid request",
+        "headers": {
+          "LI-Request-Id": {
+            "$ref": "#/components/headers/xRequestId"
+          },
+          "LI-Correlation-Id": {
+            "$ref": "#/components/headers/xCorrelationId"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Errors"
+            },
+            "examples": {
+              "validation-error": {
+                "$ref": "#/components/examples/validation-error"
+              }
+            }
+          }
+        }
+      }
+    },
     "examples": {
-      "forbidden": {
-        "value": {
-          "type": "https://datatracker.ietf.org/doc/html/rfc9110#section-15.5.4",
-          "title": "Forbidden",
-          "detail": "The resource could not be returned as the requestor is not authorized",
-          "status": 403
-        }
-      },
-      "not-found": {
-        "value": {
-          "type": "https://datatracker.ietf.org/doc/html/rfc9110#section-15.5.5",
-          "title": "Not found",
-          "detail": "The requested resource was not found",
-          "status": 404
-        }
-      },
       "server-error": {
         "value": {
           "type": "https://datatracker.ietf.org/doc/html/rfc9110#section-15.6.1",
@@ -4764,6 +3580,44 @@
           "title": "Service Unavailable",
           "detail": "The service is currently unavailable",
           "status": 503
+        }
+      },
+      "invalid-request-schema-movement": {
+        "description": "Representation of a 400 Bad Request response where the request has failed schema validation.",
+        "value": {
+          "type": "https://datatracker.ietf.org/doc/html/rfc9110#section-15.5.1",
+          "status": 400,
+          "title": "Request Schema Error",
+          "detail": "The request failed schema validation.",
+          "errors": [
+            {
+              "detail": "The request is missing the required query parameter {departureDate}",
+              "code": "S002",
+              "source": "siteId"
+            },
+            {
+              "detail": "The format of the request body property {departureDate} is invalid",
+              "code": "S008",
+              "source": "#/departureDate",
+              "value": "2024-11/01"
+            }
+          ]
+        }
+      },
+      "forbidden": {
+        "value": {
+          "type": "https://datatracker.ietf.org/doc/html/rfc9110#section-15.5.4",
+          "title": "Forbidden",
+          "detail": "The resource could not be returned as the requestor is not authorized",
+          "status": 403
+        }
+      },
+      "not-found": {
+        "value": {
+          "type": "https://datatracker.ietf.org/doc/html/rfc9110#section-15.5.5",
+          "title": "Not found",
+          "detail": "The requested resource was not found",
+          "status": 404
         }
       },
       "validation-error": {
@@ -4781,28 +3635,6 @@
             {
               "detail": "The genetic or surrogate dam is not the same species as the animal being registered",
               "code": "V006"
-            }
-          ]
-        }
-      },
-      "invalid-request-schema": {
-        "description": "Representation of a 400 Bad Request response where the request has failed schema validation.",
-        "value": {
-          "type": "https://datatracker.ietf.org/doc/html/rfc9110#section-15.5.1",
-          "status": 400,
-          "title": "Request Schema Error",
-          "detail": "The request failed schema validation.",
-          "errors": [
-            {
-              "detail": "The request is missing the required query parameter {siteId}",
-              "code": "S002",
-              "source": "siteId"
-            },
-            {
-              "detail": "The format of the request body property {birthDate} is invalid",
-              "code": "S008",
-              "source": "#/birth/birthDate",
-              "value": "2024-11/01"
             }
           ]
         }
